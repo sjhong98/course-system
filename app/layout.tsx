@@ -1,6 +1,27 @@
 import type { Metadata } from "next";
+import localFont from "next/font/local";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import MobileWrapper from "@/component/common/container/MobileWrapper";
+import Header from "@/component/common/ui/Header";
+
+export const PADDING = 20
+
+const pretendard = localFont({
+  src: [
+    { path: "./fonts/Pretendard-Thin.otf", weight: "100" },
+    { path: "./fonts/Pretendard-ExtraLight.otf", weight: "200" },
+    { path: "./fonts/Pretendard-Light.otf", weight: "300" },
+    { path: "./fonts/Pretendard-Regular.otf", weight: "400" },
+    { path: "./fonts/Pretendard-Medium.otf", weight: "500" },
+    { path: "./fonts/Pretendard-SemiBold.otf", weight: "600" },
+    { path: "./fonts/Pretendard-Bold.otf", weight: "700" },
+    { path: "./fonts/Pretendard-ExtraBold.otf", weight: "800" },
+    { path: "./fonts/Pretendard-Black.otf", weight: "900" },
+  ],
+  variable: "--font-pretendard",
+  display: "swap",
+});
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -25,9 +46,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${pretendard.variable} ${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
       >
-        {children}
+        <div className='flex flex-col min-w-screen min-h-screen items-center justify-center'>
+          <MobileWrapper>
+            <Header />
+            {children}
+          </MobileWrapper>
+        </div>
       </body>
     </html>
   );
