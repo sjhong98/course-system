@@ -2,7 +2,18 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #000000;
+  --background-secondary: #444444;
+  --foreground: #111111;
+  --scrollbar-thumb: #444444;
+  --scrollbar-track: transparent;
+}
+
+.dark {
+  --background: #111111;
+  --background-secondary: #bbbbbb;
+  --foreground: #ffffff;
+  --scrollbar-thumb: #555555;
+  --scrollbar-track: transparent;
 }
 
 @theme inline {
@@ -12,9 +23,38 @@
   --font-mono: var(--font-geist-mono);
 }
 
+html {
+  height: 100%;
+  margin: 0;
+}
+
 body {
+  height: 100%;
+  margin: 0;
   background: var(--background);
   color: var(--foreground);
+}
+
+p, label {
   font-family: var(--font-pretendard), var(--font-geist-sans), sans-serif;
   letter-spacing: -0.05em;
+}
+
+.scrollbar-thin {
+  scrollbar-width:thin;
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 2px;
+  height: 2px;
+}
+
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  background-color: var(--scrollbar-thumb);
 }

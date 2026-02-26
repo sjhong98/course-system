@@ -4,8 +4,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import MobileWrapper from "@/component/common/container/MobileWrapper";
 import Header from "@/component/common/ui/Header";
-
-export const PADDING = 20
+import Script from "next/script";
 
 const pretendard = localFont({
   src: [
@@ -44,11 +43,24 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="ko" suppressHydrationWarning>
+      <head>
+        <Script
+          id="theme-script"
+          strategy="beforeInteractive"
+        >
+          {`
+            const saved = localStorage.getItem('theme');
+            if (saved === 'dark') {
+              document.documentElement.classList.add('dark');
+            }
+          `}
+        </Script>
+      </head>
       <body
-        className={`${pretendard.variable} ${geistSans.variable} ${geistMono.variable} font-sans antialiased`}
+        className={`${pretendard.variable} ${geistSans.variable} ${geistMono.variable} font-sans antialiased h-screen m-0`}
       >
-        <div className='flex flex-col min-w-screen min-h-screen items-center justify-center'>
+        <div className='flex flex-col min-w-screen h-screen items-center'>
           <MobileWrapper>
             <Header />
             {children}

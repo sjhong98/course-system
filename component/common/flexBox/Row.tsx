@@ -1,7 +1,7 @@
 import React from "react";
 
 type RowProps = React.HTMLAttributes<HTMLDivElement> & {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   gap?: number;
 };
 

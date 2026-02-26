@@ -1,7 +1,7 @@
 import React from "react";
 
-type ColumnProps = React.HTMLAttributes<HTMLDivElement> & {
-  children: React.ReactNode;
+export type ColumnProps = React.HTMLAttributes<HTMLDivElement> & {
+  children?: React.ReactNode;
   gap?: number;
 };
 

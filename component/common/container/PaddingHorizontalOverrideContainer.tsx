@@ -1,11 +1,8 @@
-import { PADDING } from "@/app/layout";
+import { PADDING } from "@/lib/constants/constants";
 import React from "react";
 
 type PaddingHorizontalOverrideContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   children?: React.ReactNode;
-  horizontal?: boolean;
-  top?: boolean;
-  bottom?: boolean;
 };
 
 export default function PaddingHorizontalOverrideContainer({
@@ -18,8 +15,8 @@ export default function PaddingHorizontalOverrideContainer({
   const minusMarginValue = `-${PADDING}px`
 
   const marginStyle: React.CSSProperties = {
+    marginRight: minusMarginValue,
     marginLeft: minusMarginValue,
-    marginRight: minusMarginValue
   }
 
   return (

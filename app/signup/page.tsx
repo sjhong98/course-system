@@ -1,16 +1,18 @@
+'use server'
+
 import Column from "@/component/common/flexBox/Column";
 import Loading from "@/component/common/ui/Loading";
-import Title from "@/component/common/ui/PageTitle";
+import PageTitle from "@/component/common/ui/PageTitle";
 import SignUpForm from "@/component/content/signUp/SignUpForm";
-import { Suspense } from "react";
+import { Suspense } from "react";  
 
-export default function Signup() {
+export default async function Signup() {
   return (
     <Column gap={20}> 
-      <Title title="회원가입" />
+      <PageTitle title="회원가입" />
 
       <Suspense fallback={<Loading />}>
-        <SignUpForm />
+        <SignUpForm />  
       </Suspense>
     </Column>
   )
