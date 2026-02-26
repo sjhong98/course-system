@@ -1,25 +1,30 @@
 import { cn } from "@/lib/utils/cn";
 import React from "react";
+import LoadingSpinner from "./LoadingSpinner";
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children?: React.ReactNode;
+  loading?: boolean;
 };
 
 export default function Button({
   children,
   className,
+  loading,
   ...rest
 }: ButtonProps) {
   return (
     <button
       className={cn(
-        `w-full p-2 text-white rounded-lg transition-all duration-100`,
+        `flex items-center justify-center min-h-[40px] w-full text-white rounded-lg transition-all duration-100`,
         className,
-        rest.disabled ? "opacity-50 cursor-normal bg-neutral-300" : "cursor-pointer bg-neutral-700 active:bg-neutral-800 active:scale-98",
+        rest.disabled ? "opacity-50 cursor-normal bg-neutral-300" : "cursor-pointer bg-neutral-700",
+        loading || rest.disabled ? "" : "active:scale-98 active:bg-neutral-800",
       )}
+      disabled={loading || rest.disabled}
       {...rest}
     >
-      {children}
+      {loading ? <LoadingSpinner /> : children}
     </button>
   );
 }

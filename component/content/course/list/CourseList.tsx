@@ -3,15 +3,17 @@
 import Column from "@/component/common/flexBox/Column";
 import Row from "@/component/common/flexBox/Row";
 import { BottomButton } from "@/component/common/ui/BottomButton";
+import Button from "@/component/common/ui/Button";
 import CheckBox from "@/component/common/ui/CheckBox";
 import { SelectableList } from "@/component/common/ui/SelectableList";
 import { cn } from "@/lib/utils/cn";
 import { ApiResponse } from "@/lib/utils/typeGenerator";
 import { useMemo, useState } from "react";
 
+type CourseListResponse = ApiResponse<"/api/courses", "get">;
 export type CourseListSort = 'recent' | 'popular' | 'highRate';
 
-export default function CourseList() {
+export default function CourseList({ initialCourseListResponse }: { initialCourseListResponse: CourseListResponse }) {
     const [sort, setSort] = useState<CourseListSort>("recent");
 
     const courseItem = {
@@ -27,7 +29,7 @@ export default function CourseList() {
     }
 
     const course: ApiResponse<"/api/courses/{courseId}", "get">[] = [
-        courseItem, courseItem, courseItem, courseItem, courseItem, courseItem, courseItem, courseItem, courseItem, courseItem
+        courseItem
     ]
 
     const sortList = useMemo(() => (
@@ -41,6 +43,9 @@ export default function CourseList() {
     if (!Array.isArray(course)) return null
     return (
         <Column gap={20} className='h-full'>
+            <Column className='absolute top-0 right-0 '>
+                <Button className='px-3'>강의 개설</Button>
+            </Column>
             <Row>
                 {sortList.map((item) => (
                     <CheckBox key={item.value} label={item.label} className='flex-1' checked={sort === item.value} onChange={() => {
