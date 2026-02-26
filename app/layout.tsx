@@ -6,6 +6,7 @@ import MobileWrapper from "@/component/common/container/MobileWrapper";
 import Header from "@/component/common/ui/Header";
 import Script from "next/script";
 import { ToastContainer } from 'react-toastify'
+import Providers from "./Providers";
 
 const pretendard = localFont({
   src: [
@@ -61,23 +62,25 @@ export default function RootLayout({
       <body
         className={`${pretendard.variable} ${geistSans.variable} ${geistMono.variable} font-sans antialiased h-screen m-0`}
       >
-         <ToastContainer 
-            className="!max-w-[500px]"
-            position="top-center"
-            autoClose={2000}
-            hideProgressBar={true}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
+        <ToastContainer
+          className="!max-w-[500px]"
+          position="top-center"
+          autoClose={2000}
+          hideProgressBar={true}
+          newestOnTop={false}
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+        />
         <div className='flex flex-col min-w-screen h-screen items-center'>
-          <MobileWrapper>
-            <Header />
-            {children}
-          </MobileWrapper>
+          <Providers>
+            <MobileWrapper>
+              <Header />
+              {children}
+            </MobileWrapper>
+          </Providers>
         </div>
       </body>
     </html>

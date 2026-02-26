@@ -33,4 +33,12 @@ export const rules = {
     const len = String(value).trim().length;
     return len <= max ? null : `${field}은(는) ${max}자 이하여야 합니다.`;
   },
+
+  /** 숫자 최소값 (이상) */
+  minNumber: (min: number) => (field: string, value: unknown): string | null => {
+    if (value === undefined || value === null) return null;
+    const n = Number(value);
+    if (Number.isNaN(n)) return `${field}은(는) 숫자를 입력해주세요.`;
+    return n >= min ? null : `${field}은(는) ${min} 이상이어야 합니다.`;
+  },
 } as const;
