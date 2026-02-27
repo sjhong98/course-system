@@ -1,8 +1,8 @@
 'use server'
 
-import Column from "@/component/common/flexBox/Column";
-import PageTitle from "@/component/common/ui/PageTitle";
-import SignInForm from "@/component/feature/signIn/signInForm"
+import Column from "@/shared/components/flexBox/Column";
+import PageTitle from "@/shared/components/ui/PageTitle";
+import SignInForm from "@/features/auth/components/signInForm";
 
 export default async function SignIn() {
   return (

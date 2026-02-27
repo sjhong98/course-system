@@ -1,4 +1,4 @@
-import type { paths } from "@/lib/api/scheme";
+import type { paths } from "@/shared/libs/api/scheme";
 
 export type ApiResponse<
   TPath extends keyof paths,

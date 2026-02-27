@@ -1,8 +1,9 @@
 'use server'
 
 import { getCourse } from "@/action/getCourse";
-import PageTitle from "@/components/common/ui/PageTitle";
-import CourseDetail from "@/components/feature/course/[courseId]/CourseDetail";
+
+import CourseDetail from "@/features/course/components/CourseDetail";
+import PageTitle from "@/shared/components/ui/PageTitle";
 
 export default async function CourseDetailPage({ params }: { params: { courseId: string } }) {
     const { courseId } = await params;

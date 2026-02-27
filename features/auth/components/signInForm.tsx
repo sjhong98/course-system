@@ -1,15 +1,15 @@
 'use client'
 
-import { signIn } from "@/action/signIn";
-import Column from "@/component/common/flexBox/Column";
-import { BottomButton } from "@/component/common/ui/BottomButton";
-
-import LabelInput from "@/component/common/ui/LabelInput";
-import { validateSignInForm } from "@/lib/validation/signIn";
-import { InvalidResult } from "@/lib/validation/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
+
+import { signIn } from "@/action/signIn";
+import Column from "@/shared/components/flexBox/Column";
+import { BottomButton } from "@/shared/components/ui/BottomButton";
+import LabelInput from "@/shared/components/ui/LabelInput";
+import { validateSignInForm } from "@/features/auth/validation/signIn";
+import { InvalidResult } from "@/shared/validation/types";
 
 export default function SignInForm() {
     const router = useRouter();

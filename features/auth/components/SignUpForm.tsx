@@ -1,18 +1,19 @@
 'use client'
 
-import { signIn } from "@/action/signIn";
-import { signUp } from "@/action/signUp";
-import Column from "@/component/common/flexBox/Column";
-import Row from "@/component/common/flexBox/Row";
-import { BottomButton } from "@/component/common/ui/BottomButton";
-import CheckBox from "@/component/common/ui/CheckBox";
-import LabelInput from "@/component/common/ui/LabelInput";
-import { ApiRequest } from "@/lib/utils/typeGenerator";
-import { validateSignUpForm } from "@/lib/validation/signUp";
-import { InvalidResult } from "@/lib/validation/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
+
+import { signIn } from "@/action/signIn";
+import { signUp } from "@/action/signUp";
+import Column from "@/shared/components/flexBox/Column";
+import Row from "@/shared/components/flexBox/Row";
+import { BottomButton } from "@/shared/components/ui/BottomButton";
+import CheckBox from "@/shared/components/ui/CheckBox";
+import LabelInput from "@/shared/components/ui/LabelInput";
+import { validateSignUpForm } from "@/features/auth/validation/signUp";
+import { ApiRequest } from "@/shared/libs/utils/typeGenerator";
+import { InvalidResult } from "@/shared/validation/types";
 
 export default function SignUpForm() {
     const router = useRouter();

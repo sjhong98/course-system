@@ -1,16 +1,17 @@
 'use client'
 
-import { enrollCourse } from "@/action/enrollCourse";
-import PaddingHorizontalOverrideContainer from "@/component/common/container/PaddingHorizontalOverrideContainer";
-import Column from "@/component/common/flexBox/Column";
-import Row from "@/component/common/flexBox/Row";
-import { BottomButton } from "@/component/common/ui/BottomButton";
-import Error from "@/component/common/ui/Error";
-import { cn } from "@/lib/utils/cn";
-import { ApiResponse } from "@/lib/utils/typeGenerator";
 import dayjs from "dayjs";
 import { useState } from "react";
 import { toast } from "react-toastify";
+
+import { enrollCourse } from "@/action/enrollCourse";
+import PaddingHorizontalOverrideContainer from "@/shared/components/container/PaddingHorizontalOverrideContainer";
+import Column from "@/shared/components/flexBox/Column";
+import Row from "@/shared/components/flexBox/Row";
+import { BottomButton } from "@/shared/components/ui/BottomButton";
+import Error from "@/shared/components/ui/Error";
+import { cn } from "@/shared/libs/utils/cn";
+import { ApiResponse } from "@/shared/libs/utils/typeGenerator";
 
 type CourseDetailProps = {
     course: ApiResponse<"/api/courses/{courseId}", "get"> | null;

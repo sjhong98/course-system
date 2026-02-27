@@ -1,7 +1,8 @@
 'use server'
 
-import { api, errorHandler } from "@/lib/api/api";
 import { cookies } from "next/headers";
+
+import { api, errorHandler } from "@/shared/libs/api/api";
 
 const ENROLL_COURSE_PATH = "/api/courses/{courseId}/enroll";
 

@@ -1,6 +1,6 @@
-import { PADDING } from "@/lib/constants/constants";
+import { PADDING } from "@/shared/libs/constants/constants";
+import { cn } from "@/shared/libs/utils/cn";
 import ButtonComponent, { ButtonProps } from "./Button";
-import { cn } from "@/lib/utils/cn";
 
 export namespace BottomButton {
     export type BottomButtonContainerProps = ButtonProps & {

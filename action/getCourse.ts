@@ -1,6 +1,6 @@
 'use server'
 
-import { api, errorHandler } from "@/lib/api/api"
+import { api, errorHandler } from "@/shared/libs/api/api";
 
 const GET_COURSE_PATH = "/api/courses/{courseId}";
 

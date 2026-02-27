@@ -1,5 +1,5 @@
-import { invalid, valid, type ValidationResult } from "./types";
-import { rules } from "./rules";
+import { invalid, valid, type ValidationResult } from "@/shared/validation/types";
+import { rules } from "@/shared/validation/rules";
 
 export type SignInForm = { email: string; password: string };
 

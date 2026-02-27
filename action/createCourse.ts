@@ -1,8 +1,9 @@
 'use server'
 
-import { api, errorHandler } from "@/lib/api/api";
-import { ApiRequest, ApiResponse } from "@/lib/utils/typeGenerator";
 import { cookies } from "next/headers";
+
+import { api, errorHandler } from "@/shared/libs/api/api";
+import { ApiRequest, ApiResponse } from "@/shared/libs/utils/typeGenerator";
 
 type CourseCreateForm = ApiRequest<"/api/courses", "post">;
 

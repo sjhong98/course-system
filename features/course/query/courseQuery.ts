@@ -1,5 +1,6 @@
-import { getCourseList } from "@/action/getCourseList"
-import { infiniteQueryOptions, keepPreviousData } from "@tanstack/react-query"
+import { infiniteQueryOptions } from "@tanstack/react-query";
+
+import { getCourseList } from "@/action/getCourseList";
 
 export const courseListQueryOptions = (sort: string) =>
     infiniteQueryOptions({

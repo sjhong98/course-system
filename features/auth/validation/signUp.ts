@@ -1,6 +1,6 @@
-import type { ApiRequest } from "@/lib/utils/typeGenerator";
-import { invalid, valid, type ValidationResult } from "./types";
-import { rules } from "./rules";
+import type { ApiRequest } from "@/shared/libs/utils/typeGenerator";
+import { invalid, valid, type ValidationResult } from "@/shared/validation/types";
+import { rules } from "@/shared/validation/rules";
 
 const SIGNUP_PATH = "/api/users/signup";
 export type SignUpForm = ApiRequest<typeof SIGNUP_PATH, "post">;

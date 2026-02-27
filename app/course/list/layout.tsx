@@ -1,8 +1,9 @@
-import Column from "@/component/common/flexBox/Column"
-import Loading from "@/component/common/ui/Loading"
-import PageTitle from "@/component/common/ui/PageTitle"
-import { PAGE_HEIGHT } from "@/lib/constants/constants"
-import { Suspense } from "react"
+import { Suspense } from "react";
+
+import Column from "@/shared/components/flexBox/Column";
+import Loading from "@/shared/components/ui/Loading";
+import PageTitle from "@/shared/components/ui/PageTitle";
+import { PAGE_HEIGHT } from "@/shared/libs/constants/constants";
 
 export default function CourseListLayout({
     children,

@@ -1,17 +1,18 @@
 'use client'
 
-import { createCourse } from "@/action/createCourse";
-import Column from "@/component/common/flexBox/Column";
-import { BottomButton } from "@/component/common/ui/BottomButton";
-import LabelInput from "@/component/common/ui/LabelInput";
-import { ApiRequest } from "@/lib/utils/typeGenerator";
-import parseNumber from "@/lib/utils/parseNumber";
-import { validateCourseCreateForm } from "@/lib/validation/createCourse";
-import type { InvalidResult } from "@/lib/validation/types";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
-import { useQueryClient } from "@tanstack/react-query";
+
+import { createCourse } from "@/action/createCourse";
+import { validateCourseCreateForm } from "@/features/course/validation/createCourse";
+import Column from "@/shared/components/flexBox/Column";
+import { BottomButton } from "@/shared/components/ui/BottomButton";
+import LabelInput from "@/shared/components/ui/LabelInput";
+import { ApiRequest } from "@/shared/libs/utils/typeGenerator";
+import parseNumber from "@/shared/libs/utils/parseNumber";
+import type { InvalidResult } from "@/shared/validation/types";
 
 type CourseCreateForm = ApiRequest<"/api/courses", "post">;
 

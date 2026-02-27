@@ -1,4 +1,4 @@
-import { PADDING } from "@/lib/constants/constants";
+import { PADDING } from "@/shared/libs/constants/constants";
 import React from "react";
 
 type PaddingHorizontalOverrideContainerProps = React.HTMLAttributes<HTMLDivElement> & {

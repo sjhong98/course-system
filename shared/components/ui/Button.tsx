@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils/cn";
 import React from "react";
+
+import { cn } from "@/shared/libs/utils/cn";
 import LoadingSpinner from "./LoadingSpinner";
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {

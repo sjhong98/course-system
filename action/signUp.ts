@@ -1,5 +1,5 @@
-import { api, errorHandler } from "@/lib/api/api";
-import { ApiRequest, ApiResponse } from "@/lib/utils/typeGenerator";
+import { api, errorHandler } from "@/shared/libs/api/api";
+import { ApiRequest, ApiResponse } from "@/shared/libs/utils/typeGenerator";
 
 const SIGNUP_PATH = "/api/users/signup";
 

@@ -1,22 +1,23 @@
 'use client'
 
-import { enrollCourseBatch } from "@/action/enrollCourseBatch";
-import Column from "@/component/common/flexBox/Column";
-import Row from "@/component/common/flexBox/Row";
-import { BottomButton } from "@/component/common/ui/BottomButton";
-import Button from "@/component/common/ui/Button";
-import CheckBox from "@/component/common/ui/CheckBox";
-import { SelectableList } from "@/component/common/ui/SelectableList";
-import Skeleton from "@/component/common/ui/Skeleton";
-import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT } from "@/lib/constants/constants";
-import { courseListQueryOptions } from "@/lib/query/courseQuery";
-import { cn } from "@/lib/utils/cn";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { FilterIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Fragment, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { toast } from "react-toastify";
+
+import { enrollCourseBatch } from "@/action/enrollCourseBatch";
+import { courseListQueryOptions } from "@/features/course/query/courseQuery";
+import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT } from "@/shared/libs/constants/constants";
+import { cn } from "@/shared/libs/utils/cn";
+import Column from "@/shared/components/flexBox/Column";
+import Row from "@/shared/components/flexBox/Row";
+import { BottomButton } from "@/shared/components/ui/BottomButton";
+import Button from "@/shared/components/ui/Button";
+import CheckBox from "@/shared/components/ui/CheckBox";
+import { SelectableList } from "@/shared/components/ui/SelectableList";
+import Skeleton from "@/shared/components/ui/Skeleton";
 
 export type CourseListSort = 'recent' | 'popular' | 'rate';
 const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`

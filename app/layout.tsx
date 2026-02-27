@@ -1,11 +1,12 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
-import MobileWrapper from "@/component/common/container/MobileWrapper";
-import Header from "@/component/common/ui/Header";
 import Script from "next/script";
-import { ToastContainer } from 'react-toastify'
+import { ToastContainer } from "react-toastify";
+
+import MobileWrapper from "@/shared/components/container/MobileWrapper";
+import Header from "@/shared/components/ui/Header";
+import "./globals.css";
 import Providers from "./Providers";
 
 const pretendard = localFont({

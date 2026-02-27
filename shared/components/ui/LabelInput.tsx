@@ -1,6 +1,7 @@
 import React from "react";
+
+import { InvalidResult } from "@/shared/validation/types";
 import Column from "../flexBox/Column";
-import { InvalidResult } from "@/lib/validation/types";
 
 type LabelInputProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label: string;

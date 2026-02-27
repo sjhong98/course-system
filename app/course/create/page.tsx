@@ -1,10 +1,11 @@
 'use server'
 
-import Column from "@/component/common/flexBox/Column"
-import Loading from "@/component/common/ui/Loading"
-import PageTitle from "@/component/common/ui/PageTitle"
-import CourseCreateForm from "@/component/feature/course/create/CourseCreateForm"
-import { Suspense } from "react"
+import { Suspense } from "react";
+
+import Column from "@/shared/components/flexBox/Column";
+import Loading from "@/shared/components/ui/Loading";
+import PageTitle from "@/shared/components/ui/PageTitle";
+import CourseCreateForm from "@/features/course/components/CourseCreateForm";
 
 export default async function CourseCreate() {
     return (

@@ -1,6 +1,6 @@
 'use server'
 
-import { PADDING, PAGE_HEIGHT, PAGE_TITLE_HEIGHT } from "@/lib/constants/constants";
+import { PADDING, PAGE_HEIGHT, PAGE_TITLE_HEIGHT } from "@/shared/libs/constants/constants";
 import Header from "../ui/Header";
 import Column from "../flexBox/Column";
 

@@ -1,5 +1,5 @@
-import PaddingHorizontalOverrideContainer from "@/component/common/container/PaddingHorizontalOverrideContainer";
-import { HEADER_HEIGHT } from "@/lib/constants/constants";
+import PaddingHorizontalOverrideContainer from "@/shared/components/container/PaddingHorizontalOverrideContainer";
+import { HEADER_HEIGHT } from "@/shared/libs/constants/constants";
 
 export default function Header() {
   return (
