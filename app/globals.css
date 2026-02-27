@@ -58,3 +58,17 @@ p, label {
   border-radius: 2px;
   background-color: var(--scrollbar-thumb);
 }
+
+@keyframes opacity-up {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.opacity-up {
+  animation:
+    opacity-up 0.5s ease-in-out forwards,
+}

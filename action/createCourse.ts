@@ -17,7 +17,5 @@ export async function createCourse(course: CourseCreateForm) {
             },
         });
         return response as ApiResponse<"/api/courses", "post">;
-    }, {
-        errorMessage: "강의 등록에 실패했습니다.",
     });
 }

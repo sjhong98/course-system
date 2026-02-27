@@ -50,7 +50,7 @@ export default function SignUpForm() {
                 setError(result);
                 return;
             }
-            await signUp(signUpForm);
+            const result2 = await signUp(signUpForm);
             await signIn({email: signUpForm.email, password: signUpForm.password});
     
         } catch (error) {
@@ -74,7 +74,7 @@ export default function SignUpForm() {
                 </Row>
             </Column>
             <BottomButton.Container type="submit">
-                <BottomButton.Button loading={processing}>회원가입</BottomButton.Button>
+                <BottomButton.Button processing={processing}>회원가입</BottomButton.Button>
             </BottomButton.Container>
         </form>
     )

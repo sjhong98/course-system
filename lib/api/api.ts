@@ -1,27 +1,30 @@
 import type { paths } from "@/lib/api/scheme.d";
 import createClient from "openapi-fetch";
 
+type SuccessResponse<T> = { data?: T };
+type ErrorResponse = { error: { message: string } };
+
 export const api = createClient<paths>({
     baseUrl: "http://localhost:8080",
 });
 
-export const errorHandler = async <T, E>(
-    apiCall: () => Promise<{ data?: T; error?: { message?: string } }>,
-    options?: { errorMessage?: string }
-): Promise<T | E> => {
+export const errorHandler = async <T>(
+    apiCall: () => Promise<SuccessResponse<T>>
+): Promise<T> => {
     try {
         const result = await apiCall();
 
-        // 2xx 응답이 아닌 경우 에러 처리
-        if (result.error) {
-            throw new Error(result.error.message)
-        }
+        const isError = (obj: SuccessResponse<T> | ErrorResponse): obj is ErrorResponse => {
+            return "error" in obj;
+        };
     
-        return result.data as T
-    } catch (error) {
-        if (error instanceof Error) {
-            throw error
+        if (isError(result)) {
+            throw new Error(result.error.message);
         }
-        throw error
+
+        return result.data as T;
+    } catch (error) {
+        if (error instanceof Error) throw error;
+        throw error;
     }
 };
