@@ -16,7 +16,7 @@ export default function Button({
   return (
     <button
       className={cn(
-        `flex items-center justify-center min-h-[40px] w-full text-white rounded-lg transition-all duration-100`,
+        `flex items-center justify-center p-2 w-full text-white rounded-lg transition-all duration-100`,
         className,
         rest.disabled ? "opacity-50 cursor-normal bg-neutral-300" : "cursor-pointer bg-neutral-700",
         processing || rest.disabled ? "" : "active:scale-98 active:bg-neutral-800",

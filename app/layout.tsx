@@ -77,7 +77,6 @@ export default function RootLayout({
         <div className='flex flex-col min-w-screen h-screen items-center'>
           <Providers>
             <MobileWrapper>
-              <Header />
               {children}
             </MobileWrapper>
           </Providers>

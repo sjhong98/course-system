@@ -3,12 +3,14 @@ import React from "react";
 
 type PaddingHorizontalOverrideContainerProps = React.HTMLAttributes<HTMLDivElement> & {
   children?: React.ReactNode;
+  paddingHorizontal?: boolean;
 };
 
 export default function PaddingHorizontalOverrideContainer({
   children,
   style,
   className,
+  paddingHorizontal,
   ...rest
 }: PaddingHorizontalOverrideContainerProps) {
   
@@ -22,7 +24,7 @@ export default function PaddingHorizontalOverrideContainer({
   return (
     <div
       className={`${className ?? ""}`}
-      style={{ ...marginStyle, ...style }}
+      style={{ ...marginStyle, ...style, ...(paddingHorizontal ? { paddingLeft: `${PADDING}px`, paddingRight: `${PADDING}px` } : {}) }}
       {...rest}
     >
       {children}

@@ -1,5 +1,6 @@
 import { PADDING } from "@/lib/constants/constants";
 import ButtonComponent, { ButtonProps } from "./Button";
+import { cn } from "@/lib/utils/cn";
 
 export namespace BottomButton {
     export type BottomButtonContainerProps = ButtonProps & {
@@ -7,6 +8,7 @@ export namespace BottomButton {
     }
 
     export type BottomButtonProps = ButtonProps & {
+        className?: string;
         children?: React.ReactNode;
     }
 
@@ -18,9 +20,9 @@ export namespace BottomButton {
         )
     }
 
-    export function Button({ children, ...rest }: BottomButtonProps) {
+    export function Button({ children, className, ...rest }: BottomButtonProps) {
         return (
-            <ButtonComponent {...rest}>{children}</ButtonComponent>
+            <ButtonComponent className={cn(className, 'min-h-[40px]')} {...rest}>{children}</ButtonComponent>
         )
     }
 }
