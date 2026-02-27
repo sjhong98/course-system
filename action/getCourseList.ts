@@ -5,7 +5,7 @@ import { cookies } from "next/headers";
 
 const GET_COURSES_PATH = "/api/courses";
 
-export async function getCourses(page: number, sort?: string) {
+export async function getCourseList(page: number, sort?: string) {
     try {
         const cookieStore = await cookies();
         const accessToken = cookieStore.get("accessToken")?.value;

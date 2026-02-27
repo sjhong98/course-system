@@ -67,7 +67,7 @@ export default function CourseCreateForm() {
                 <LabelInput label="가격" name="price" data-type="number" value={courseCreateForm.price.toLocaleString()} onChange={handleChange} error={error} />
             </Column>
             <BottomButton.Container>
-                <BottomButton.Button loading={processing}>강의 개설</BottomButton.Button>
+                <BottomButton.Button processing={processing}>강의 개설</BottomButton.Button>
             </BottomButton.Container>
         </form>
     )

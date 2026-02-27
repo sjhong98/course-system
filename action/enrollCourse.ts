@@ -1,4 +1,4 @@
-import { ApiResponse } from "@/lib/utils/typeGenerator";
+'use server'
 
 import { api, errorHandler } from "@/lib/api/api";
 import { cookies } from "next/headers";

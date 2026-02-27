@@ -2,18 +2,22 @@
 
 :root {
   --background: #ffffff;
+  --background-tertiary: #eeeeee;
   --background-secondary: #444444;
   --foreground: #111111;
   --scrollbar-thumb: #444444;
   --scrollbar-track: transparent;
+  --scrollbar-width: 15px;
 }
 
 .dark {
   --background: #111111;
+  --background-tertiary: #222222;
   --background-secondary: #bbbbbb;
   --foreground: #ffffff;
   --scrollbar-thumb: #555555;
   --scrollbar-track: transparent;
+  --scrollbar-width: 15px;
 }
 
 @theme inline {
@@ -46,8 +50,8 @@ p, label {
 }
 
 .scrollbar-thin::-webkit-scrollbar {
-  width: 2px;
-  height: 2px;
+  width: var(--scrollbar-width);
+  height: var(--scrollbar-width);
 }
 
 .scrollbar-thin::-webkit-scrollbar-track {

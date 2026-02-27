@@ -52,7 +52,7 @@ export default function SignInForm() {
                 <LabelInput label="비밀번호" name="password" type="password" value={signInForm.password} onChange={handleChange} placeholder="비밀번호" />
             </Column>
             <BottomButton.Container>
-                <BottomButton.Button loading={processing}>로그인</BottomButton.Button>
+                <BottomButton.Button processing={processing}>로그인</BottomButton.Button>
             </BottomButton.Container>
         </form>
     )

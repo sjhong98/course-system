@@ -8,15 +8,37 @@ import Button from "@/component/common/ui/Button";
 import CheckBox from "@/component/common/ui/CheckBox";
 import { SelectableList } from "@/component/common/ui/SelectableList";
 import Skeleton from "@/component/common/ui/Skeleton";
+import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT, PADDING } from "@/lib/constants/constants";
 import { courseListQueryOptions } from "@/lib/query/courseQuery";
 import { cn } from "@/lib/utils/cn";
-import { ApiResponse } from "@/lib/utils/typeGenerator";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { FilterIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Fragment, useEffect, useMemo, useState } from "react";
+import { Fragment, ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
 export type CourseListSort = 'recent' | 'popular' | 'rate';
+const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`
+
+type CourseHeaderButtonProps = {
+    children: ReactNode;
+    onClick: () => void;
+    active?: boolean;
+};
+
+function CourseHeaderButton({ children, onClick, active }: CourseHeaderButtonProps) {
+    return (
+        <Button
+            className={cn(
+                'p-1 px-1.5 text-sm whitespace-nowrap ',
+                active ? '!bg-[var(--foreground)] !text-[var(--background-tertiary)]' : '!bg-[var(--background-tertiary)] !text-[var(--foreground)]'
+            )}
+            onClick={onClick}
+        >
+            {children}
+        </Button>
+    );
+}
 
 export default function CourseList() {
     const router = useRouter()
@@ -24,6 +46,8 @@ export default function CourseList() {
 
     const [sort, setSort] = useState<CourseListSort>("recent");
     const [enrollCourseList, setEnrollCourseList] = useState<number[]>([]);
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const [isSelectable, setIsSelectable] = useState(false);
     const [processing, setProcessing] = useState(false);
 
     const {
@@ -36,13 +60,14 @@ export default function CourseList() {
 
     // 결과값 파싱하여 중복 제거
     const courseList = useMemo(() => {
-        const list = courseListData?.pages?.flatMap((page) => page.content) ?? [];
+        if (!courseListData) return [];
+        const list = courseListData.pages.flatMap((page) => page?.content) ?? [];
 
         const uniqueById = new Map();
 
         for (const item of list) {
             if (!item) continue;
-            if (!uniqueById.has(item.id)) {
+            if ("id" in item && !uniqueById.has(item.id)) {
                 uniqueById.set(item.id, item);
             }
         }
@@ -78,8 +103,6 @@ export default function CourseList() {
             setProcessing(true);
             const result = await enrollCourseBatch(enrollCourseList);
             setEnrollCourseList([]);
-            // console.log(result.)
-            // console.log(result.);
 
 
         } catch (error) {
@@ -89,27 +112,46 @@ export default function CourseList() {
         }
     }
 
+    const handleClickCourseItem = (id: number) => {
+        if (isSelectable) {
+            handleEnrollCourseChange(id);
+        } else {
+            router.push(`/course/${id}`);
+        }
+    }
+
     if (!Array.isArray(courseList)) return null
 
     return (
-        <Column gap={20} className='h-full'>
-            <Column className='absolute top-0 right-0 '>
-                <Button className='px-3' onClick={() => router.push('/course/create')}>강의 개설</Button>
-            </Column>
-            <Row>
-                {sortList.map((item) => (
-                    <CheckBox key={item.value} label={item.label} className='flex-1' checked={sort === item.value} onChange={() => {
-                        setSort(item.value as CourseListSort)
-                    }} />
-                ))}
+        <Column gap={20} style={{ height: COURSE_LIST_HEIGHT, maxHeight: COURSE_LIST_HEIGHT }}>
+            <Row gap={4} className='absolute top-2 right-0'>
+                <CourseHeaderButton onClick={() => setIsFilterOpen(!isFilterOpen)} active={isFilterOpen}>
+                    <FilterIcon className='w-4 h-4' />
+                </CourseHeaderButton>
+                <CourseHeaderButton onClick={() => setIsSelectable(!isSelectable)} active={isSelectable}>수강 신청</CourseHeaderButton>
+                <CourseHeaderButton onClick={() => router.push('/course/create')} active>강의 개설</CourseHeaderButton>
             </Row>
-            <SelectableList.Container className='h-[calc(100vh-220px)] overflow-y-scroll pb-[100px]'>
+            {isFilterOpen && (
+                <Row className='absolute right-0 w-full py-2 bg-[var(--background)] z-[100] border-b border-[var(--background-tertiary)]' style={{ top: `${PAGE_TITLE_HEIGHT}px` }}>
+                    {sortList.map((item) => (
+                        <CheckBox key={item.value} label={item.label} className='flex-1' checked={sort === item.value} onChange={() => {
+                            setSort(item.value as CourseListSort)
+                        }} />
+                    ))}
+                </Row>
+            )}
+            <SelectableList.Container
+                className={cn(
+                    'overflow-y-scroll pb-[100px] flex-shrink-0 h-full',
+                )}
+                style={{ marginRight: 'calc(var(--scrollbar-width) * -1)' }}
+            >
                 {courseList.map((item, index) => {
                     if (item === undefined) return null;
                     return (
                         <Fragment key={item.id}>
                             {index === courseList.length - 4 && <div ref={ref} key={-1} className='w-full h-5 bg-amber-300' />}
-                            <SelectableList.Item selected={enrollCourseList.includes(item.id)} onSelect={() => handleEnrollCourseChange(item.id)}>
+                            <SelectableList.Item selected={enrollCourseList.includes(item.id)} selectable={isSelectable} onSelect={() => handleClickCourseItem(item.id)}>
                                 <Column gap={10} className={cn("w-full h-full border border-neutral-300 rounded-lg p-2", item.isFull ? "opacity-30" : "")}>
                                     <Row className='w-full justify-between'>
                                         <Column>
@@ -140,9 +182,11 @@ export default function CourseList() {
                     </Row>
                 )}
             </SelectableList.Container>
-            <BottomButton.Container>
-                <BottomButton.Button onClick={handleEnrollCourse} processing={processing}>수강 신청</BottomButton.Button>
-            </BottomButton.Container>
+            {isSelectable && (
+                <BottomButton.Container>
+                    <BottomButton.Button onClick={handleEnrollCourse} processing={processing}>수강 신청</BottomButton.Button>
+                </BottomButton.Container>
+            )}
         </Column>
     )
 }

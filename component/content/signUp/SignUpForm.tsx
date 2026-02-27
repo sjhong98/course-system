@@ -50,11 +50,11 @@ export default function SignUpForm() {
                 setError(result);
                 return;
             }
-            const result2 = await signUp(signUpForm);
+            await signUp(signUpForm);
             await signIn({email: signUpForm.email, password: signUpForm.password});
     
         } catch (error) {
-            toast.error(error instanceof Error ? error.message : "회원가입 처리 중 오류가 발생했습니다.", { toastId: "signUpError" });
+            toast.error(error instanceof Error ? error.message : "회원가입 처리 중 오류가 발생했습니다.");
         } finally {
             setProcessing(false);
             router.push('/course/list')

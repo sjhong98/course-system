@@ -1,11 +1,11 @@
-import { getCourses } from "@/action/getCourses"
+import { getCourseList } from "@/action/getCourseList"
 import { infiniteQueryOptions, keepPreviousData } from "@tanstack/react-query"
 
 export const courseListQueryOptions = (sort: string) =>
     infiniteQueryOptions({
         queryKey: ["courses", sort],
         queryFn: async ({ pageParam }) => {
-            return await getCourses(pageParam, sort);
+            return await getCourseList(pageParam, sort);
         },
         staleTime: 5 * 60 * 1000,
         gcTime: 5 * 60 * 1000,
