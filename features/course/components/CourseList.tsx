@@ -1,56 +1,36 @@
 'use client'
 
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { FilterIcon } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { Fragment, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
+import { useQueryClient, useSuspenseInfiniteQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import { useInView } from "react-intersection-observer";
 import { toast } from "react-toastify";
 
 import { enrollCourseBatch } from "@/action/enrollCourseBatch";
 import { courseListQueryOptions } from "@/features/course/query/courseQuery";
-import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT } from "@/shared/libs/constants/constants";
-import { cn } from "@/shared/libs/utils/cn";
 import Column from "@/shared/components/flexBox/Column";
 import Row from "@/shared/components/flexBox/Row";
 import { BottomButton } from "@/shared/components/ui/BottomButton";
-import Button from "@/shared/components/ui/Button";
-import CheckBox from "@/shared/components/ui/CheckBox";
 import { SelectableList } from "@/shared/components/ui/SelectableList";
-import Skeleton from "@/shared/components/ui/Skeleton";
+import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT } from "@/shared/libs/constants/constants";
+import { cn } from "@/shared/libs/utils/cn";
+import CourseListSkeleton from "./CourseListSkeleton";
+import { useQueryParams } from "@/shared/hooks/useQueryParams";
 
 export type CourseListSort = 'recent' | 'popular' | 'rate';
 const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`
 
-type CourseHeaderButtonProps = {
-    children: ReactNode;
-    onClick: () => void;
-    active?: boolean;
-};
-
-function CourseHeaderButton({ children, onClick, active }: CourseHeaderButtonProps) {
-    return (
-        <Button
-            className={cn(
-                'p-1 px-1.5 text-sm whitespace-nowrap ',
-                active ? '!bg-[var(--foreground)] !text-[var(--background-tertiary)]' : '!bg-[var(--background-tertiary)] !text-[var(--foreground)]'
-            )}
-            onClick={onClick}
-        >
-            {children}
-        </Button>
-    );
-}
-
 export default function CourseList() {
     const router = useRouter()
+    const { setParam } = useQueryParams()
+    const searchParams = useSearchParams()
+    const sort = searchParams.get("sort") as CourseListSort
+    const isSelectable = searchParams.get("select") === "true"
+
     const { ref: upperTriggerRef, inView: upperInView } = useInView()
     const { ref: lowerTriggerRef, inView: lowerInView } = useInView()
 
-    const [sort, setSort] = useState<CourseListSort>("recent");
     const [enrollCourseList, setEnrollCourseList] = useState<number[]>([]);
-    const [isFilterOpen, setIsFilterOpen] = useState(false);
-    const [isSelectable, setIsSelectable] = useState(false);
     const [processing, setProcessing] = useState(false);
 
     const {
@@ -60,7 +40,8 @@ export default function CourseList() {
         isFetching: isFetchingCourseList,
         isFetchingNextPage: isFetchingNextPageCourseList,
         refetch: refetchCourseList,
-    } = useInfiniteQuery(courseListQueryOptions(sort))
+    } = useSuspenseInfiniteQuery(courseListQueryOptions(sort))
+    const queryClient = useQueryClient()
 
     // 결과값 중복 발생 -> 결과값 파싱하여 중복 제거
     const courseList = useMemo(() => {
@@ -85,14 +66,6 @@ export default function CourseList() {
         }
     }, [upperInView, lowerInView])
 
-    const sortList = useMemo(() => (
-        [
-            { label: "최근 등록순", value: "recent" },
-            { label: "신청자 많은순", value: "popular" },
-            { label: "신청률 높은순", value: "rate" },
-        ]
-    ), [])
-
     const handleEnrollCourseChange = (id: number) => {
         setEnrollCourseList((prev) => {
             if (prev.includes(id)) {
@@ -115,8 +88,22 @@ export default function CourseList() {
             }
             if (result.success && result.success.length > 0) {
                 toast.success(`${result.success.length}개의 강의를 수강 신청했습니다.`);
-                refetchCourseList();
-                setIsSelectable(false);
+                setParam("select", null)
+
+                queryClient.setQueryData(courseListQueryOptions(sort).queryKey, (old: any) => {
+                    return {
+                        ...old,
+                        pages: old.pages.map((page: any) => {
+                            return { ...page, content: page.content.map((item: any) => {
+                                const successItem = result.success.find((success: any) => success.courseId === item.id)
+                                if (!successItem) return item;
+                                const currentStudents = item.currentStudents + 1;
+                                const isFull = currentStudents >= item.maxStudents;
+                                return { ...item, currentStudents, isFull  }
+                            }) }
+                        })
+                    }
+                })
             }
 
         } catch (error) {
@@ -138,22 +125,7 @@ export default function CourseList() {
 
     return (
         <Column gap={20} style={{ height: COURSE_LIST_HEIGHT, maxHeight: COURSE_LIST_HEIGHT }}>
-            <Row gap={4} className='absolute top-2 right-0'>
-                <CourseHeaderButton onClick={() => setIsFilterOpen(!isFilterOpen)} active={isFilterOpen}>
-                    <FilterIcon className='w-4 h-4' />
-                </CourseHeaderButton>
-                <CourseHeaderButton onClick={() => setIsSelectable(!isSelectable)} active={isSelectable}>수강 신청</CourseHeaderButton>
-                <CourseHeaderButton onClick={() => router.push('/course/create')} active>강의 개설</CourseHeaderButton>
-            </Row>
-            {isFilterOpen && (
-                <Row className='absolute right-0 w-full py-2 bg-[var(--background)] z-[100] border-b border-[var(--background-tertiary)]' style={{ top: `${PAGE_TITLE_HEIGHT}px` }}>
-                    {sortList.map((item) => (
-                        <CheckBox key={item.value} label={item.label} className='flex-1' checked={sort === item.value} onChange={() => {
-                            setSort(item.value as CourseListSort)
-                        }} />
-                    ))}
-                </Row>
-            )}
+            
             <SelectableList.Container
                 className={cn(
                     'overflow-y-scroll pb-[100px] flex-shrink-0 h-full relative',
@@ -190,12 +162,8 @@ export default function CourseList() {
                     )
                 })}
                 <div key={-1} ref={lowerTriggerRef} className='w-full h-5' />
-                {(isFetchingNextPageCourseList || isFetchingCourseList) && (
-                    <Column gap={10}>
-                        <Skeleton height={80} />
-                        <Skeleton height={80} />
-                        <Skeleton height={80} />
-                    </Column>
+                {(isFetchingNextPageCourseList) && (
+                    <CourseListSkeleton />
                 )}
                 {!hasNextPageCourseList && !isFetchingCourseList && (
                     <Row className='w-full justify-center items-center h-[80px]'>

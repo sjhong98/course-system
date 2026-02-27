@@ -18,5 +18,5 @@ export const courseListQueryOptions = (sort: string) =>
         placeholderData: {
             pages: [],
             pageParams: [0],
-          },
+        },
     })
