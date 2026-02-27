@@ -8,14 +8,15 @@ import Button from "@/component/common/ui/Button";
 import CheckBox from "@/component/common/ui/CheckBox";
 import { SelectableList } from "@/component/common/ui/SelectableList";
 import Skeleton from "@/component/common/ui/Skeleton";
-import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT, PADDING } from "@/lib/constants/constants";
+import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT } from "@/lib/constants/constants";
 import { courseListQueryOptions } from "@/lib/query/courseQuery";
 import { cn } from "@/lib/utils/cn";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { FilterIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { Fragment, ReactNode, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useInView } from "react-intersection-observer";
+import { toast } from "react-toastify";
 
 export type CourseListSort = 'recent' | 'popular' | 'rate';
 const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`
@@ -42,7 +43,8 @@ function CourseHeaderButton({ children, onClick, active }: CourseHeaderButtonPro
 
 export default function CourseList() {
     const router = useRouter()
-    const { ref, inView } = useInView()
+    const { ref: upperTriggerRef, inView: upperInView } = useInView()
+    const { ref: lowerTriggerRef, inView: lowerInView } = useInView()
 
     const [sort, setSort] = useState<CourseListSort>("recent");
     const [enrollCourseList, setEnrollCourseList] = useState<number[]>([]);
@@ -52,13 +54,14 @@ export default function CourseList() {
 
     const {
         data: courseListData,
-        fetchNextPage,
-        hasNextPage,
-        isFetching,
-        isFetchingNextPage,
+        fetchNextPage: fetchNextPageCourseList,
+        hasNextPage: hasNextPageCourseList,
+        isFetching: isFetchingCourseList,
+        isFetchingNextPage: isFetchingNextPageCourseList,
+        refetch: refetchCourseList,
     } = useInfiniteQuery(courseListQueryOptions(sort))
 
-    // 결과값 파싱하여 중복 제거
+    // 결과값 중복 발생 -> 결과값 파싱하여 중복 제거
     const courseList = useMemo(() => {
         if (!courseListData) return [];
         const list = courseListData.pages.flatMap((page) => page?.content) ?? [];
@@ -67,7 +70,7 @@ export default function CourseList() {
 
         for (const item of list) {
             if (!item) continue;
-            if ("id" in item && !uniqueById.has(item.id)) {
+            if ("id" in item) {
                 uniqueById.set(item.id, item);
             }
         }
@@ -76,10 +79,10 @@ export default function CourseList() {
     }, [courseListData]);
 
     useEffect(() => {
-        if (inView && hasNextPage) {
-            fetchNextPage()
+        if ((upperInView || lowerInView) && hasNextPageCourseList) {
+            fetchNextPageCourseList()
         }
-    }, [inView])
+    }, [upperInView, lowerInView])
 
     const sortList = useMemo(() => (
         [
@@ -104,6 +107,16 @@ export default function CourseList() {
             const result = await enrollCourseBatch(enrollCourseList);
             setEnrollCourseList([]);
 
+            if (result.failed && result.failed.length > 0) {
+                result.failed.forEach((item) => {
+                    toast.error(item.reason ?? `강의 수강 신청에 실패했습니다: ${item.courseId}`);
+                });
+            }
+            if (result.success && result.success.length > 0) {
+                toast.success(`${result.success.length}개의 강의를 수강 신청했습니다.`);
+                refetchCourseList();
+                setIsSelectable(false);
+            }
 
         } catch (error) {
             console.error(error);
@@ -112,13 +125,13 @@ export default function CourseList() {
         }
     }
 
-    const handleClickCourseItem = (id: number) => {
+    const handleClickCourseItem = useCallback((id: number) => {
         if (isSelectable) {
             handleEnrollCourseChange(id);
         } else {
             router.push(`/course/${id}`);
         }
-    }
+    }, [isSelectable])
 
     if (!Array.isArray(courseList)) return null
 
@@ -142,7 +155,7 @@ export default function CourseList() {
             )}
             <SelectableList.Container
                 className={cn(
-                    'overflow-y-scroll pb-[100px] flex-shrink-0 h-full',
+                    'overflow-y-scroll pb-[100px] flex-shrink-0 h-full relative',
                 )}
                 style={{ marginRight: 'calc(var(--scrollbar-width) * -1)' }}
             >
@@ -150,9 +163,15 @@ export default function CourseList() {
                     if (item === undefined) return null;
                     return (
                         <Fragment key={item.id}>
-                            {index === courseList.length - 4 && <div ref={ref} key={-1} className='w-full h-5 bg-amber-300' />}
-                            <SelectableList.Item selected={enrollCourseList.includes(item.id)} selectable={isSelectable} onSelect={() => handleClickCourseItem(item.id)}>
-                                <Column gap={10} className={cn("w-full h-full border border-neutral-300 rounded-lg p-2", item.isFull ? "opacity-30" : "")}>
+                            {index === courseList.length - 4 && <div key={-1} ref={upperTriggerRef} className='w-full h-1' />}
+                            <SelectableList.Item
+                                key={isSelectable ? 'selectable' : 'unselectable'}
+                                selected={enrollCourseList.includes(item.id)}
+                                selectable={isSelectable}
+                                disabled={isSelectable && item.isFull}
+                                onSelect={() => handleClickCourseItem(item.id)}
+                            >
+                                <Column gap={10} className={cn("w-full h-full border border-neutral-300 rounded-lg p-2 select-none", item.isFull ? "opacity-30" : "")}>
                                     <Row className='w-full justify-between'>
                                         <Column>
                                             <p className='line-clamp-1'>{item.title}</p>
@@ -169,14 +188,15 @@ export default function CourseList() {
                         </Fragment>
                     )
                 })}
-                {(isFetchingNextPage || isFetching) && (
+                <div key={-1} ref={lowerTriggerRef} className='w-full h-5' />
+                {(isFetchingNextPageCourseList || isFetchingCourseList) && (
                     <Column gap={10}>
                         <Skeleton height={80} />
                         <Skeleton height={80} />
                         <Skeleton height={80} />
                     </Column>
                 )}
-                {!hasNextPage && !isFetching && (
+                {!hasNextPageCourseList && !isFetchingCourseList && (
                     <Row className='w-full justify-center items-center h-[80px]'>
                         <p className='text-sm'>모든 강의를 불러왔습니다.</p>
                     </Row>

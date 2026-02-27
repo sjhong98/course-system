@@ -17,9 +17,9 @@ export namespace SelectableList {
         onSelect?: (e?: any) => void;
     }
 
-    export function Container({ children, gap = 10, ...rest }: SelectableListContainerProps) {
+    export function Container({ children, ...rest }: SelectableListContainerProps) {
         return (
-            <Column gap={gap} className={cn("scrollbar-thin flex-shrink-0", rest.className)} {...rest}>
+            <Column className={cn("scrollbar-thin flex-shrink-0", rest.className)} {...rest}>
                 {children}
             </Column>
         )
@@ -32,7 +32,7 @@ export namespace SelectableList {
         }, [])
 
         return (
-            <Row gap={20} className='cursor-pointer transition-all duration-100' onClick={handleSelect}>
+            <Row gap={20} className={cn('transition-all duration-100 mb-[10px]', selectable && rest.disabled ? 'cursor-normal' : 'cursor-pointer')} onClick={handleSelect}>
                 {selectable && <CheckBox checked={selected} onChange={handleSelect} {...rest} />}
                 {children}
             </Row>

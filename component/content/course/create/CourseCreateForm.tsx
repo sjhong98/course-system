@@ -11,11 +11,13 @@ import type { InvalidResult } from "@/lib/validation/types";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { useQueryClient } from "@tanstack/react-query";
 
 type CourseCreateForm = ApiRequest<"/api/courses", "post">;
 
 export default function CourseCreateForm() {
     const router = useRouter();
+    const queryClient = useQueryClient();
 
     const [courseCreateForm, setCourseCreateForm] = useState<CourseCreateForm>({
         title: "",
@@ -47,6 +49,7 @@ export default function CourseCreateForm() {
             }
             setError(null);
             await createCourse(result.data);
+            await queryClient.invalidateQueries({ queryKey: ["courses"] });
             router.push('/course/list');
             toast.success("강의 등록에 성공했습니다.");
         } catch (err) {
