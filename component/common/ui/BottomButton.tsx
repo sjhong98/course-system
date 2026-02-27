@@ -12,7 +12,7 @@ export namespace BottomButton {
 
     export function Container({ children }: BottomButtonContainerProps) {
         return (
-            <div className='absolute bottom-0 left-0 w-full' style={{ padding: `${PADDING}px`, paddingBottom: `${PADDING + 20}px` }}>
+            <div className='absolute bottom-0 left-0 w-full' style={{ paddingBottom: `${PADDING + 20}px` }}>
                 {children}
             </div>
         )

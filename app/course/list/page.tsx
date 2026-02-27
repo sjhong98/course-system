@@ -8,9 +8,11 @@ import { courseListQueryOptions } from "@/lib/query/courseQuery"
 import { QueryClient } from "@tanstack/react-query"
 import { Suspense } from "react"
 
+const DEFAULT_SORT = "recent"
+
 export default async function CourseListPage() {
     const queryClient = new QueryClient()
-    await queryClient.prefetchInfiniteQuery(courseListQueryOptions)
+    await queryClient.prefetchInfiniteQuery(courseListQueryOptions(DEFAULT_SORT))
     
     return (
         <Column gap={20} className='h-full relative'>

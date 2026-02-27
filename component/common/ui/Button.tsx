@@ -4,13 +4,13 @@ import LoadingSpinner from "./LoadingSpinner";
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children?: React.ReactNode;
-  loading?: boolean;
+  processing?: boolean;
 };
 
 export default function Button({
   children,
   className,
-  loading,
+  processing,
   ...rest
 }: ButtonProps) {
   return (
@@ -19,12 +19,12 @@ export default function Button({
         `flex items-center justify-center min-h-[40px] w-full text-white rounded-lg transition-all duration-100`,
         className,
         rest.disabled ? "opacity-50 cursor-normal bg-neutral-300" : "cursor-pointer bg-neutral-700",
-        loading || rest.disabled ? "" : "active:scale-98 active:bg-neutral-800",
+        processing || rest.disabled ? "" : "active:scale-98 active:bg-neutral-800",
       )}
-      disabled={loading || rest.disabled}
+      disabled={processing || rest.disabled}
       {...rest}
     >
-      {loading ? <LoadingSpinner /> : children}
+      {processing ? <LoadingSpinner /> : children}
     </button>
   );
 }

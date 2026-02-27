@@ -1,15 +1,21 @@
 import { getCourses } from "@/action/getCourses"
-import { infiniteQueryOptions } from "@tanstack/react-query"
+import { infiniteQueryOptions, keepPreviousData } from "@tanstack/react-query"
 
-
-export const courseListQueryOptions = infiniteQueryOptions({
-    queryKey: ["courses"],
-    queryFn: ({ pageParam }) => {
-        return getCourses(pageParam)
-    },
-    initialPageParam: 0,
-    getNextPageParam: (lastPage) => {
-        if (lastPage.last) return undefined
-        return (lastPage.pageable?.pageNumber ?? 0) + 1
-      }
-})
+export const courseListQueryOptions = (sort: string) =>
+    infiniteQueryOptions({
+        queryKey: ["courses", sort],
+        queryFn: async ({ pageParam }) => {
+            return await getCourses(pageParam, sort);
+        },
+        staleTime: 5 * 60 * 1000,
+        gcTime: 5 * 60 * 1000,
+        initialPageParam: 0,
+        getNextPageParam: (lastPage) => {
+            if (lastPage.last) return undefined
+            return (lastPage.pageable?.pageNumber ?? 0) + 1
+        },
+        placeholderData: {
+            pages: [],
+            pageParams: [0],
+          },
+    })
