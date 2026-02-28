@@ -1,144 +1,45 @@
 'use client'
 
-import { useQueryClient, useSuspenseInfiniteQuery } from '@tanstack/react-query'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { Fragment, useCallback, useEffect, useMemo, useState } from 'react'
-import { useInView } from 'react-intersection-observer'
-import { toast } from 'react-toastify'
+import { Fragment } from 'react'
 
-import { enrollCourseBatch } from '@/action/enrollCourseBatch'
-import { courseListQueryOptions } from '@/features/course/query/courseQuery'
 import Column from '@/shared/components/flexBox/Column'
 import Row from '@/shared/components/flexBox/Row'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import { SelectableList } from '@/shared/components/ui/SelectableList'
+import Error from '@/shared/components/ui/Error'
 import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT } from '@/shared/libs/constants/constants'
 import { cn } from '@/shared/libs/utils/cn'
-import CourseListSkeleton from './CourseListSkeleton'
-import { useQueryParams } from '@/shared/hooks/useQueryParams'
-import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
-import { errorHandler } from '@/shared/libs/utils/errorHandler'
-import Error from '@/shared/components/ui/Error'
-import { paths } from '@/shared/libs/api/scheme'
 
-export type CourseListSort = 'recent' | 'popular' | 'rate'
+import { useCourseList, type CourseListSort } from '../hooks/useCourseList'
+import CourseListSkeleton from './CourseListSkeleton'
+
+export type { CourseListSort }
+
 const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`
 
 export default function CourseList() {
-  const router = useRouter()
-  const { setParam } = useQueryParams()
-  const searchParams = useSearchParams()
-  const sort = searchParams.get('sort') as CourseListSort
-  const isSelectable = searchParams.get('select') === 'true'
-
-  const { ref: upperTriggerRef, inView: upperInView } = useInView()
-  const { ref: lowerTriggerRef, inView: lowerInView } = useInView()
-
-  const [enrollCourseList, setEnrollCourseList] = useState<number[]>([])
-  const [processing, setProcessing] = useState(false)
-
   const {
-    data: courseListData,
-    fetchNextPage: fetchNextPageCourseList,
-    hasNextPage: hasNextPageCourseList,
-    isFetching: isFetchingCourseList,
-    isFetchingNextPage: isFetchingNextPageCourseList,
-    error: errorCourseList,
-    failureCount,
-  } = useSuspenseInfiniteQuery(courseListQueryOptions(sort))
-
-  const isRetrying = isFetchingCourseList && failureCount > 0
-  const queryClient = useQueryClient()
-
-  // 결과값 중복 발생 -> 결과값 파싱하여 중복 제거
-  const courseList = useMemo(() => {
-    if (!courseListData) return []
-    const list = courseListData.pages.flatMap((page) => page?.content) ?? []
-
-    const uniqueById = new Map()
-
-    for (const item of list) {
-      if (!item) continue
-      if ('id' in item) {
-        uniqueById.set(item.id, item)
-      }
-    }
-
-    return Array.from(uniqueById.values())
-  }, [courseListData])
-
-  useEffect(() => {
-    if ((upperInView || lowerInView) && hasNextPageCourseList) {
-      fetchNextPageCourseList()
-    }
-  }, [upperInView, lowerInView])
-
-  const handleEnrollCourseChange = (id: number) => {
-    setEnrollCourseList((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((item) => item !== id)
-      }
-      return [...prev, id]
-    })
-  }
-
-  const handleEnrollCourse = async () => {
-    const toastId = 'enroll-course'
-    try {
-      setProcessing(true)
-      const result = await apiResponseHandler(async () => await enrollCourseBatch(enrollCourseList), { key: toastId })
-      setEnrollCourseList([])
-
-      if (result.failed && result.failed.length > 0) {
-        result.failed.forEach((item) => {
-          const failedItemTitle = courseList.find((course) => course.id === item.courseId)?.title ?? '알 수 없는 강의'
-          toast.error(item.reason ? `${failedItemTitle}: ${item.reason}` : `강의 수강 신청에 실패했습니다: ${item.courseId}`)
-        })
-      }
-      if (result.success && result.success.length > 0) {
-        toast.success(`${result.success.length}개의 강의를 수강 신청했습니다.`)
-        setParam('select', null)
-
-        queryClient.setQueryData(courseListQueryOptions(sort).queryKey, (old) => {
-          if (!old?.pages) return old
-          return {
-            ...old,
-            pages: old.pages.map((page) => ({
-              ...page,
-              content: page.content.map((item: paths['/api/courses/{courseId}']['get']['responses']['200']['content']['*/*']) => {
-                const successItem = result.success.find((success) => success.courseId === item.id)
-                if (!successItem) return item
-                const currentStudents = item.currentStudents + 1
-                const isFull = currentStudents >= item.maxStudents
-                return { ...item, currentStudents, isFull }
-              }),
-            })),
-          }
-        })
-      }
-    } catch (error) {
-      errorHandler(error, { key: toastId, message: '수강 신청에 실패했습니다.' })
-    } finally {
-      setProcessing(false)
-    }
-  }
-
-  const handleClickCourseItem = useCallback(
-    (id: number) => {
-      if (isSelectable) {
-        handleEnrollCourseChange(id)
-      } else {
-        router.push(`/course/${id}`)
-      }
-    },
-    [isSelectable],
-  )
+    courseList,
+    upperTriggerRef,
+    lowerTriggerRef,
+    isFetchingNextPageCourseList,
+    hasNextPageCourseList,
+    isFetchingCourseList,
+    isRetrying,
+    errorCourseList,
+    enrollCourseList,
+    processing,
+    handleClickCourseItem,
+    handleEnrollCourse,
+    isSelectable,
+  } = useCourseList()
 
   if (isRetrying) {
     return <Error message={errorCourseList?.message} />
   }
 
   if (!Array.isArray(courseList)) return null
+
   return (
     <Column gap={20} style={{ height: COURSE_LIST_HEIGHT, maxHeight: COURSE_LIST_HEIGHT }}>
       <SelectableList.Container

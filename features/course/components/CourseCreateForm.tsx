@@ -1,88 +1,14 @@
 'use client'
 
-import { useQueryClient } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
-
-import { createCourse } from '@/action/createCourse'
-import { validateCourseCreateForm } from '@/features/course/validation/createCourse'
 import Column from '@/shared/components/flexBox/Column'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import LabelInput from '@/shared/components/ui/LabelInput'
-import { errorHandler } from '@/shared/libs/utils/errorHandler'
-import parseNumber from '@/shared/libs/utils/parseNumber'
-import { ApiRequest } from '@/shared/libs/utils/typeGenerator'
-import type { InvalidResult } from '@/shared/validation/types'
-import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import LabelInputWithSuffixText from '@/shared/components/ui/LabelInputWithSuffixText'
 
-type CourseCreateForm = ApiRequest<'/api/courses', 'post'>
+import { useCourseCreateForm } from '../hooks/useCourseCreateForm'
 
 export default function CourseCreateForm() {
-  const router = useRouter()
-  const queryClient = useQueryClient()
-
-  const [courseCreateForm, setCourseCreateForm] = useState<CourseCreateForm>({
-    title: '',
-    description: '',
-    instructorName: '',
-    maxStudents: 1,
-    price: 0,
-  })
-  const [error, setError] = useState<InvalidResult | null>(null)
-  const [processing, setProcessing] = useState(false)
-
-  useEffect(() => {
-    const role = localStorage.getItem('role')
-    if (role !== 'INSTRUCTOR') {
-      window.alert('강사만 강의를 개설할 수 있습니다.')
-      router.push('/course/list')
-    }
-    const name = localStorage.getItem('name')
-    if (name) {
-      setCourseCreateForm({
-        ...courseCreateForm,
-        instructorName: name,
-      })
-    }
-  }, [])
-
-  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setCourseCreateForm((prev) => ({
-      ...prev,
-      [e.target.name]:
-        e.target.getAttribute('data-type') === 'number'
-          ? parseNumber(e as React.ChangeEvent<HTMLInputElement>, Number(prev[e.target.name as keyof CourseCreateForm]))
-          : e.target.value,
-    }))
-  }, [])
-
-  const handleSubmit = useCallback(
-    async (e: React.FormEvent<HTMLFormElement>) => {
-      const toastId = 'create-course'
-      e.preventDefault()
-      try {
-        setProcessing(true)
-        const result = validateCourseCreateForm(courseCreateForm)
-        if (result.ok === false) {
-          setError(result)
-          return
-        } else {
-          setError(null)
-        }
-        await apiResponseHandler(async () => await createCourse(result.data), { key: toastId })
-        await queryClient.invalidateQueries({ queryKey: ['courses'] })
-        router.push('/course/list')
-        toast.success('강의 등록에 성공했습니다.')
-      } catch (error) {
-        errorHandler(error, { key: toastId, message: '강의 등록에 실패했습니다.' })
-      } finally {
-        setProcessing(false)
-      }
-    },
-    [courseCreateForm, queryClient, router],
-  )
+  const { courseCreateForm, error, processing, handleChange, handleSubmit } = useCourseCreateForm()
 
   return (
     <form onSubmit={handleSubmit}>
