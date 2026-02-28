@@ -10,11 +10,11 @@ import { validateCourseCreateForm } from '@/features/course/validation/createCou
 import Column from '@/shared/components/flexBox/Column'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import LabelInput from '@/shared/components/ui/LabelInput'
-import { ApiRequest } from '@/shared/libs/utils/typeGenerator'
+import { errorHandler } from '@/shared/libs/utils/errorHandler'
 import parseNumber from '@/shared/libs/utils/parseNumber'
+import { ApiRequest } from '@/shared/libs/utils/typeGenerator'
 import type { InvalidResult } from '@/shared/validation/types'
-import { ApiError } from '@/shared/libs/api/api'
-import { apiErrorHandler } from '@/shared/libs/utils/apiErrorHandler'
+import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 
 type CourseCreateForm = ApiRequest<'/api/courses', 'post'>
 
@@ -52,12 +52,12 @@ export default function CourseCreateForm() {
         return
       }
       setError(null)
-      await createCourse(result.data)
+      apiResponseHandler(async () => await createCourse(result.data))
       await queryClient.invalidateQueries({ queryKey: ['courses'] })
       router.push('/course/list')
       toast.success('강의 등록에 성공했습니다.')
     } catch (error) {
-      apiErrorHandler(error, '강의 등록에 실패했습니다.')
+      errorHandler(error, '강의 등록에 실패했습니다.')
     } finally {
       setProcessing(false)
     }

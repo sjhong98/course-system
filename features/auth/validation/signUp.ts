@@ -14,7 +14,7 @@ export function validateSignUpForm(form: SignUpForm): ValidationResult<SignUpFor
   const emailError = rules.required('이메일', form.email) ?? rules.email('이메일', form.email)
   if (emailError) errors.email = emailError
 
-  const phoneError = rules.required('휴대폰 번호', form.phone)
+  const phoneError = rules.required('휴대폰 번호', form.phone) ?? rules.phoneFormat('휴대폰 번호', form.phone)
   if (phoneError) errors.phone = phoneError
 
   const passwordError = rules.required('비밀번호', form.password) ?? rules.passwordFormat('비밀번호', form.password)

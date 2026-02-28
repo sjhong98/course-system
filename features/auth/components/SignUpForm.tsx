@@ -1,20 +1,20 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { toast } from 'react-toastify'
-
 import { signIn } from '@/action/signIn'
 import { signUp } from '@/action/signUp'
+import { validateSignUpForm } from '@/features/auth/validation/signUp'
 import Column from '@/shared/components/flexBox/Column'
 import Row from '@/shared/components/flexBox/Row'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import CheckBox from '@/shared/components/ui/CheckBox'
 import LabelInput from '@/shared/components/ui/LabelInput'
-import { validateSignUpForm } from '@/features/auth/validation/signUp'
+import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
+import { errorHandler } from '@/shared/libs/utils/errorHandler'
+import formatPhoneNumber from '@/shared/libs/utils/formatPhoneNumber'
 import { ApiRequest } from '@/shared/libs/utils/typeGenerator'
 import { InvalidResult } from '@/shared/validation/types'
-import { apiErrorHandler } from '@/shared/libs/utils/apiErrorHandler'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 
 export default function SignUpForm() {
   const router = useRouter()
@@ -51,14 +51,16 @@ export default function SignUpForm() {
       if (result.ok === false) {
         setError(result)
         return
+      } else {
+        setError(null)
       }
-      await signUp(signUpForm)
-      await signIn({ email: signUpForm.email, password: signUpForm.password })
+      await apiResponseHandler(async () => await signUp(signUpForm))
+      await apiResponseHandler(async () => await signIn({ email: signUpForm.email, password: signUpForm.password }))
+      router.push('/course/list')
     } catch (error) {
-      apiErrorHandler(error, '회원가입 처리 중 오류가 발생했습니다.')
+      errorHandler(error, '회원가입 처리 중 오류가 발생했습니다.')
     } finally {
       setProcessing(false)
-      router.push('/course/list')
     }
   }
 
@@ -67,7 +69,7 @@ export default function SignUpForm() {
       <Column gap={20} className="h-full">
         <LabelInput label="이름" name="name" value={signUpForm.name} onChange={handleChange} error={error} />
         <LabelInput label="이메일" name="email" value={signUpForm.email} onChange={handleChange} error={error} />
-        <LabelInput label="휴대폰 번호" name="phone" value={signUpForm.phone} onChange={handleChange} error={error} />
+        <LabelInput label="휴대폰 번호" name="phone" value={formatPhoneNumber(signUpForm.phone)} onChange={handleChange} error={error} />
         <LabelInput label="비밀번호" type="password" name="password" value={signUpForm.password} onChange={handleChange} error={error} />
         <Row className="w-full">
           <CheckBox label="수강생" className="flex-1" name="STUDENT" checked={signUpForm.role === 'STUDENT'} onChange={handleRoleChange} />
@@ -81,7 +83,9 @@ export default function SignUpForm() {
         </Row>
       </Column>
       <BottomButton.Container type="submit">
-        <BottomButton.Button processing={processing}>회원가입</BottomButton.Button>
+        <BottomButton.Button processing={processing} type="submit">
+          회원가입
+        </BottomButton.Button>
       </BottomButton.Container>
     </form>
   )

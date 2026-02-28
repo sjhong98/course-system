@@ -2,15 +2,15 @@
 
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { toast } from 'react-toastify'
 
 import { signIn } from '@/action/signIn'
+import { validateSignInForm } from '@/features/auth/validation/signIn'
 import Column from '@/shared/components/flexBox/Column'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import LabelInput from '@/shared/components/ui/LabelInput'
-import { validateSignInForm } from '@/features/auth/validation/signIn'
 import { InvalidResult } from '@/shared/validation/types'
-import { apiErrorHandler } from '@/shared/libs/utils/apiErrorHandler'
+import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
+import { errorHandler } from '@/shared/libs/utils/errorHandler'
 
 export default function SignInForm() {
   const router = useRouter()
@@ -29,27 +29,29 @@ export default function SignInForm() {
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault()
     try {
       setProcessing(true)
-      e.preventDefault()
       const result = validateSignInForm(signInForm)
       if (result.ok === false) {
         setError(result)
         return
+      } else {
+        setError(null)
       }
-      await signIn(signInForm)
+      await apiResponseHandler(() => signIn(signInForm))
+      router.push('/course/list')
     } catch (error) {
-      apiErrorHandler(error, '로그인 처리 중 오류가 발생했습니다.')
+      errorHandler(error)
     } finally {
       setProcessing(false)
-      router.push('/course/list')
     }
   }
 
   return (
     <form onSubmit={handleSubmit}>
       <Column gap={20}>
-        <LabelInput label="이메일" name="email" value={signInForm.email} onChange={handleChange} placeholder="이메일" />
+        <LabelInput label="이메일" name="email" value={signInForm.email} onChange={handleChange} placeholder="이메일" error={error} />
         <LabelInput
           label="비밀번호"
           name="password"
@@ -57,10 +59,13 @@ export default function SignInForm() {
           value={signInForm.password}
           onChange={handleChange}
           placeholder="비밀번호"
+          error={error}
         />
       </Column>
       <BottomButton.Container>
-        <BottomButton.Button processing={processing}>로그인</BottomButton.Button>
+        <BottomButton.Button processing={processing} type="submit">
+          로그인
+        </BottomButton.Button>
       </BottomButton.Container>
     </form>
   )

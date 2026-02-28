@@ -36,6 +36,15 @@ export const rules = {
       return len <= max ? null : `${field}은(는) ${max}자 이하여야 합니다.`
     },
 
+  /** 휴대폰 번호 3-4-4 형식 (숫자 11자리, 예: 010-1234-5678) */
+  phoneFormat: (_field: string, value: unknown): string | null => {
+    if (value === undefined || value === null) return null
+    const digits = String(value).replace(/\D/g, '')
+    if (digits.length !== 11) return '휴대폰 번호 형식을 확인해주세요. (ex. 010-1234-5678)'
+    const validPrefix = /^01[0-9]/.test(digits)
+    return validPrefix ? null : '휴대폰 번호 형식을 확인해주세요. (ex. 010-1234-5678)'
+  },
+
   /** 숫자 최소값 (이상) */
   minNumber:
     (min: number) =>

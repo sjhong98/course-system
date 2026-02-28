@@ -5,49 +5,48 @@ import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { enrollCourse } from '@/action/enrollCourse'
+import { getCourse } from '@/action/getCourse'
 import PaddingHorizontalOverrideContainer from '@/shared/components/container/PaddingHorizontalOverrideContainer'
 import Column from '@/shared/components/flexBox/Column'
 import Row from '@/shared/components/flexBox/Row'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import Error from '@/shared/components/ui/Error'
+import { paths } from '@/shared/libs/api/scheme'
+import { apiResponseHandler, apiSyncResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { cn } from '@/shared/libs/utils/cn'
-import { ApiResponse } from '@/shared/libs/utils/typeGenerator'
-import { ApiError, type ApiErrorPayload } from '@/shared/libs/api/api'
-import { apiErrorHandler } from '@/shared/libs/utils/apiErrorHandler'
 
-type CourseDetailProps = {
-  course: ApiResponse<'/api/courses/{courseId}', 'get'> | null
-  error: ApiErrorPayload | null
-}
-
-export default function CourseDetail({ course, error }: CourseDetailProps) {
+export default function CourseDetail({ result }: { result: Awaited<ReturnType<typeof getCourse>> }) {
   const [processing, setProcessing] = useState(false)
+  const [error, setError] = useState<string>(null)
+  const [course, setCourse] = useState<paths['/api/courses/{courseId}']['get']['responses']['200']['content']['*/*']>(null)
 
   useEffect(() => {
-    if (error) {
-      const apiError = new ApiError(error.message, error.status)
-      apiErrorHandler(apiError, apiError.message ?? '강의 조회 중 오류가 발생했습니다.')
+    try {
+      const courseResult = apiSyncResponseHandler(result)
+      setCourse(courseResult)
+    } catch (error) {
+      setError(error.message)
     }
-  }, [error])
+  }, [])
 
   const handleEnroll = async () => {
     try {
       if (!course) return
       setProcessing(true)
-      const result = await enrollCourse(course.id!)
+      const result = await apiResponseHandler(async () => await enrollCourse(course.id!))
 
       if (result) {
         toast.success('수강 신청이 완료되었습니다.')
       }
     } catch (error) {
-      apiErrorHandler(error, '수강 신청에 실패했습니다.')
+      // apiErrorHandler(error, '수강 신청에 실패했습니다.')
     } finally {
       setProcessing(false)
     }
   }
 
   return error || !course ? (
-    <Error message={error.message} />
+    <Error message={error} />
   ) : (
     <Column gap={12} className="w-full h-full">
       <PaddingHorizontalOverrideContainer paddingHorizontal className="bg-[var(--background-tertiary)] py-6 flex flex-col gap-8">
