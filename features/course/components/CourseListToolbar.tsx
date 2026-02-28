@@ -3,14 +3,15 @@
 import Row from '@/shared/components/flexBox/Row'
 import Button from '@/shared/components/ui/Button'
 import CheckBox from '@/shared/components/ui/CheckBox'
+import useAuth from '@/shared/hooks/useAuth'
 import { useQueryParams } from '@/shared/hooks/useQueryParams'
 import { PAGE_TITLE_HEIGHT } from '@/shared/libs/constants/constants'
 import { cn } from '@/shared/libs/utils/cn'
 import { FilterIcon } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ReactNode, useEffect, useMemo, useState } from 'react'
-
-export type CourseListSort = 'recent' | 'popular' | 'rate'
+import { ReactNode, useMemo, useState } from 'react'
+import { parseCourseListSort } from '../utils/parseCourseListSort'
+import { CourseListSort } from '../hooks/useCourseList'
 
 type CourseHeaderButtonProps = {
   children: ReactNode
@@ -41,13 +42,11 @@ export default function CourseListToolbar() {
   const router = useRouter()
   const { setParam } = useQueryParams()
   const searchParams = useSearchParams()
-  const sort: CourseListSort = ['recent', 'popular', 'rate'].includes(searchParams.get('sort') ?? '')
-    ? (searchParams.get('sort') as CourseListSort)
-    : 'recent'
+  const { isInstructor } = useAuth()
+  const sort = parseCourseListSort(searchParams)
   const isSelectable = searchParams.get('select') === 'true'
 
   const [isFilterOpen, setIsFilterOpen] = useState(false)
-  const [isInstructor, setIsInstructor] = useState(false)
 
   const handleSortChange = (value: CourseListSort) => {
     setParam('sort', value)
@@ -65,10 +64,6 @@ export default function CourseListToolbar() {
     ],
     [],
   )
-
-  useEffect(() => {
-    setIsInstructor(typeof window !== 'undefined' && window.localStorage.getItem('role') === 'INSTRUCTOR')
-  }, [])
 
   return (
     <>

@@ -1,5 +1,5 @@
 const parseNumber = (e: React.ChangeEvent<HTMLInputElement>, originNumber: number) => {
-  const raw = e.target.value.replace(/\D/g, '')
+  const raw = e?.target?.value?.replace(/\D/g, '') ?? ''
   if (raw.length > 12) return originNumber
 
   const parsed = raw === '' ? 0 : Number(raw)

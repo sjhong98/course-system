@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import Row from '../flexBox/Row'
 
 export type CheckBoxProps = React.InputHTMLAttributes<HTMLInputElement> & {
@@ -10,10 +11,18 @@ export type CheckBoxProps = React.InputHTMLAttributes<HTMLInputElement> & {
 const checkboxId = (name: string | undefined) => (name ? `checkbox-${name}` : undefined)
 
 export default function CheckBox({ label, name, className, onChange, 'aria-label': ariaLabel, ...rest }: CheckBoxProps) {
+  const inputRef = useRef<HTMLInputElement>(null)
   const id = checkboxId(name)
   return (
-    <Row gap={8} className={`items-center ${className ?? ''}`} onClick={() => onChange?.({ target: { name, value: rest.checked } })}>
+    <Row
+      gap={8}
+      className={`items-center ${className ?? ''}`}
+      onClick={(e) => {
+        if (e.target === e.currentTarget) inputRef.current?.click()
+      }}
+    >
       <input
+        ref={inputRef}
         id={id}
         name={name}
         type="checkbox"

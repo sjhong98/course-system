@@ -12,6 +12,7 @@ import { useQueryParams } from '@/shared/hooks/useQueryParams'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
 import { paths } from '@/shared/libs/api/scheme'
+import { parseCourseListSort } from '../utils/parseCourseListSort'
 
 export type CourseListSort = 'recent' | 'popular' | 'rate'
 
@@ -22,9 +23,7 @@ export function useCourseList() {
   const queryClient = useQueryClient()
   const { setParam } = useQueryParams()
   const searchParams = useSearchParams()
-  const sort: CourseListSort = ['recent', 'popular', 'rate'].includes(searchParams.get('sort') ?? '')
-    ? (searchParams.get('sort') as CourseListSort)
-    : 'recent'
+  const sort = parseCourseListSort(searchParams)
   const isSelectable = searchParams.get('select') === 'true'
 
   const { ref: upperTriggerRef, inView: upperInView } = useInView()

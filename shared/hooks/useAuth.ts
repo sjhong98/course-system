@@ -1,7 +1,13 @@
+'use client'
+
+// 클라이언트 전용 훅
+
 import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
 export default function useAuth() {
   const router = useRouter()
+  const [isInstructor, setIsInstructor] = useState(false)
 
   const completeSignIn = (role: string, name: string) => {
     localStorage.setItem('role', role)
@@ -25,9 +31,9 @@ export default function useAuth() {
     return { role, name }
   }
 
-  const isInstructor = () => {
-    return localStorage.getItem('role') === 'INSTRUCTOR'
-  }
+  useEffect(() => {
+    setIsInstructor(localStorage.getItem('role') === 'INSTRUCTOR')
+  }, [])
 
   return {
     completeSignIn,

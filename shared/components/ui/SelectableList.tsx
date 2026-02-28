@@ -40,7 +40,7 @@ export namespace SelectableList {
     const handleSelect = useCallback(() => {
       if (rest.disabled) return
       onSelect?.()
-    }, [])
+    }, [rest.disabled, onSelect])
 
     return (
       <Row

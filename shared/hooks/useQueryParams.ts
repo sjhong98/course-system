@@ -1,3 +1,7 @@
+'use client'
+
+// 클라이언트 전용 훅
+
 import { usePathname, useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 

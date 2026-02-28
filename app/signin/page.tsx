@@ -1,6 +1,6 @@
 'use server'
 
-import SignInForm from '@/features/auth/components/signInForm'
+import SignInForm from '@/features/auth/components/SignInForm'
 
 export default async function SignInPage() {
   return <SignInForm />

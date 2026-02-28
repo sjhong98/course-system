@@ -10,10 +10,8 @@ import Error from '@/shared/components/ui/Error'
 import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT } from '@/shared/libs/constants/constants'
 import { cn } from '@/shared/libs/utils/cn'
 
-import { useCourseList, type CourseListSort } from '../hooks/useCourseList'
+import { useCourseList } from '../hooks/useCourseList'
 import CourseListSkeleton from './CourseListSkeleton'
-
-export type { CourseListSort }
 
 const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`
 
