@@ -1,9 +1,17 @@
 import { PAGE_TITLE_HEIGHT } from '@/shared/libs/constants/constants'
+import { ChevronLeft } from 'lucide-react'
+import Row from '../flexBox/Row'
 
-export default function PageTitle({ title }: { title: string }) {
+type PageTitleProps = {
+  title: string
+  onBack?: () => void
+}
+
+export default function PageTitle({ title, onBack }: PageTitleProps) {
   return (
-    <div className="flex items-center justify-start" style={{ height: `${PAGE_TITLE_HEIGHT}px` }}>
+    <Row gap={10} className="items-center justify-start" style={{ height: `${PAGE_TITLE_HEIGHT}px` }}>
+      {onBack && <ChevronLeft className="w-5 h-5 cursor-pointer" onClick={onBack} />}
       <p className="text-lg font-semibold">{title}</p>
-    </div>
+    </Row>
   )
 }
