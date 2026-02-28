@@ -70,10 +70,18 @@ export default function SignUpForm() {
   return (
     <form onSubmit={handleSubmit}>
       <Column gap={20} className="h-full">
-        <LabelInput label="이름" name="name" value={signUpForm.name} onChange={handleChange} error={error} />
-        <LabelInput label="이메일" name="email" value={signUpForm.email} onChange={handleChange} error={error} />
-        <LabelInput label="휴대폰 번호" name="phone" value={signUpForm.phone} onChange={handleChange} error={error} />
-        <LabelInput label="비밀번호" type="password" name="password" value={signUpForm.password} onChange={handleChange} error={error} />
+        <LabelInput label="이름" name="name" value={signUpForm.name} onChange={handleChange} error={error} required />
+        <LabelInput label="이메일" name="email" value={signUpForm.email} onChange={handleChange} error={error} required />
+        <LabelInput label="휴대폰 번호" name="phone" value={signUpForm.phone} onChange={handleChange} error={error} required />
+        <LabelInput
+          label="비밀번호"
+          type="password"
+          name="password"
+          value={signUpForm.password}
+          onChange={handleChange}
+          error={error}
+          required
+        />
         <Row className="w-full">
           <CheckBox label="수강생" className="flex-1" name="STUDENT" checked={signUpForm.role === 'STUDENT'} onChange={handleRoleChange} />
           <CheckBox
