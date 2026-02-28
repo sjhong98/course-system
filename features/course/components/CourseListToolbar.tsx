@@ -67,7 +67,7 @@ export default function CourseListToolbar() {
           <FilterIcon className="w-4 h-4" />
         </CourseHeaderButton>
         <CourseHeaderButton onClick={handleSelectChange} active={isSelectable}>
-          수강 신청
+          수강 신청 선택
         </CourseHeaderButton>
         <CourseHeaderButton onClick={() => router.push('/course/create')} active>
           강의 개설

@@ -1,8 +1,8 @@
-'use server';
+'use server'
 
-import { api, unwrapApiResponse } from '@/shared/libs/api/api';
+import { api, unwrapApiResponse } from '@/shared/libs/api/api'
 
-const GET_COURSE_PATH = '/api/courses/{courseId}';
+const GET_COURSE_PATH = '/api/courses/{courseId}'
 
 export async function getCourse(courseId: number) {
   return unwrapApiResponse(async () => {
@@ -12,6 +12,6 @@ export async function getCourse(courseId: number) {
           courseId,
         },
       },
-    });
-  });
+    })
+  })
 }

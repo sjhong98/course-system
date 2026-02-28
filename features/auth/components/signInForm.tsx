@@ -10,6 +10,7 @@ import { BottomButton } from '@/shared/components/ui/BottomButton'
 import LabelInput from '@/shared/components/ui/LabelInput'
 import { validateSignInForm } from '@/features/auth/validation/signIn'
 import { InvalidResult } from '@/shared/validation/types'
+import { apiErrorHandler } from '@/shared/libs/utils/apiErrorHandler'
 
 export default function SignInForm() {
   const router = useRouter()
@@ -38,7 +39,7 @@ export default function SignInForm() {
       }
       await signIn(signInForm)
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : '로그인 처리 중 오류가 발생했습니다.', { toastId: 'signInError' })
+      apiErrorHandler(error, '로그인 처리 중 오류가 발생했습니다.')
     } finally {
       setProcessing(false)
       router.push('/course/list')

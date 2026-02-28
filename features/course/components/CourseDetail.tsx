@@ -12,6 +12,8 @@ import { BottomButton } from '@/shared/components/ui/BottomButton'
 import Error from '@/shared/components/ui/Error'
 import { cn } from '@/shared/libs/utils/cn'
 import { ApiResponse } from '@/shared/libs/utils/typeGenerator'
+import { ApiError } from '@/shared/libs/api/api'
+import { apiErrorHandler } from '@/shared/libs/utils/apiErrorHandler'
 
 type CourseDetailProps = {
   course: ApiResponse<'/api/courses/{courseId}', 'get'> | null
@@ -31,8 +33,7 @@ export default function CourseDetail({ course, errorMessage }: CourseDetailProps
         toast.success('수강 신청이 완료되었습니다.')
       }
     } catch (error) {
-      const message = (error as Error).message ?? '수강 신청에 실패했습니다.'
-      toast.error(message)
+      apiErrorHandler(error, '수강 신청에 실패했습니다.')
     } finally {
       setProcessing(false)
     }

@@ -13,6 +13,8 @@ import LabelInput from '@/shared/components/ui/LabelInput'
 import { ApiRequest } from '@/shared/libs/utils/typeGenerator'
 import parseNumber from '@/shared/libs/utils/parseNumber'
 import type { InvalidResult } from '@/shared/validation/types'
+import { ApiError } from '@/shared/libs/api/api'
+import { apiErrorHandler } from '@/shared/libs/utils/apiErrorHandler'
 
 type CourseCreateForm = ApiRequest<'/api/courses', 'post'>
 
@@ -54,8 +56,8 @@ export default function CourseCreateForm() {
       await queryClient.invalidateQueries({ queryKey: ['courses'] })
       router.push('/course/list')
       toast.success('강의 등록에 성공했습니다.')
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : '강의 등록에 실패했습니다.')
+    } catch (error) {
+      apiErrorHandler(error, '강의 등록에 실패했습니다.')
     } finally {
       setProcessing(false)
     }

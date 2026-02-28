@@ -16,7 +16,7 @@ import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT } from '@/shared/libs/constants/consta
 import { cn } from '@/shared/libs/utils/cn'
 import CourseListSkeleton from './CourseListSkeleton'
 import { useQueryParams } from '@/shared/hooks/useQueryParams'
-import { errorHandler } from '@/shared/libs/utils/errorHandler'
+import { apiErrorHandler } from '@/shared/libs/utils/apiErrorHandler'
 
 export type CourseListSort = 'recent' | 'popular' | 'rate'
 const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`
@@ -110,7 +110,7 @@ export default function CourseList() {
         })
       }
     } catch (error) {
-      errorHandler(error)
+      apiErrorHandler(error, '수강 신청에 실패했습니다.')
     } finally {
       setProcessing(false)
     }

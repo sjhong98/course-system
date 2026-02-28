@@ -14,6 +14,7 @@ import LabelInput from '@/shared/components/ui/LabelInput'
 import { validateSignUpForm } from '@/features/auth/validation/signUp'
 import { ApiRequest } from '@/shared/libs/utils/typeGenerator'
 import { InvalidResult } from '@/shared/validation/types'
+import { apiErrorHandler } from '@/shared/libs/utils/apiErrorHandler'
 
 export default function SignUpForm() {
   const router = useRouter()
@@ -54,7 +55,7 @@ export default function SignUpForm() {
       await signUp(signUpForm)
       await signIn({ email: signUpForm.email, password: signUpForm.password })
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : '회원가입 처리 중 오류가 발생했습니다.')
+      apiErrorHandler(error, '회원가입 처리 중 오류가 발생했습니다.')
     } finally {
       setProcessing(false)
       router.push('/course/list')
