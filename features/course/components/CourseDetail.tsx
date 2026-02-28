@@ -1,7 +1,7 @@
 'use client'
 
 import dayjs from 'dayjs'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { enrollCourse } from '@/action/enrollCourse'
@@ -12,16 +12,23 @@ import { BottomButton } from '@/shared/components/ui/BottomButton'
 import Error from '@/shared/components/ui/Error'
 import { cn } from '@/shared/libs/utils/cn'
 import { ApiResponse } from '@/shared/libs/utils/typeGenerator'
-import { ApiError } from '@/shared/libs/api/api'
+import { ApiError, type ApiErrorPayload } from '@/shared/libs/api/api'
 import { apiErrorHandler } from '@/shared/libs/utils/apiErrorHandler'
 
 type CourseDetailProps = {
   course: ApiResponse<'/api/courses/{courseId}', 'get'> | null
-  errorMessage: string | null
+  error: ApiErrorPayload | null
 }
 
-export default function CourseDetail({ course, errorMessage }: CourseDetailProps) {
+export default function CourseDetail({ course, error }: CourseDetailProps) {
   const [processing, setProcessing] = useState(false)
+
+  useEffect(() => {
+    if (error) {
+      const apiError = new ApiError(error.message, error.status)
+      apiErrorHandler(apiError, apiError.message ?? '강의 조회 중 오류가 발생했습니다.')
+    }
+  }, [error])
 
   const handleEnroll = async () => {
     try {
@@ -39,8 +46,8 @@ export default function CourseDetail({ course, errorMessage }: CourseDetailProps
     }
   }
 
-  return errorMessage || !course ? (
-    <Error message={errorMessage ?? undefined} />
+  return error || !course ? (
+    <Error message={error.message} />
   ) : (
     <Column gap={12} className="w-full h-full">
       <PaddingHorizontalOverrideContainer paddingHorizontal className="bg-[var(--background-tertiary)] py-6 flex flex-col gap-8">

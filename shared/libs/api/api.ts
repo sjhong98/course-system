@@ -1,4 +1,5 @@
 import type { paths } from '@/shared/libs/api/scheme.d'
+import { redirect } from 'next/navigation'
 import createClient from 'openapi-fetch'
 
 export const api = createClient<paths>({
@@ -24,33 +25,18 @@ export class ApiError extends Error {
   }
 }
 
+export type ApiErrorPayload = { message: string; status: number }
+
+const isClient = typeof window !== 'undefined'
+
 export const unwrapApiResponse = async <T>(apiCall: () => Promise<SuccessResponse<T> | ErrorResponse>): Promise<T> => {
   const result = await apiCall()
 
+  console.log('\n\n\nfrom api', result)
+
   if ('error' in result) {
-    // if (result.status === 401)
     throw new ApiError(result.error.message, result.response.status)
   }
 
   return result.data as T
 }
-
-// import { cookies } from 'next/headers'
-// import { redirect } from 'next/navigation'
-
-// import { ApiError, unwrapApiResponse } from '@/shared/libs/api/api'
-
-// export async function unwrapApiResponseOrRedirect<T>(
-//   apiCall: () => Promise<{ data?: T; error?: { message?: string } | unknown; response?: Response }>,
-// ): Promise<T> {
-//   try {
-//     return await unwrapApiResponse(apiCall)
-//   } catch (error) {
-//     if (error instanceof ApiError && error.status === 401) {
-//       const cookieStore = await cookies()
-//       cookieStore.delete('accessToken')
-//       redirect('/signin')
-//     }
-//     throw error
-//   }
-// }
