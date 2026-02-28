@@ -1,9 +1,9 @@
 'use client'
 
 import { PADDING, PAGE_HEIGHT } from '@/shared/libs/constants/constants'
-import Column from '../flexBox/Column'
-import Header from '../ui/Header'
-import Menu from '../ui/Menu'
+import Column from '@/shared/components/flexBox/Column'
+import Header from '@/shared/components/ui/Header'
+import Menu from '@/shared/components/ui/Menu'
 import { useState } from 'react'
 
 export default function MobileWrapper({ children }: { children: React.ReactNode }) {

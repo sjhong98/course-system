@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 
-import parseNumber from '../parseNumber'
+import parseNumber from '@/shared/libs/utils/parseNumber'
 
 function createChangeEvent(value: string): React.ChangeEvent<HTMLInputElement> {
   return {

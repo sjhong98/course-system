@@ -10,8 +10,7 @@ import { cn } from '@/shared/libs/utils/cn'
 import { FilterIcon } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { ReactNode, useMemo, useState } from 'react'
-import { parseCourseListSort } from '../utils/parseCourseListSort'
-import { CourseListSort } from '../hooks/useCourseList'
+import { parseCourseListSort, CourseListSort } from '@/features/course/utils/parseCourseListSort'
 
 type CourseHeaderButtonProps = {
   children: ReactNode

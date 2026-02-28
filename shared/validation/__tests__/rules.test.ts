@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-import { rules } from '../rules'
+import { rules } from '@/shared/validation/rules'
 
 describe('shared/validation/rules', () => {
   describe('required', () => {

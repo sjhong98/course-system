@@ -2,7 +2,7 @@ import { render, screen, waitFor, within, cleanup } from '@testing-library/react
 import userEvent from '@testing-library/user-event'
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 
-import SignInForm from '../signInForm'
+import SignInForm from '@/features/auth/components/SignInForm'
 
 function getForm(container: HTMLElement): HTMLElement {
   const form = container.querySelector('form')

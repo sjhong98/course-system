@@ -10,8 +10,8 @@ import Error from '@/shared/components/ui/Error'
 import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT } from '@/shared/libs/constants/constants'
 import { cn } from '@/shared/libs/utils/cn'
 
-import { useCourseList } from '../hooks/useCourseList'
-import CourseListSkeleton from './CourseListSkeleton'
+import { useCourseList } from '@/features/course/hooks/useCourseList'
+import CourseListSkeleton from '@/features/course/components/CourseListSkeleton'
 
 const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`
 
@@ -52,10 +52,10 @@ export default function CourseList() {
               {index === courseList.length - 4 && <div key={-1} ref={upperTriggerRef} className="w-full h-1" />}
               <SelectableList.Item
                 key={isSelectable ? 'selectable' : 'unselectable'}
-                selected={enrollCourseList.includes(item.id)}
+                selected={enrollCourseList.includes(item.id ?? 0)}
                 selectable={isSelectable}
                 disabled={isSelectable && item.isFull}
-                onSelect={() => handleClickCourseItem(item.id)}
+                onSelect={() => handleClickCourseItem(item.id ?? 0)}
                 aria-label={item.title ? `강의: ${item.title}` : undefined}
               >
                 <Column

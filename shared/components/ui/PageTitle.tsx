@@ -1,6 +1,6 @@
 import { PAGE_TITLE_HEIGHT } from '@/shared/libs/constants/constants'
 import { ChevronLeft } from 'lucide-react'
-import Row from '../flexBox/Row'
+import Row from '@/shared/components/flexBox/Row'
 
 type PageTitleProps = {
   title: string

@@ -1,6 +1,6 @@
 import { PADDING } from '@/shared/libs/constants/constants'
 import { cn } from '@/shared/libs/utils/cn'
-import ButtonComponent, { ButtonProps } from './Button'
+import ButtonComponent, { ButtonProps } from '@/shared/components/ui/Button'
 
 export namespace BottomButton {
   export type BottomButtonContainerProps = ButtonProps & {

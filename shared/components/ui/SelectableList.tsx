@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 
 import { cn } from '@/shared/libs/utils/cn'
-import Column, { ColumnProps } from '../flexBox/Column'
-import Row from '../flexBox/Row'
-import CheckBox, { CheckBoxProps } from './CheckBox'
+import Column, { ColumnProps } from '@/shared/components/flexBox/Column'
+import Row from '@/shared/components/flexBox/Row'
+import CheckBox, { CheckBoxProps } from '@/shared/components/ui/CheckBox'
 
 export namespace SelectableList {
   export type SelectableListContainerProps = ColumnProps & {

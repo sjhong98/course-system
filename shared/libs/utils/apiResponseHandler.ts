@@ -1,10 +1,10 @@
 import { toast } from 'react-toastify'
-import { SerializableResponse } from '../api/api'
-import { errorHandler } from './errorHandler'
+import { SerializableResponse } from '@/shared/libs/api/api'
+import { errorHandler } from '@/shared/libs/utils/errorHandler'
 
 export type ApiErrorPayload = { message: string; status: number }
 
-type ErrorWithMessage = { message?: string }
+type ErrorWithMessage = { message: string }
 
 // Client에서 동작하는 API 호출 및 응답값 핸들러
 export const apiResponseHandler = async <T, E extends ErrorWithMessage>(

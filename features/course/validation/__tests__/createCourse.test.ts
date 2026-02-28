@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-import { validateCourseCreateForm } from '../createCourse'
+import { validateCourseCreateForm } from '@/features/course/validation/createCourse'
 
 describe('도메인3: 강의 등록 - 유효성 검사 (createCourse)', () => {
   const validForm = {

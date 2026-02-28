@@ -1,5 +1,5 @@
 import { useRef } from 'react'
-import Row from '../flexBox/Row'
+import Row from '@/shared/components/flexBox/Row'
 
 export type CheckBoxProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string

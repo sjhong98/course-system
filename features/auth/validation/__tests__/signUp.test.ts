@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-import { validateSignUpForm } from '../signUp'
+import { validateSignUpForm } from '@/features/auth/validation/signUp'
 
 describe('features/auth/validation/signUp', () => {
   const validForm = {

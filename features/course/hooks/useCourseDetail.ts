@@ -14,8 +14,8 @@ type Course = paths['/api/courses/{courseId}']['get']['responses']['200']['conte
 
 export function useCourseDetail(result: Awaited<ReturnType<typeof getCourse>>) {
   const queryClient = useQueryClient()
-  const [course, setCourse] = useState<Course>(null)
-  const [error, setError] = useState<string>(null)
+  const [course, setCourse] = useState<Course | null>(null)
+  const [error, setError] = useState<string | null>(null)
   const [processing, setProcessing] = useState(false)
 
   useEffect(() => {
@@ -41,8 +41,8 @@ export function useCourseDetail(result: Awaited<ReturnType<typeof getCourse>>) {
         prev
           ? {
               ...prev,
-              currentStudents: prev.currentStudents + 1,
-              isFull: prev.currentStudents + 1 >= prev.maxStudents,
+              currentStudents: prev.currentStudents ?? 0 + 1,
+              isFull: (prev?.currentStudents ?? 0) + 1 >= (prev?.maxStudents ?? 0),
             }
           : null,
       )

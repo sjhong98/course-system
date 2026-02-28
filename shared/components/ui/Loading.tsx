@@ -1,5 +1,5 @@
-import Column from '../flexBox/Column'
-import Skeleton from './Skeleton'
+import Column from '@/shared/components/flexBox/Column'
+import Skeleton from '@/shared/components/ui/Skeleton'
 
 export default function Loading() {
   return (

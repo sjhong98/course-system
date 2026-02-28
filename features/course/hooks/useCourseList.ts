@@ -12,9 +12,7 @@ import { useQueryParams } from '@/shared/hooks/useQueryParams'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
 import { paths } from '@/shared/libs/api/scheme'
-import { parseCourseListSort } from '../utils/parseCourseListSort'
-
-export type CourseListSort = 'recent' | 'popular' | 'rate'
+import { parseCourseListSort } from '@/features/course/utils/parseCourseListSort'
 
 type CourseItem = paths['/api/courses/{courseId}']['get']['responses']['200']['content']['*/*']
 
@@ -46,12 +44,12 @@ export function useCourseList() {
 
   const courseList = useMemo(() => {
     if (!courseListData) return []
-    const list: CourseItem[] = courseListData.pages.flatMap((page) => page?.content) ?? []
+    const list: CourseItem[] = courseListData.pages.flatMap((page) => page?.content ?? []) ?? []
     const uniqueById = new Map<number, CourseItem>()
     for (const item of list) {
       if (!item) continue
       if ('id' in item) {
-        uniqueById.set(item.id, item)
+        uniqueById.set(item.id ?? 0, item)
       }
     }
     return Array.from(uniqueById.values())
@@ -92,16 +90,20 @@ export function useCourseList() {
           if (!old?.pages) return old
           return {
             ...old,
-            pages: old.pages.map((page: { content: CourseItem[] }) => ({
-              ...page,
-              content: page.content.map((item: CourseItem) => {
-                const successItem = result.success.find((s: { courseId: number }) => s.courseId === item.id)
-                if (!successItem) return item
-                const currentStudents = item.currentStudents + 1
-                const isFull = currentStudents >= item.maxStudents
-                return { ...item, currentStudents, isFull }
-              }),
-            })),
+            pages: old.pages.map((page) => {
+              const content = page.content ?? []
+              return {
+                ...page,
+                content: content.map((item: CourseItem) => {
+                  const successItem = result.success?.find((s) => s.courseId === item.id)
+                  if (!successItem) return item
+                  const currentStudents = (item.currentStudents ?? 0) + 1
+                  const maxStudents = item.maxStudents ?? 0
+                  const isFull = currentStudents >= maxStudents
+                  return { ...item, currentStudents, isFull }
+                }),
+              }
+            }),
           }
         })
       }

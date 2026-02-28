@@ -2,7 +2,7 @@
 
 import React, { useLayoutEffect, useRef, useState } from 'react'
 
-import LabelInput, { LabelInputProps } from './LabelInput'
+import LabelInput, { LabelInputProps } from '@/shared/components/ui/LabelInput'
 
 type LabelInputWithSuffixTextProps = LabelInputProps & {
   suffix: string

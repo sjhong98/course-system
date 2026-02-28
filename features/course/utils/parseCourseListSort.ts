@@ -1,4 +1,4 @@
-import { CourseListSort } from '../hooks/useCourseList'
+export type CourseListSort = 'recent' | 'popular' | 'rate'
 
 export function parseCourseListSort(searchParams: URLSearchParams): CourseListSort {
   const sort = ['recent', 'popular', 'rate'].includes(searchParams.get('sort') ?? '')

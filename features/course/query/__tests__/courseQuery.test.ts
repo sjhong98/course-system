@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-import { courseListQueryOptions } from '../courseQuery'
+import { courseListQueryOptions } from '@/features/course/query/courseQuery'
 
 type GetNextPageParam = NonNullable<ReturnType<typeof courseListQueryOptions>['getNextPageParam']>
 type LastPage = Parameters<GetNextPageParam>[0]

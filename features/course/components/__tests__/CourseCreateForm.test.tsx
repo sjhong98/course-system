@@ -21,7 +21,7 @@ vi.mock('@/action/createCourse', () => ({
   createCourse: (...args: unknown[]) => mockCreateCourse(...args),
 }))
 
-import CourseCreateForm from '../CourseCreateForm'
+import CourseCreateForm from '@/features/course/components/CourseCreateForm'
 
 function getForm(container: HTMLElement): HTMLElement {
   const form = container.querySelector('form')

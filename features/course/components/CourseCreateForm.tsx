@@ -5,7 +5,7 @@ import { BottomButton } from '@/shared/components/ui/BottomButton'
 import LabelInput from '@/shared/components/ui/LabelInput'
 import LabelInputWithSuffixText from '@/shared/components/ui/LabelInputWithSuffixText'
 
-import { useCourseCreateForm } from '../hooks/useCourseCreateForm'
+import { useCourseCreateForm } from '@/features/course/hooks/useCourseCreateForm'
 
 export default function CourseCreateForm() {
   const { courseCreateForm, error, processing, handleChange, handleSubmit } = useCourseCreateForm()

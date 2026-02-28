@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { InvalidResult } from '@/shared/validation/types'
-import Column from '../flexBox/Column'
+import Column from '@/shared/components/flexBox/Column'
 
 type BaseProps = {
   label: string

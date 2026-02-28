@@ -1,11 +1,11 @@
 'use client'
 
-import { dispatchThemeChange } from '@/shared/components/ui/ThemeSyncToastContainer'
 import useAuth from '@/shared/hooks/useAuth'
+import { toggleThemeAndSync } from '@/shared/libs/utils/theme'
 import { HEADER_HEIGHT, PADDING } from '@/shared/libs/constants/constants'
 import { useEffect, useRef, useState } from 'react'
-import PaddingHorizontalOverrideContainer from '../container/PaddingHorizontalOverrideContainer'
-import Column from '../flexBox/Column'
+import PaddingHorizontalOverrideContainer from '@/shared/components/container/PaddingHorizontalOverrideContainer'
+import Column from '@/shared/components/flexBox/Column'
 
 const MENU_OPEN_TIME = 300
 
@@ -25,18 +25,7 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
     },
     {
       label: '테마 변경',
-      onClick: () => {
-        const theme = localStorage.getItem('theme')
-        if (theme === 'dark') {
-          localStorage.setItem('theme', 'light')
-          document.documentElement.classList.remove('dark')
-          dispatchThemeChange('light')
-        } else {
-          localStorage.setItem('theme', 'dark')
-          document.documentElement.classList.add('dark')
-          dispatchThemeChange('dark')
-        }
-      },
+      onClick: toggleThemeAndSync,
     },
   ]
 

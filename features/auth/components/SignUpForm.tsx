@@ -6,7 +6,7 @@ import { BottomButton } from '@/shared/components/ui/BottomButton'
 import CheckBox from '@/shared/components/ui/CheckBox'
 import LabelInput from '@/shared/components/ui/LabelInput'
 
-import { useSignUpForm } from '../hooks/useSignUpForm'
+import { useSignUpForm } from '@/features/auth/hooks/useSignUpForm'
 
 export default function SignUpForm() {
   const { signUpForm, error, processing, handleChange, handleRoleChange, handleSubmit } = useSignUpForm()

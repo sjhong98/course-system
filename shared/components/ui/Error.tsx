@@ -1,7 +1,7 @@
 'use client'
 
-import Column from '../flexBox/Column'
-import Button from './Button'
+import Column from '@/shared/components/flexBox/Column'
+import Button from '@/shared/components/ui/Button'
 
 type ErrorProps = {
   message?: string

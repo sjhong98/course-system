@@ -6,8 +6,8 @@ import ThemeSyncToastContainer from '@/shared/components/ui/ThemeSyncToastContai
 
 import MobileWrapper from '@/shared/components/container/MobileWrapper'
 import Header from '@/shared/components/ui/Header'
-import './globals.css'
-import Providers from './Providers'
+import '@/app/globals.css'
+import Providers from '@/app/Providers'
 
 const pretendard = localFont({
   src: [

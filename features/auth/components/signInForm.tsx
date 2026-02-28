@@ -4,7 +4,7 @@ import Column from '@/shared/components/flexBox/Column'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import LabelInput from '@/shared/components/ui/LabelInput'
 
-import { useSignInForm } from '../hooks/useSignInForm'
+import { useSignInForm } from '@/features/auth/hooks/useSignInForm'
 
 export default function SignInForm() {
   const { signInForm, error, processing, handleChange, handleSubmit } = useSignInForm()

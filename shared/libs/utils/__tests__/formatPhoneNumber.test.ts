@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 
-import formatPhoneNumber from '../formatPhoneNumber'
+import formatPhoneNumber from '@/shared/libs/utils/formatPhoneNumber'
 
 describe('shared/libs/utils/formatPhoneNumber', () => {
   it('숫자만 3자리면 그대로 반환한다', () => {

@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { cn } from '@/shared/libs/utils/cn'
-import LoadingSpinner from './LoadingSpinner'
+import LoadingSpinner from '@/shared/components/ui/LoadingSpinner'
 
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   children?: React.ReactNode

@@ -10,8 +10,8 @@ import { BottomButton } from '@/shared/components/ui/BottomButton'
 import Error from '@/shared/components/ui/Error'
 import { cn } from '@/shared/libs/utils/cn'
 
-import { useCourseDetail } from '../hooks/useCourseDetail'
-import CourseDetailSkeleton from './CourseDetailSkeleton'
+import { useCourseDetail } from '@/features/course/hooks/useCourseDetail'
+import CourseDetailSkeleton from '@/features/course/components/CourseDetailSkeleton'
 
 export default function CourseDetail({ result }: { result: Awaited<ReturnType<typeof getCourse>> }) {
   const { course, error, processing, handleEnroll } = useCourseDetail(result)
