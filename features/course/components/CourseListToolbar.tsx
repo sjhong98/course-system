@@ -8,7 +8,7 @@ import { PAGE_TITLE_HEIGHT } from '@/shared/libs/constants/constants'
 import { cn } from '@/shared/libs/utils/cn'
 import { FilterIcon } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { ReactNode, useMemo, useState } from 'react'
+import { ReactNode, useEffect, useMemo, useState } from 'react'
 
 export type CourseListSort = 'recent' | 'popular' | 'rate'
 
@@ -42,6 +42,7 @@ export default function CourseListToolbar() {
   const isSelectable = searchParams.get('select') === 'true'
 
   const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const [isInstructor, setIsInstructor] = useState(false)
 
   const handleSortChange = (value: CourseListSort) => {
     setParam('sort', value)
@@ -60,6 +61,10 @@ export default function CourseListToolbar() {
     [],
   )
 
+  useEffect(() => {
+    setIsInstructor(typeof window !== 'undefined' && window.localStorage.getItem('role') === 'INSTRUCTOR')
+  }, [])
+
   return (
     <>
       <Row gap={4} className="absolute top-2 right-0">
@@ -69,9 +74,11 @@ export default function CourseListToolbar() {
         <CourseHeaderButton onClick={handleSelectChange} active={isSelectable}>
           수강 신청 선택
         </CourseHeaderButton>
-        <CourseHeaderButton onClick={() => router.push('/course/create')} active>
-          강의 개설
-        </CourseHeaderButton>
+        {isInstructor && (
+          <CourseHeaderButton onClick={() => router.push('/course/create')} active>
+            강의 개설
+          </CourseHeaderButton>
+        )}
       </Row>
       {isFilterOpen && (
         <Row
