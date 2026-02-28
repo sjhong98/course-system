@@ -60,16 +60,17 @@ export default function CourseCreateForm() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     const toastId = 'create-course'
+    e.preventDefault()
     try {
-      e.preventDefault()
       setProcessing(true)
       const result = validateCourseCreateForm(courseCreateForm)
       if (result.ok === false) {
         setError(result)
         return
+      } else {
+        setError(null)
       }
-      setError(null)
-      apiResponseHandler(async () => await createCourse(result.data), { key: toastId })
+      await apiResponseHandler(async () => await createCourse(result.data), { key: toastId })
       await queryClient.invalidateQueries({ queryKey: ['courses'] })
       router.push('/course/list')
       toast.success('강의 등록에 성공했습니다.')
