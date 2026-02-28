@@ -1,19 +1,13 @@
-import type { paths } from "@/shared/libs/api/scheme";
+import type { paths } from '@/shared/libs/api/scheme'
 
-export type ApiResponse<
-  TPath extends keyof paths,
-  TMethod extends keyof paths[TPath]
-> = paths[TPath][TMethod] extends {
-  responses: { 200: { content: { [media: string]: infer R } } };
+export type ApiResponse<TPath extends keyof paths, TMethod extends keyof paths[TPath]> = paths[TPath][TMethod] extends {
+  responses: { 200: { content: { [media: string]: infer R } } }
 }
   ? R
-  : never;
+  : never
 
-export type ApiRequest<
-  TPath extends keyof paths,
-  TMethod extends keyof paths[TPath]
-> = paths[TPath][TMethod] extends {
-  requestBody: { content: { [media: string]: infer R } };
+export type ApiRequest<TPath extends keyof paths, TMethod extends keyof paths[TPath]> = paths[TPath][TMethod] extends {
+  requestBody: { content: { [media: string]: infer R } }
 }
   ? R
-  : never;
+  : never

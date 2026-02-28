@@ -1,11 +1,8 @@
 'use server'
 
-import { Suspense } from "react";
-
-import Column from "@/shared/components/flexBox/Column";
-import Loading from "@/shared/components/ui/Loading";
-import PageTitle from "@/shared/components/ui/PageTitle";
-import SignUpForm from "@/features/auth/components/SignUpForm";
+import SignUpForm from '@/features/auth/components/SignUpForm'
+import Column from '@/shared/components/flexBox/Column'
+import PageTitle from '@/shared/components/ui/PageTitle'
 
 export default async function Signup() {
   return (
