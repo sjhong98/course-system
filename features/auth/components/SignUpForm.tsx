@@ -8,16 +8,16 @@ import Row from '@/shared/components/flexBox/Row'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import CheckBox from '@/shared/components/ui/CheckBox'
 import LabelInput from '@/shared/components/ui/LabelInput'
+import useAuth from '@/shared/hooks/useAuth'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
 import formatPhoneNumber from '@/shared/libs/utils/formatPhoneNumber'
 import { ApiRequest } from '@/shared/libs/utils/typeGenerator'
 import { InvalidResult } from '@/shared/validation/types'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export default function SignUpForm() {
-  const router = useRouter()
+  const { completeSignIn } = useAuth()
   const [signUpForm, setSignUpForm] = useState<ApiRequest<'/api/users/signup', 'post'>>({
     email: '',
     password: '',
@@ -29,9 +29,11 @@ export default function SignUpForm() {
   const [processing, setProcessing] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    const nextValue = name === 'phone' ? formatPhoneNumber(value) : value
     setSignUpForm({
       ...signUpForm,
-      [e.target.name]: e.target.value,
+      [name]: nextValue,
     })
   }
 
@@ -43,6 +45,7 @@ export default function SignUpForm() {
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const toastId = 'sign-up'
     try {
       e.preventDefault()
       setProcessing(true)
@@ -54,11 +57,11 @@ export default function SignUpForm() {
       } else {
         setError(null)
       }
-      await apiResponseHandler(async () => await signUp(signUpForm))
-      await apiResponseHandler(async () => await signIn({ email: signUpForm.email, password: signUpForm.password }))
-      router.push('/course/list')
+      await apiResponseHandler(async () => await signUp(signUpForm), { key: toastId })
+      const signInResult = await apiResponseHandler(async () => await signIn({ email: signUpForm.email, password: signUpForm.password }))
+      completeSignIn(signInResult.user.role, signInResult.user.name)
     } catch (error) {
-      errorHandler(error, '회원가입 처리 중 오류가 발생했습니다.')
+      errorHandler(error, { key: toastId, message: '회원가입 처리 중 오류가 발생했습니다.' })
     } finally {
       setProcessing(false)
     }
@@ -69,7 +72,7 @@ export default function SignUpForm() {
       <Column gap={20} className="h-full">
         <LabelInput label="이름" name="name" value={signUpForm.name} onChange={handleChange} error={error} />
         <LabelInput label="이메일" name="email" value={signUpForm.email} onChange={handleChange} error={error} />
-        <LabelInput label="휴대폰 번호" name="phone" value={formatPhoneNumber(signUpForm.phone)} onChange={handleChange} error={error} />
+        <LabelInput label="휴대폰 번호" name="phone" value={signUpForm.phone} onChange={handleChange} error={error} />
         <LabelInput label="비밀번호" type="password" name="password" value={signUpForm.password} onChange={handleChange} error={error} />
         <Row className="w-full">
           <CheckBox label="수강생" className="flex-1" name="STUDENT" checked={signUpForm.role === 'STUDENT'} onChange={handleRoleChange} />

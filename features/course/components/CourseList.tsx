@@ -18,6 +18,8 @@ import CourseListSkeleton from './CourseListSkeleton'
 import { useQueryParams } from '@/shared/hooks/useQueryParams'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
+import Error from '@/shared/components/ui/Error'
+import { paths } from '@/shared/libs/api/scheme'
 
 export type CourseListSort = 'recent' | 'popular' | 'rate'
 const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`
@@ -42,9 +44,10 @@ export default function CourseList() {
     isFetching: isFetchingCourseList,
     isFetchingNextPage: isFetchingNextPageCourseList,
     error: errorCourseList,
-    isError: isErrorCourseList,
-    refetch: refetchCourseList,
+    failureCount,
   } = useSuspenseInfiniteQuery(courseListQueryOptions(sort))
+
+  const isRetrying = isFetchingCourseList && failureCount > 0
   const queryClient = useQueryClient()
 
   // 결과값 중복 발생 -> 결과값 파싱하여 중복 제거
@@ -70,15 +73,6 @@ export default function CourseList() {
     }
   }, [upperInView, lowerInView])
 
-  useEffect(() => {
-    if (errorCourseList) {
-      errorHandler(
-        errorCourseList instanceof Error ? errorCourseList : new Error(String(errorCourseList)),
-        '강의 목록을 불러오지 못했습니다.',
-      )
-    }
-  }, [errorCourseList])
-
   const handleEnrollCourseChange = (id: number) => {
     setEnrollCourseList((prev) => {
       if (prev.includes(id)) {
@@ -89,9 +83,10 @@ export default function CourseList() {
   }
 
   const handleEnrollCourse = async () => {
+    const toastId = 'enroll-course'
     try {
       setProcessing(true)
-      const result = await apiResponseHandler(async () => await enrollCourseBatch(enrollCourseList))
+      const result = await apiResponseHandler(async () => await enrollCourseBatch(enrollCourseList), { key: toastId })
       setEnrollCourseList([])
 
       if (result.failed && result.failed.length > 0) {
@@ -104,26 +99,25 @@ export default function CourseList() {
         toast.success(`${result.success.length}개의 강의를 수강 신청했습니다.`)
         setParam('select', null)
 
-        queryClient.setQueryData(courseListQueryOptions(sort).queryKey, (old: any) => {
+        queryClient.setQueryData(courseListQueryOptions(sort).queryKey, (old) => {
+          if (!old?.pages) return old
           return {
             ...old,
-            pages: old.pages.map((page: any) => {
-              return {
-                ...page,
-                content: page.content.map((item: any) => {
-                  const successItem = result.success.find((success: any) => success.courseId === item.id)
-                  if (!successItem) return item
-                  const currentStudents = item.currentStudents + 1
-                  const isFull = currentStudents >= item.maxStudents
-                  return { ...item, currentStudents, isFull }
-                }),
-              }
-            }),
+            pages: old.pages.map((page) => ({
+              ...page,
+              content: page.content.map((item: paths['/api/courses/{courseId}']['get']['responses']['200']['content']['*/*']) => {
+                const successItem = result.success.find((success) => success.courseId === item.id)
+                if (!successItem) return item
+                const currentStudents = item.currentStudents + 1
+                const isFull = currentStudents >= item.maxStudents
+                return { ...item, currentStudents, isFull }
+              }),
+            })),
           }
         })
       }
     } catch (error) {
-      errorHandler(error, '수강 신청에 실패했습니다.')
+      errorHandler(error, { key: toastId, message: '수강 신청에 실패했습니다.' })
     } finally {
       setProcessing(false)
     }
@@ -140,19 +134,11 @@ export default function CourseList() {
     [isSelectable],
   )
 
-  if (!Array.isArray(courseList)) return null
-
-  if (isErrorCourseList) {
-    return (
-      <Column gap={20} style={{ height: COURSE_LIST_HEIGHT, maxHeight: COURSE_LIST_HEIGHT }} className="justify-center items-center">
-        <p className="text-neutral-500">강의 목록을 불러오지 못했습니다.</p>
-        <BottomButton.Button type="button" onClick={() => refetchCourseList()}>
-          다시 시도
-        </BottomButton.Button>
-      </Column>
-    )
+  if (isRetrying) {
+    return <Error message={errorCourseList?.message} />
   }
 
+  if (!Array.isArray(courseList)) return null
   return (
     <Column gap={20} style={{ height: COURSE_LIST_HEIGHT, maxHeight: COURSE_LIST_HEIGHT }}>
       <SelectableList.Container

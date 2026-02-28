@@ -14,8 +14,11 @@ import Error from '@/shared/components/ui/Error'
 import { paths } from '@/shared/libs/api/scheme'
 import { apiResponseHandler, apiSyncResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { cn } from '@/shared/libs/utils/cn'
+import { errorHandler } from '@/shared/libs/utils/errorHandler'
+import { useQueryClient } from '@tanstack/react-query'
 
 export default function CourseDetail({ result }: { result: Awaited<ReturnType<typeof getCourse>> }) {
+  const queryClient = useQueryClient()
   const [processing, setProcessing] = useState(false)
   const [error, setError] = useState<string>(null)
   const [course, setCourse] = useState<paths['/api/courses/{courseId}']['get']['responses']['200']['content']['*/*']>(null)
@@ -30,23 +33,32 @@ export default function CourseDetail({ result }: { result: Awaited<ReturnType<ty
   }, [])
 
   const handleEnroll = async () => {
+    const toastId = 'enroll-course'
     try {
       if (!course) return
       setProcessing(true)
-      const result = await apiResponseHandler(async () => await enrollCourse(course.id!))
+      const result = await apiResponseHandler(async () => await enrollCourse(course.id!), { key: toastId })
+      queryClient.invalidateQueries({ queryKey: ['courses'] })
+      setCourse((prev) => ({
+        ...prev,
+        currentStudents: prev.currentStudents + 1,
+        isFull: prev.currentStudents + 1 >= prev.maxStudents,
+      }))
 
       if (result) {
         toast.success('수강 신청이 완료되었습니다.')
       }
     } catch (error) {
-      // apiErrorHandler(error, '수강 신청에 실패했습니다.')
+      errorHandler(error, { key: toastId, message: '수강 신청에 실패했습니다.' })
     } finally {
       setProcessing(false)
     }
   }
 
-  return error || !course ? (
+  return error ? (
     <Error message={error} />
+  ) : !course ? (
+    <></>
   ) : (
     <Column gap={12} className="w-full h-full">
       <PaddingHorizontalOverrideContainer paddingHorizontal className="bg-[var(--background-tertiary)] py-6 flex flex-col gap-8">

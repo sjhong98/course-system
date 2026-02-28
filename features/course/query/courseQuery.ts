@@ -12,6 +12,7 @@ export const courseListQueryOptions = (sort: string) =>
     staleTime: 5 * 60 * 1000,
     gcTime: 5 * 60 * 1000,
     initialPageParam: 0,
+    retry: 3,
     getNextPageParam: (lastPage) => {
       if (lastPage.last) return undefined
       return (lastPage.pageable?.pageNumber ?? 0) + 1

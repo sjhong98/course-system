@@ -1,6 +1,5 @@
 'use client'
 
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 import { signIn } from '@/action/signIn'
@@ -8,12 +7,13 @@ import { validateSignInForm } from '@/features/auth/validation/signIn'
 import Column from '@/shared/components/flexBox/Column'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import LabelInput from '@/shared/components/ui/LabelInput'
-import { InvalidResult } from '@/shared/validation/types'
+import useAuth from '@/shared/hooks/useAuth'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
+import { InvalidResult } from '@/shared/validation/types'
 
 export default function SignInForm() {
-  const router = useRouter()
+  const { completeSignIn } = useAuth()
   const [signInForm, setSignInForm] = useState({
     email: '',
     password: '',
@@ -29,6 +29,7 @@ export default function SignInForm() {
   }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    const toastId = 'sign-in'
     e.preventDefault()
     try {
       setProcessing(true)
@@ -39,10 +40,10 @@ export default function SignInForm() {
       } else {
         setError(null)
       }
-      await apiResponseHandler(() => signIn(signInForm))
-      router.push('/course/list')
+      const signInResult = await apiResponseHandler(() => signIn(signInForm), { key: toastId })
+      completeSignIn(signInResult.user.role, signInResult.user.name)
     } catch (error) {
-      errorHandler(error)
+      errorHandler(error, { key: toastId, message: '로그인 처리 중 오류가 발생했습니다.' })
     } finally {
       setProcessing(false)
     }

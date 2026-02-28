@@ -1,11 +1,11 @@
 import CourseDetailContainer from '@/features/course/components/CourseDetailContainer'
-import Loading from '@/shared/components/ui/Loading'
+import CourseDetailSkeleton from '@/features/course/components/CourseDetailSkeleton'
 import { Suspense } from 'react'
 
 export default function CourseDetailPage({ params }: { params: Promise<{ courseId: string }> }) {
   return (
     <>
-      <Suspense fallback={<Loading />}>
+      <Suspense fallback={<CourseDetailSkeleton />}>
         <CourseDetailContainer params={params} />
       </Suspense>
     </>

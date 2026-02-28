@@ -9,13 +9,6 @@ export async function getCourseList(page: number, sort?: string) {
   const cookieStore = await cookies()
   const accessToken = cookieStore.get('accessToken')?.value
 
-  return {
-    error: {
-      message: '값을 가져올 수 없습니다',
-    },
-    status: 400,
-  }
-
   return serializableResponse(() =>
     api.GET(GET_COURSES_PATH, {
       params: {
