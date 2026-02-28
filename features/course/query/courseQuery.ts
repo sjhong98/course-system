@@ -14,7 +14,7 @@ export const courseListQueryOptions = (sort: string) =>
     initialPageParam: 0,
     retry: 3,
     getNextPageParam: (lastPage) => {
-      if (lastPage.last) return undefined
+      if (!lastPage || lastPage.last) return undefined
       return (lastPage.pageable?.pageNumber ?? 0) + 1
     },
     placeholderData: {

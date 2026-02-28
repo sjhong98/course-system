@@ -36,10 +36,15 @@ describe('shared/validation/rules', () => {
     })
   })
 
+  const passwordCombinationError =
+    '비밀번호는 영문 소문자, 대문자, 숫자 중 최소 두 가지 이상을 조합해야 합니다.'
+
   describe('passwordFormat', () => {
-    it('6~10자이고 영문+숫자면 null을 반환한다', () => {
-      expect(rules.passwordFormat('비밀번호', 'pass1word')).toBeNull()
-      expect(rules.passwordFormat('비밀번호', 'abc123')).toBeNull()
+    it('6~10자이고 소문자·대문자·숫자 중 두 가지 이상이면 null을 반환한다', () => {
+      expect(rules.passwordFormat('비밀번호', 'pass1word')).toBeNull() // 소문자+숫자
+      expect(rules.passwordFormat('비밀번호', 'abc123')).toBeNull() // 소문자+숫자
+      expect(rules.passwordFormat('비밀번호', 'ABC123')).toBeNull() // 대문자+숫자
+      expect(rules.passwordFormat('비밀번호', 'Abcdef')).toBeNull() // 소문자+대문자
     })
 
     it('길이가 6 미만이면 에러를 반환한다', () => {
@@ -50,12 +55,16 @@ describe('shared/validation/rules', () => {
       expect(rules.passwordFormat('비밀번호', 'abcdefghij1')).toBe('비밀번호는 6~10자여야 합니다.')
     })
 
-    it('영문만 있으면 에러를 반환한다', () => {
-      expect(rules.passwordFormat('비밀번호', 'password')).toBe('비밀번호는 영문과 숫자를 포함해야 합니다.')
+    it('소문자만 있으면 에러를 반환한다', () => {
+      expect(rules.passwordFormat('비밀번호', 'password')).toBe(passwordCombinationError)
+    })
+
+    it('대문자만 있으면 에러를 반환한다', () => {
+      expect(rules.passwordFormat('비밀번호', 'PASSWORD')).toBe(passwordCombinationError)
     })
 
     it('숫자만 있으면 에러를 반환한다', () => {
-      expect(rules.passwordFormat('비밀번호', '123456')).toBe('비밀번호는 영문과 숫자를 포함해야 합니다.')
+      expect(rules.passwordFormat('비밀번호', '123456')).toBe(passwordCombinationError)
     })
   })
 

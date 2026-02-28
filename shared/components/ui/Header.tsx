@@ -6,6 +6,7 @@ export default function Header({ menuOpen, setMenuOpen }: { menuOpen: boolean; s
   return (
     <>
       <PaddingHorizontalOverrideContainer
+        as="header"
         className="flex items-center justify-center text-2xl font-extrabold tracking-[-1.5px] sticky top-0 left-0 right-0 flex-shrink-0 z-[100] relative select-none"
         style={{
           height: `${HEADER_HEIGHT}px`,

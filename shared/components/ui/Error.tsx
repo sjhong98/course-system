@@ -1,4 +1,5 @@
-import { useRouter } from 'next/navigation'
+'use client'
+
 import Column from '../flexBox/Column'
 import Button from './Button'
 
@@ -9,7 +10,6 @@ type ErrorProps = {
 }
 
 export default function Error({ message = '오류가 발생했습니다.', buttonText = '다시 시도', retry }: ErrorProps) {
-  const router = useRouter()
   let retryFunction = () => {
     if (retry) {
       retry()
@@ -18,7 +18,7 @@ export default function Error({ message = '오류가 발생했습니다.', butto
     }
   }
   return (
-    <Column gap={20} className="w-full h-full items-center justify-center">
+    <Column as="section" role="alert" gap={20} className="w-full h-full items-center justify-center">
       <h2 className="text-lg">{message}</h2>
       <div className="w-[60%]">
         <Button onClick={retryFunction} aria-label={buttonText}>

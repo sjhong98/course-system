@@ -39,7 +39,12 @@ export function useSignInForm() {
           setError(null)
         }
         const signInResult = await apiResponseHandler(() => signIn(signInForm), { key: toastId })
-        completeSignIn(signInResult.user.role, signInResult.user.name)
+        const user = signInResult?.user
+        if (!user?.role || !user?.name) {
+          errorHandler(new Error('로그인 응답에 사용자 정보가 없습니다.'), { key: toastId, message: '로그인 응답에 사용자 정보가 없습니다. 다시 시도해 주세요.' })
+          return
+        }
+        completeSignIn(user.role, user.name)
       } catch (err) {
         errorHandler(err, { key: toastId, message: '로그인 처리 중 오류가 발생했습니다.' })
       } finally {

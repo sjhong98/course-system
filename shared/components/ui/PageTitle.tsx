@@ -15,7 +15,7 @@ export default function PageTitle({ title, onBack }: PageTitleProps) {
           <ChevronLeft className="w-5 h-5" />
         </button>
       )}
-      <p className="text-lg font-semibold">{title}</p>
+      <h2 className="text-lg font-semibold">{title}</h2>
     </Row>
   )
 }

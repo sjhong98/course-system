@@ -16,7 +16,7 @@ export default function MobileWrapper({ children }: { children: React.ReactNode 
       <div className="h-full w-full flex flex-col">
         <Header menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
         <Menu menuOpen={menuOpen} setMenuOpen={setMenuOpen} />
-        <Column className="relative" style={{ height: PAGE_HEIGHT, maxHeight: PAGE_HEIGHT }}>
+        <Column as="main" className="relative" style={{ height: PAGE_HEIGHT, maxHeight: PAGE_HEIGHT }}>
           {children}
         </Column>
       </div>

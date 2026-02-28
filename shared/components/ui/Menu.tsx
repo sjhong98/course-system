@@ -71,14 +71,13 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
           transitionDuration: `${MENU_OPEN_TIME}ms`,
         }}
       >
-        <Column ref={menuRef} className="flex-shrink-0 w-full items-end" style={{ paddingRight: `${PADDING}px` }}>
+        <Column as="nav" ref={menuRef} className="flex-shrink-0 w-full items-end" style={{ paddingRight: `${PADDING}px` }}>
           <Column gap={24} className="pb-6 pt-10">
             {menuItems.map((item) => (
               <button
                 key={item.label}
-                type="button"
                 role="menuitem"
-                className="flex gap-2 items-center justify-start gap-2 cursor-pointer select-none"
+                className="flex gap-2 items-center justify-start gap-2 cursor-pointer select-none cursor-pointer"
                 onClick={item.onClick}
                 aria-label={item.label}
               >

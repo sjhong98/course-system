@@ -41,7 +41,9 @@ export default function CourseListToolbar() {
   const router = useRouter()
   const { setParam } = useQueryParams()
   const searchParams = useSearchParams()
-  const sort = (searchParams.get('sort') as CourseListSort) ?? 'recent'
+  const sort: CourseListSort = ['recent', 'popular', 'rate'].includes(searchParams.get('sort') ?? '')
+    ? (searchParams.get('sort') as CourseListSort)
+    : 'recent'
   const isSelectable = searchParams.get('select') === 'true'
 
   const [isFilterOpen, setIsFilterOpen] = useState(false)
@@ -85,6 +87,7 @@ export default function CourseListToolbar() {
       </Row>
       {isFilterOpen && (
         <Row
+          as="section"
           role="group"
           aria-label="정렬 옵션"
           className="absolute right-0 w-full py-2 bg-[var(--background)] z-[90] border-b border-[var(--background-tertiary)]"

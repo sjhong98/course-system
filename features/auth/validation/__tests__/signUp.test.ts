@@ -54,15 +54,28 @@ describe('features/auth/validation/signUp', () => {
       if (!result.ok) expect(result.errors.password).toBe('비밀번호는 6~10자여야 합니다.')
     })
 
-    it('비밀번호에 숫자가 없으면 에러를 반환한다', () => {
+    it('비밀번호가 영문 소문자·대문자·숫자 중 두 가지 미만이면 에러를 반환한다', () => {
       const result = validateSignUpForm({ ...validForm, password: 'password' })
       expect(result.ok).toBe(false)
-      if (!result.ok) expect(result.errors.password).toBe('비밀번호는 영문과 숫자를 포함해야 합니다.')
+      if (!result.ok)
+        expect(result.errors.password).toBe(
+          '비밀번호는 영문 소문자, 대문자, 숫자 중 최소 두 가지 이상을 조합해야 합니다.'
+        )
     })
 
     it('role은 STUDENT 또는 INSTRUCTOR 모두 유효하다', () => {
       expect(validateSignUpForm({ ...validForm, role: 'STUDENT' }).ok).toBe(true)
       expect(validateSignUpForm({ ...validForm, role: 'INSTRUCTOR' }).ok).toBe(true)
+    })
+
+    it('role이 없거나 STUDENT/INSTRUCTOR가 아니면 errors.role을 반환한다', () => {
+      const emptyRole = validateSignUpForm({ ...validForm, role: '' as 'STUDENT' })
+      expect(emptyRole.ok).toBe(false)
+      if (!emptyRole.ok) expect(emptyRole.errors.role).toBe('역할을 선택해 주세요.')
+
+      const invalidRole = validateSignUpForm({ ...validForm, role: 'ADMIN' as 'STUDENT' })
+      expect(invalidRole.ok).toBe(false)
+      if (!invalidRole.ok) expect(invalidRole.errors.role).toBe('역할을 선택해 주세요.')
     })
   })
 })

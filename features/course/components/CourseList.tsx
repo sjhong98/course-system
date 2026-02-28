@@ -92,7 +92,12 @@ export default function CourseList() {
       </SelectableList.Container>
       {isSelectable && (
         <BottomButton.Container>
-          <BottomButton.Button onClick={handleEnrollCourse} processing={processing} aria-label="수강 신청">
+          <BottomButton.Button
+            onClick={handleEnrollCourse}
+            processing={processing}
+            disabled={enrollCourseList.length === 0}
+            aria-label="수강 신청"
+          >
             수강 신청
           </BottomButton.Button>
         </BottomButton.Container>

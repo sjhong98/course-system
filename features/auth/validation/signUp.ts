@@ -20,6 +20,11 @@ export function validateSignUpForm(form: SignUpForm): ValidationResult<SignUpFor
   const passwordError = rules.required('비밀번호', form.password) ?? rules.passwordFormat('비밀번호', form.password)
   if (passwordError) errors.password = passwordError
 
+  const validRoles = ['STUDENT', 'INSTRUCTOR'] as const
+  if (!form.role || !validRoles.includes(form.role)) {
+    errors.role = '역할을 선택해 주세요.'
+  }
+
   if (Object.keys(errors).length > 0) return invalid(errors)
   return valid(form)
 }

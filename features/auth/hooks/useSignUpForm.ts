@@ -57,10 +57,30 @@ export function useSignUpForm() {
           setError(null)
         }
         await apiResponseHandler(async () => await signUp(signUpForm), { key: toastId })
-        const signInResult = await apiResponseHandler(async () => await signIn({ email: signUpForm.email, password: signUpForm.password }))
-        completeSignIn(signInResult.user.role, signInResult.user.name)
+        let signInResult
+        try {
+          signInResult = await apiResponseHandler(async () => await signIn({ email: signUpForm.email, password: signUpForm.password }))
+        } catch (signInErr) {
+          errorHandler(signInErr instanceof Error ? signInErr : new Error(String(signInErr)), {
+            key: toastId,
+            message: '회원가입이 완료되었습니다. 로그인에 실패했습니다. 아래에서 로그인해 주세요.',
+          })
+          return
+        }
+        const user = signInResult?.user
+        if (!user?.role || !user?.name) {
+          errorHandler(new Error('로그인 응답에 사용자 정보가 없습니다.'), {
+            key: toastId,
+            message: '회원가입이 완료되었습니다. 로그인 응답에 문제가 있습니다. 아래에서 로그인해 주세요.',
+          })
+          return
+        }
+        completeSignIn(user.role, user.name)
       } catch (err) {
-        errorHandler(err, { key: toastId, message: '회원가입 처리 중 오류가 발생했습니다.' })
+        errorHandler(err instanceof Error ? err : new Error(String(err)), {
+          key: toastId,
+          message: '회원가입 처리 중 오류가 발생했습니다.',
+        })
       } finally {
         setProcessing(false)
       }

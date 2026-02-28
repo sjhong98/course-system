@@ -10,14 +10,18 @@ export const rules = {
     return re.test(s) ? null : '올바른 이메일 형식이 아닙니다.'
   },
 
-  /** 비밀번호 6~10자, 영문+숫자 조합 (스키마 설명 기준) */
+  /** 비밀번호 6~10자, 영문 소문자·대문자·숫자 중 최소 두 가지 이상 조합 */
   passwordFormat: (_field: string, value: unknown): string | null => {
     if (value === undefined || value === null) return null
     const s = String(value)
     if (s.length < 6 || s.length > 10) return '비밀번호는 6~10자여야 합니다.'
-    const hasLetter = /[a-zA-Z]/.test(s)
+    const hasLower = /[a-z]/.test(s)
+    const hasUpper = /[A-Z]/.test(s)
     const hasNumber = /\d/.test(s)
-    return hasLetter && hasNumber ? null : '비밀번호는 영문과 숫자를 포함해야 합니다.'
+    const combinationCount = [hasLower, hasUpper, hasNumber].filter(Boolean).length
+    return combinationCount >= 2
+      ? null
+      : '비밀번호는 영문 소문자, 대문자, 숫자 중 최소 두 가지 이상을 조합해야 합니다.'
   },
 
   minLength:

@@ -22,17 +22,20 @@ export function useCourseDetail(result: Awaited<ReturnType<typeof getCourse>>) {
     try {
       const courseResult = apiSyncResponseHandler(result)
       setCourse(courseResult)
-    } catch (err) {
-      setError(err.message)
+    } catch (error) {
+      setError(error instanceof Error ? error.message : '알 수 없는 오류가 발생했습니다.')
     }
   }, [result])
 
   const handleEnroll = useCallback(async () => {
     const toastId = 'enroll-course'
     try {
-      if (!course) return
+      if (!course || !course.id) {
+        errorHandler(new Error('강의 ID가 올바르지 않습니다.'), { message: '강의 ID가 올바르지 않습니다.' })
+        return
+      }
       setProcessing(true)
-      const enrollResult = await apiResponseHandler(async () => await enrollCourse(course.id!), { key: toastId })
+      const enrollResult = await apiResponseHandler(async () => await enrollCourse(course.id), { key: toastId })
       queryClient.invalidateQueries({ queryKey: ['courses'] })
       setCourse((prev) =>
         prev

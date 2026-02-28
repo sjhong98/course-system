@@ -22,7 +22,9 @@ export function useCourseList() {
   const queryClient = useQueryClient()
   const { setParam } = useQueryParams()
   const searchParams = useSearchParams()
-  const sort = searchParams.get('sort') as CourseListSort
+  const sort: CourseListSort = ['recent', 'popular', 'rate'].includes(searchParams.get('sort') ?? '')
+    ? (searchParams.get('sort') as CourseListSort)
+    : 'recent'
   const isSelectable = searchParams.get('select') === 'true'
 
   const { ref: upperTriggerRef, inView: upperInView } = useInView()
@@ -45,7 +47,7 @@ export function useCourseList() {
 
   const courseList = useMemo(() => {
     if (!courseListData) return []
-    const list = courseListData.pages.flatMap((page) => page?.content) ?? []
+    const list: CourseItem[] = courseListData.pages.flatMap((page) => page?.content) ?? []
     const uniqueById = new Map<number, CourseItem>()
     for (const item of list) {
       if (!item) continue
@@ -87,7 +89,7 @@ export function useCourseList() {
       if (result.success && result.success.length > 0) {
         toast.success(`${result.success.length}개의 강의를 수강 신청했습니다.`)
         setParam('select', null)
-        queryClient.setQueryData(courseListQueryOptions(sort).queryKey, (old: unknown) => {
+        queryClient.setQueryData(courseListQueryOptions(sort).queryKey, (old) => {
           if (!old?.pages) return old
           return {
             ...old,

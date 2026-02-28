@@ -22,13 +22,21 @@ export namespace SelectableList {
 
   export function Container({ children, 'aria-label': ariaLabel, ...rest }: SelectableListContainerProps) {
     return (
-      <Column role="list" className={cn('scrollbar-thin flex-shrink-0', rest.className)} aria-label={ariaLabel} {...rest}>
+      <Column role="list" as="section" className={cn('scrollbar-thin flex-shrink-0', rest.className)} aria-label={ariaLabel} {...rest}>
         {children}
       </Column>
     )
   }
 
-  export function Item({ children, selected, selectable = true, onSelect, onChange, 'aria-label': ariaLabel, ...rest }: SelectableListItemProps) {
+  export function Item({
+    children,
+    selected,
+    selectable = true,
+    onSelect,
+    onChange,
+    'aria-label': ariaLabel,
+    ...rest
+  }: SelectableListItemProps) {
     const handleSelect = useCallback(() => {
       if (rest.disabled) return
       onSelect?.()
