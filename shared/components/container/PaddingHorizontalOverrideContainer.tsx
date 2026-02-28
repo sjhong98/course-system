@@ -1,10 +1,10 @@
-import { PADDING } from "@/shared/libs/constants/constants";
-import React from "react";
+import { PADDING } from '@/shared/libs/constants/constants'
+import React from 'react'
 
 type PaddingHorizontalOverrideContainerProps = React.HTMLAttributes<HTMLDivElement> & {
-  children?: React.ReactNode;
-  paddingHorizontal?: boolean;
-};
+  children?: React.ReactNode
+  paddingHorizontal?: boolean
+}
 
 export default function PaddingHorizontalOverrideContainer({
   children,
@@ -13,7 +13,6 @@ export default function PaddingHorizontalOverrideContainer({
   paddingHorizontal,
   ...rest
 }: PaddingHorizontalOverrideContainerProps) {
-  
   const minusMarginValue = `-${PADDING}px`
 
   const marginStyle: React.CSSProperties = {
@@ -23,12 +22,11 @@ export default function PaddingHorizontalOverrideContainer({
 
   return (
     <div
-      className={`${className ?? ""}`}
+      className={`${className ?? ''}`}
       style={{ ...marginStyle, ...style, ...(paddingHorizontal ? { paddingLeft: `${PADDING}px`, paddingRight: `${PADDING}px` } : {}) }}
       {...rest}
     >
       {children}
     </div>
-  );
+  )
 }
-
