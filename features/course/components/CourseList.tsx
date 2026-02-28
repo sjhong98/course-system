@@ -17,6 +17,7 @@ import { cn } from '@/shared/libs/utils/cn'
 import CourseListSkeleton from './CourseListSkeleton'
 import { useQueryParams } from '@/shared/hooks/useQueryParams'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
+import { errorHandler } from '@/shared/libs/utils/errorHandler'
 
 export type CourseListSort = 'recent' | 'popular' | 'rate'
 const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`
@@ -40,6 +41,8 @@ export default function CourseList() {
     hasNextPage: hasNextPageCourseList,
     isFetching: isFetchingCourseList,
     isFetchingNextPage: isFetchingNextPageCourseList,
+    error: errorCourseList,
+    isError: isErrorCourseList,
     refetch: refetchCourseList,
   } = useSuspenseInfiniteQuery(courseListQueryOptions(sort))
   const queryClient = useQueryClient()
@@ -66,6 +69,15 @@ export default function CourseList() {
       fetchNextPageCourseList()
     }
   }, [upperInView, lowerInView])
+
+  useEffect(() => {
+    if (errorCourseList) {
+      errorHandler(
+        errorCourseList instanceof Error ? errorCourseList : new Error(String(errorCourseList)),
+        '강의 목록을 불러오지 못했습니다.',
+      )
+    }
+  }, [errorCourseList])
 
   const handleEnrollCourseChange = (id: number) => {
     setEnrollCourseList((prev) => {
@@ -111,7 +123,7 @@ export default function CourseList() {
         })
       }
     } catch (error) {
-      // apiErrorHandler(error, '수강 신청에 실패했습니다.')
+      errorHandler(error, '수강 신청에 실패했습니다.')
     } finally {
       setProcessing(false)
     }
@@ -129,6 +141,17 @@ export default function CourseList() {
   )
 
   if (!Array.isArray(courseList)) return null
+
+  if (isErrorCourseList) {
+    return (
+      <Column gap={20} style={{ height: COURSE_LIST_HEIGHT, maxHeight: COURSE_LIST_HEIGHT }} className="justify-center items-center">
+        <p className="text-neutral-500">강의 목록을 불러오지 못했습니다.</p>
+        <BottomButton.Button type="button" onClick={() => refetchCourseList()}>
+          다시 시도
+        </BottomButton.Button>
+      </Column>
+    )
+  }
 
   return (
     <Column gap={20} style={{ height: COURSE_LIST_HEIGHT, maxHeight: COURSE_LIST_HEIGHT }}>

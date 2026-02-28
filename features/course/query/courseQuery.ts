@@ -20,4 +20,5 @@ export const courseListQueryOptions = (sort: string) =>
       pages: [],
       pageParams: [0],
     },
+    throwOnError: false,
   })

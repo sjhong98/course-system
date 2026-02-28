@@ -10,11 +10,19 @@ type ErrorProps = {
 
 export default function Error({ message = '오류가 발생했습니다.', buttonText = '다시 시도', retry }: ErrorProps) {
   const router = useRouter()
-  let retryFunction = retry ?? router.refresh
+  let retryFunction = () => {
+    if (retry) {
+      retry()
+    } else {
+      window.location.reload()
+    }
+  }
   return (
     <Column gap={20} className="w-full h-full items-center justify-center">
       <h2 className="text-lg">{message}</h2>
-      <Button onClick={retryFunction}>{buttonText}</Button>
+      <div className="w-[60%]">
+        <Button onClick={retryFunction}>{buttonText}</Button>
+      </div>
     </Column>
   )
 }

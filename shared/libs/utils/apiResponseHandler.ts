@@ -15,6 +15,7 @@ export type ApiErrorPayload = { message: string; status: number }
 
 type ErrorWithMessage = { message?: string }
 
+// Client에서 동작하는 API 호출 및 응답값 핸들러
 export const apiResponseHandler = async <T, E extends ErrorWithMessage>(apiCall: () => Promise<SerializableResponse<T, E>>): Promise<T> => {
   const result = await apiCall()
 
@@ -33,6 +34,7 @@ export const apiResponseHandler = async <T, E extends ErrorWithMessage>(apiCall:
   return result.data as T
 }
 
+// Server에서 패치한 데이터를 Client에서 받아 동작하는 응답값 핸들러
 export const apiSyncResponseHandler = <T>(apiResponse: SuccessResponse<T> | ErrorResponse): T => {
   if ('error' in apiResponse) {
     const toastMessage = apiResponse.error.message ?? '요청 중에 오류가 발생했습니다.'
