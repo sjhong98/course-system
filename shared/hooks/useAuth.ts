@@ -25,10 +25,15 @@ export default function useAuth() {
     return { role, name }
   }
 
+  const isInstructor = () => {
+    return localStorage.getItem('role') === 'INSTRUCTOR'
+  }
+
   return {
     completeSignIn,
     completeSignOut,
     isLoggedIn,
     getUserInfo,
+    isInstructor,
   }
 }
