@@ -1,6 +1,8 @@
 import Column from '@/shared/components/flexBox/Column'
 import Skeleton from '@/shared/components/ui/Skeleton'
 
+// 강의 상세 스켈레톤 컴포넌트
+
 export default function CourseDetailSkeleton() {
   return (
     <Column gap={10} className="w-full h-full">

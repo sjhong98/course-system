@@ -4,10 +4,12 @@ import { useCallback, useState } from 'react'
 
 import { signIn } from '@/action/signIn'
 import { validateSignInForm } from '@/features/auth/validation/signIn'
-import useAuth from '@/shared/hooks/useAuth'
+import useAuth from '@/features/auth/hooks/useAuth'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
 import type { InvalidResult } from '@/shared/validation/types'
+
+// 로그인 도메인 로직 훅
 
 export function useSignInForm() {
   const { completeSignIn } = useAuth()
@@ -18,6 +20,7 @@ export function useSignInForm() {
   const [error, setError] = useState<InvalidResult | null>(null)
   const [processing, setProcessing] = useState(false)
 
+  // 입력 핸들러
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSignInForm((prev) => ({
       ...prev,
@@ -25,6 +28,7 @@ export function useSignInForm() {
     }))
   }, [])
 
+  // 제출 핸들러
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       const toastId = 'sign-in'
@@ -41,7 +45,10 @@ export function useSignInForm() {
         const signInResult = await apiResponseHandler(() => signIn(signInForm), { key: toastId })
         const user = signInResult?.user
         if (!user?.role || !user?.name) {
-          errorHandler(new Error('로그인 응답에 사용자 정보가 없습니다.'), { key: toastId, message: '로그인 응답에 사용자 정보가 없습니다. 다시 시도해 주세요.' })
+          errorHandler(new Error('로그인 응답에 사용자 정보가 없습니다.'), {
+            key: toastId,
+            message: '로그인 응답에 사용자 정보가 없습니다. 다시 시도해 주세요.',
+          })
           return
         }
         completeSignIn(user.role, user.name)

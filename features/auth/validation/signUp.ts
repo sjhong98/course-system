@@ -5,6 +5,8 @@ import { rules } from '@/shared/validation/rules'
 const SIGNUP_PATH = '/api/users/signup'
 export type SignUpForm = ApiRequest<typeof SIGNUP_PATH, 'post'>
 
+// 회원가입 폼 유효성 검사
+
 export function validateSignUpForm(form: SignUpForm): ValidationResult<SignUpForm> {
   const errors: Record<string, string> = {}
 

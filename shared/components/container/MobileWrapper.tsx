@@ -6,6 +6,8 @@ import Header from '@/shared/components/ui/Header'
 import Menu from '@/shared/components/ui/Menu'
 import { useState } from 'react'
 
+// 모바일 Wrapper 컴포넌트
+
 export default function MobileWrapper({ children }: { children: React.ReactNode }) {
   const [menuOpen, setMenuOpen] = useState(false)
   return (

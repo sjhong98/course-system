@@ -1,11 +1,10 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-
 import { signIn } from '@/action/signIn'
 import { signUp } from '@/action/signUp'
 import { validateSignUpForm } from '@/features/auth/validation/signUp'
-import useAuth from '@/shared/hooks/useAuth'
+import useAuth from '@/features/auth/hooks/useAuth'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
 import formatPhoneNumber from '@/shared/libs/utils/formatPhoneNumber'
@@ -20,12 +19,15 @@ const initialSignUpForm: ApiRequest<'/api/users/signup', 'post'> = {
   role: 'STUDENT',
 }
 
+// 회원가입 도메인 로직 훅
+
 export function useSignUpForm() {
   const { completeSignIn } = useAuth()
   const [signUpForm, setSignUpForm] = useState<ApiRequest<'/api/users/signup', 'post'>>(initialSignUpForm)
   const [error, setError] = useState<InvalidResult | null>(null)
   const [processing, setProcessing] = useState(false)
 
+  // 입력 핸들러
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     const nextValue = name === 'phone' ? formatPhoneNumber(value) : value
@@ -35,6 +37,7 @@ export function useSignUpForm() {
     }))
   }, [])
 
+  // 역할 변경 핸들러
   const handleRoleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSignUpForm((prev) => ({
       ...prev,
@@ -42,6 +45,7 @@ export function useSignUpForm() {
     }))
   }, [])
 
+  // 제출 핸들러
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       const toastId = 'sign-up'

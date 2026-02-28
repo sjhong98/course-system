@@ -5,6 +5,8 @@
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
+// 세션 훅
+
 export default function useAuth() {
   const router = useRouter()
   const [isInstructor, setIsInstructor] = useState(false)

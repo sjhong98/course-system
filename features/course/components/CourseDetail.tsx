@@ -12,9 +12,13 @@ import { cn } from '@/shared/libs/utils/cn'
 
 import { useCourseDetail } from '@/features/course/hooks/useCourseDetail'
 import CourseDetailSkeleton from '@/features/course/components/CourseDetailSkeleton'
+import { apiSyncResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
+
+// 강의 상세 컴포넌트
 
 export default function CourseDetail({ result }: { result: Awaited<ReturnType<typeof getCourse>> }) {
-  const { course, error, processing, handleEnroll } = useCourseDetail(result)
+  const course = apiSyncResponseHandler(result)
+  const { error, processing, handleEnroll } = useCourseDetail(course)
 
   if (error) {
     return <Error message={error} />

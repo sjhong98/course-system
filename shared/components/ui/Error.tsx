@@ -9,6 +9,8 @@ type ErrorProps = {
   retry?: () => void
 }
 
+// 공통 에러 UI 컴포넌트
+
 export default function Error({ message = '오류가 발생했습니다.', buttonText = '다시 시도', retry }: ErrorProps) {
   let retryFunction = () => {
     if (retry) {

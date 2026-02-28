@@ -6,6 +6,8 @@ import { api, serializableResponse } from '@/shared/libs/api/api'
 
 const ENROLL_COURSE_PATH = '/api/courses/{courseId}/enroll'
 
+// 강의 수강 신청 액션
+
 export const enrollCourse = async (courseId: number) => {
   const cookieStore = await cookies()
   const accessToken = cookieStore.get('accessToken')?.value

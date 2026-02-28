@@ -15,6 +15,8 @@ import CourseListSkeleton from '@/features/course/components/CourseListSkeleton'
 
 const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`
 
+// 강의 목록 컴포넌트
+
 export default function CourseList() {
   const {
     courseList,

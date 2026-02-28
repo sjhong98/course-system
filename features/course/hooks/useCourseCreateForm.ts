@@ -23,6 +23,8 @@ const initialForm: CourseCreateForm = {
   price: 0,
 }
 
+// 강의 개설 도메인 로직 훅
+
 export function useCourseCreateForm() {
   const router = useRouter()
   const queryClient = useQueryClient()
@@ -31,6 +33,7 @@ export function useCourseCreateForm() {
   const [error, setError] = useState<InvalidResult | null>(null)
   const [processing, setProcessing] = useState(false)
 
+  // 권한 검사
   useEffect(() => {
     const role = typeof window !== 'undefined' ? localStorage.getItem('role') : null
     if (role !== 'INSTRUCTOR') {
@@ -38,12 +41,17 @@ export function useCourseCreateForm() {
       router.push('/course/list')
       return
     }
+  }, [])
+
+  // 사용자 이름 설정
+  useEffect(() => {
     const name = typeof window !== 'undefined' ? localStorage.getItem('name') : null
     if (name) {
       setCourseCreateForm((prev) => ({ ...prev, instructorName: name }))
     }
-  }, [router])
+  }, [])
 
+  // 입력 핸들러
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setCourseCreateForm((prev) => ({
       ...prev,
@@ -54,6 +62,7 @@ export function useCourseCreateForm() {
     }))
   }, [])
 
+  // 제출 핸들러
   const handleSubmit = useCallback(
     async (e: React.FormEvent<HTMLFormElement>) => {
       const toastId = 'create-course'

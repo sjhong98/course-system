@@ -15,7 +15,7 @@ vi.mock('react-toastify', () => ({
 }))
 
 const mockCompleteSignIn = vi.fn()
-vi.mock('@/shared/hooks/useAuth', () => ({
+vi.mock('@/features/auth/hooks/useAuth', () => ({
   default: () => ({
     completeSignIn: mockCompleteSignIn,
   }),

@@ -8,6 +8,8 @@ import LabelInput from '@/shared/components/ui/LabelInput'
 
 import { useSignUpForm } from '@/features/auth/hooks/useSignUpForm'
 
+// 회원가입 폼 컴포넌트
+
 export default function SignUpForm() {
   const { signUpForm, error, processing, handleChange, handleRoleChange, handleSubmit } = useSignUpForm()
 
@@ -27,7 +29,14 @@ export default function SignUpForm() {
           required
         />
         <Row className="w-full" role="group" aria-label="역할 선택">
-          <CheckBox label="수강생" className="flex-1" name="STUDENT" checked={signUpForm.role === 'STUDENT'} onChange={handleRoleChange} aria-label="수강생" />
+          <CheckBox
+            label="수강생"
+            className="flex-1"
+            name="STUDENT"
+            checked={signUpForm.role === 'STUDENT'}
+            onChange={handleRoleChange}
+            aria-label="수강생"
+          />
           <CheckBox
             label="강사"
             className="flex-1"

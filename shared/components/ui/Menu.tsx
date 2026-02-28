@@ -1,6 +1,6 @@
 'use client'
 
-import useAuth from '@/shared/hooks/useAuth'
+import useAuth from '@/features/auth/hooks/useAuth'
 import { toggleThemeAndSync } from '@/shared/libs/utils/theme'
 import { HEADER_HEIGHT, PADDING } from '@/shared/libs/constants/constants'
 import { useEffect, useRef, useState } from 'react'
@@ -8,6 +8,8 @@ import PaddingHorizontalOverrideContainer from '@/shared/components/container/Pa
 import Column from '@/shared/components/flexBox/Column'
 
 const MENU_OPEN_TIME = 300
+
+// 메뉴 컴포넌트
 
 export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; setMenuOpen: (open: boolean) => void }) {
   const { completeSignOut } = useAuth()

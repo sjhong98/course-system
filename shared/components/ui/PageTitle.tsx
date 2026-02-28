@@ -7,6 +7,8 @@ type PageTitleProps = {
   onBack?: () => void
 }
 
+// 페이지 타이틀 컴포넌트
+
 export default function PageTitle({ title, onBack }: PageTitleProps) {
   return (
     <Row gap={10} className="items-center justify-start" style={{ height: `${PAGE_TITLE_HEIGHT}px` }}>

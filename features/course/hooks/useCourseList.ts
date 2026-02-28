@@ -1,24 +1,22 @@
 'use client'
 
-import { useQueryClient, useSuspenseInfiniteQuery } from '@tanstack/react-query'
+import { useSuspenseInfiniteQuery } from '@tanstack/react-query'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
-import { toast } from 'react-toastify'
 
-import { enrollCourseBatch } from '@/action/enrollCourseBatch'
 import { courseListQueryOptions } from '@/features/course/query/courseQuery'
+import { useEnrollCourseBatch } from '@/features/course/hooks/useEnrollCourse'
 import { useQueryParams } from '@/shared/hooks/useQueryParams'
-import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
-import { errorHandler } from '@/shared/libs/utils/errorHandler'
 import { paths } from '@/shared/libs/api/scheme'
 import { parseCourseListSort } from '@/features/course/utils/parseCourseListSort'
 
 type CourseItem = paths['/api/courses/{courseId}']['get']['responses']['200']['content']['*/*']
 
+// 강의 목록 도메인 로직 훅
+
 export function useCourseList() {
   const router = useRouter()
-  const queryClient = useQueryClient()
   const { setParam } = useQueryParams()
   const searchParams = useSearchParams()
   const sort = parseCourseListSort(searchParams)
@@ -26,9 +24,6 @@ export function useCourseList() {
 
   const { ref: upperTriggerRef, inView: upperInView } = useInView()
   const { ref: lowerTriggerRef, inView: lowerInView } = useInView()
-
-  const [enrollCourseList, setEnrollCourseList] = useState<number[]>([])
-  const [processing, setProcessing] = useState(false)
 
   const {
     data: courseListData,
@@ -42,6 +37,7 @@ export function useCourseList() {
 
   const isRetrying = isFetchingCourseList && failureCount > 0
 
+  // 강의 목록 데이터 설정
   const courseList = useMemo(() => {
     if (!courseListData) return []
     const list: CourseItem[] = courseListData.pages.flatMap((page) => page?.content ?? []) ?? []
@@ -55,65 +51,21 @@ export function useCourseList() {
     return Array.from(uniqueById.values())
   }, [courseListData])
 
+  // 수강 신청 도메인 로직 훅
+  const { enrollCourseList, handleEnrollCourseChange, handleEnrollCourse, processing } = useEnrollCourseBatch({
+    courseList,
+    sort,
+    setParam,
+  })
+
+  // 무한 스크롤 핸들러
   useEffect(() => {
     if ((upperInView || lowerInView) && hasNextPageCourseList) {
       fetchNextPageCourseList()
     }
   }, [upperInView, lowerInView, hasNextPageCourseList, fetchNextPageCourseList])
 
-  const handleEnrollCourseChange = useCallback((id: number) => {
-    setEnrollCourseList((prev) => {
-      if (prev.includes(id)) {
-        return prev.filter((item) => item !== id)
-      }
-      return [...prev, id]
-    })
-  }, [])
-
-  const handleEnrollCourse = useCallback(async () => {
-    const toastId = 'enroll-course'
-    try {
-      setProcessing(true)
-      const result = await apiResponseHandler(async () => await enrollCourseBatch(enrollCourseList), { key: toastId })
-      setEnrollCourseList([])
-
-      if (result.failed && result.failed.length > 0) {
-        result.failed.forEach((item) => {
-          const failedItemTitle = courseList.find((c) => c.id === item.courseId)?.title ?? '알 수 없는 강의'
-          toast.error(item.reason ? `${failedItemTitle}: ${item.reason}` : `강의 수강 신청에 실패했습니다: ${item.courseId}`)
-        })
-      }
-      if (result.success && result.success.length > 0) {
-        toast.success(`${result.success.length}개의 강의를 수강 신청했습니다.`)
-        setParam('select', null)
-        queryClient.setQueryData(courseListQueryOptions(sort).queryKey, (old) => {
-          if (!old?.pages) return old
-          return {
-            ...old,
-            pages: old.pages.map((page) => {
-              const content = page.content ?? []
-              return {
-                ...page,
-                content: content.map((item: CourseItem) => {
-                  const successItem = result.success?.find((s) => s.courseId === item.id)
-                  if (!successItem) return item
-                  const currentStudents = (item.currentStudents ?? 0) + 1
-                  const maxStudents = item.maxStudents ?? 0
-                  const isFull = currentStudents >= maxStudents
-                  return { ...item, currentStudents, isFull }
-                }),
-              }
-            }),
-          }
-        })
-      }
-    } catch (err) {
-      errorHandler(err, { key: toastId, message: '수강 신청에 실패했습니다.' })
-    } finally {
-      setProcessing(false)
-    }
-  }, [enrollCourseList, courseList, sort, setParam, queryClient])
-
+  // 강의 아이템 클릭 핸들러
   const handleClickCourseItem = useCallback(
     (id: number) => {
       if (isSelectable) {

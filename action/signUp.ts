@@ -3,6 +3,8 @@ import { ApiRequest } from '@/shared/libs/utils/typeGenerator'
 
 const SIGNUP_PATH = '/api/users/signup'
 
+// 회원가입 액션
+
 export async function signUp(signUpForm: ApiRequest<typeof SIGNUP_PATH, 'post'>) {
   return serializableResponse(() => api.POST(SIGNUP_PATH, { body: signUpForm }))
 }

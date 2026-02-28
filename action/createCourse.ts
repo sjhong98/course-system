@@ -7,6 +7,8 @@ import { ApiRequest } from '@/shared/libs/utils/typeGenerator'
 
 type CourseCreateForm = ApiRequest<'/api/courses', 'post'>
 
+// 강의 개설 액션
+
 export async function createCourse(course: CourseCreateForm) {
   const cookieStore = await cookies()
   const accessToken = cookieStore.get('accessToken')?.value

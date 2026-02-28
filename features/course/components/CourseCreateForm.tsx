@@ -7,6 +7,8 @@ import LabelInputWithSuffixText from '@/shared/components/ui/LabelInputWithSuffi
 
 import { useCourseCreateForm } from '@/features/course/hooks/useCourseCreateForm'
 
+// 강의 개설 폼 컴포넌트
+
 export default function CourseCreateForm() {
   const { courseCreateForm, error, processing, handleChange, handleSubmit } = useCourseCreateForm()
 

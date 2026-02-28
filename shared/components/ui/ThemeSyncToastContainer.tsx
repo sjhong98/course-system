@@ -9,6 +9,8 @@ function getThemeFromDOM(): 'dark' | 'light' {
   return document.documentElement.classList.contains('dark') ? 'dark' : 'light'
 }
 
+// 테마 동기화 Toast 컴포넌트
+
 export default function ThemeSyncToastContainer(
   props: Omit<React.ComponentProps<typeof ToastContainer>, 'theme'> & { theme?: 'dark' | 'light' },
 ) {

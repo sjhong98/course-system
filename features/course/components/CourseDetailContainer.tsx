@@ -6,6 +6,8 @@ interface CourseDetailContainerProps {
   params: Promise<{ courseId: string }>
 }
 
+// 강의 상세 컨테이너 컴포넌트 (서버)
+
 export default async function CourseDetailContainer({ params }: CourseDetailContainerProps) {
   const { courseId } = await params
 

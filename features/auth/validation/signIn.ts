@@ -3,6 +3,8 @@ import { rules } from '@/shared/validation/rules'
 
 export type SignInForm = { email: string; password: string }
 
+// 로그인 폼 유효성 검사
+
 export function validateSignInForm(form: SignInForm): ValidationResult<SignInForm> {
   const errors: Record<string, string> = {}
 

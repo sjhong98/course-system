@@ -3,7 +3,7 @@
 import Row from '@/shared/components/flexBox/Row'
 import Button from '@/shared/components/ui/Button'
 import CheckBox from '@/shared/components/ui/CheckBox'
-import useAuth from '@/shared/hooks/useAuth'
+import useAuth from '@/features/auth/hooks/useAuth'
 import { useQueryParams } from '@/shared/hooks/useQueryParams'
 import { PAGE_TITLE_HEIGHT } from '@/shared/libs/constants/constants'
 import { cn } from '@/shared/libs/utils/cn'
@@ -18,6 +18,8 @@ type CourseHeaderButtonProps = {
   active?: boolean
   'aria-label'?: string
 }
+
+// 강의 목록 툴바 버튼 컴포넌트
 
 function CourseHeaderButton({ children, onClick, active, 'aria-label': ariaLabel, ...rest }: CourseHeaderButtonProps) {
   return (
@@ -37,10 +39,12 @@ function CourseHeaderButton({ children, onClick, active, 'aria-label': ariaLabel
   )
 }
 
+// 강의 목록 툴바 컴포넌트
+
 export default function CourseListToolbar() {
   const router = useRouter()
-  const { setParam } = useQueryParams()
   const searchParams = useSearchParams()
+  const { setParam } = useQueryParams()
   const { isInstructor } = useAuth()
   const sort = parseCourseListSort(searchParams)
   const isSelectable = searchParams.get('select') === 'true'

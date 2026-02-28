@@ -6,6 +6,8 @@ import LabelInput from '@/shared/components/ui/LabelInput'
 
 import { useSignInForm } from '@/features/auth/hooks/useSignInForm'
 
+// 로그인 폼 컴포넌트
+
 export default function SignInForm() {
   const { signInForm, error, processing, handleChange, handleSubmit } = useSignInForm()
 

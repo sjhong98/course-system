@@ -2,6 +2,8 @@ import PaddingHorizontalOverrideContainer from '@/shared/components/container/Pa
 import { HEADER_HEIGHT, PADDING } from '@/shared/libs/constants/constants'
 import { MenuIcon, XIcon } from 'lucide-react'
 
+// 메뉴 헤더 컴포넌트
+
 export default function Header({ menuOpen, setMenuOpen }: { menuOpen: boolean; setMenuOpen: (open: boolean) => void }) {
   return (
     <>

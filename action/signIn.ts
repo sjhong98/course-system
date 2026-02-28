@@ -7,6 +7,8 @@ import { ApiRequest, ApiResponse } from '@/shared/libs/utils/typeGenerator'
 
 const LOGIN_PATH = '/api/users/login'
 
+// 로그인 액션
+
 export async function signIn(signInForm: ApiRequest<typeof LOGIN_PATH, 'post'>) {
   const result = await serializableResponse(() => api.POST(LOGIN_PATH, { body: signInForm }))
 

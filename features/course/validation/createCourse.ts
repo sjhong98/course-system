@@ -5,6 +5,8 @@ import { rules } from '@/shared/validation/rules'
 const CREATE_COURSE_PATH = '/api/courses'
 export type CourseCreateForm = ApiRequest<typeof CREATE_COURSE_PATH, 'post'>
 
+// 강의 등록 폼 유효성 검사
+
 export function validateCourseCreateForm(form: CourseCreateForm): ValidationResult<CourseCreateForm> {
   const errors: Record<string, string> = {}
 

@@ -2,6 +2,8 @@
 
 // 클라이언트 전용 훅
 
+// 쿼리 파라미터 훅
+
 import { usePathname, useRouter } from 'next/navigation'
 import { useCallback } from 'react'
 
