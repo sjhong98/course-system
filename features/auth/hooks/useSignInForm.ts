@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from 'react'
 
-import { signIn } from '@/action/signIn'
+import { signIn } from '@/features/auth/action/signIn'
 import { validateSignInForm } from '@/features/auth/validation/signIn'
 import useAuth from '@/features/auth/hooks/useAuth'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'

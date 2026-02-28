@@ -233,3 +233,23 @@ shared/
 - 5-1) 수강 신청
   - 강의 상세에서 단건 수강 신청
   - 일괄 수강 신청 지원 (enrollCourseBatch)
+
+<br />
+
+### 구현내용
+
+**Feature-Sliced 아키텍처**
+타입 안정된
+
+- 타입 안정한 API 레이어
+  - /v3/api-docs 에서
+    OpenAPI 스펙 기반으로 API 스키마를
+- 서버/클라이언트 응답 처리 일원화
+- tanstack query: 무한 스크롤 + prefetch + cache + revalidate
+- 보안: httpOnly
+- 테마: beforeInteractive + css variable
+- skeleton + error
+- 테스트
+- SSR: URL 기반 데이터 패치 + supsense 분리로 concurrent
+- 중복 제거: 공용 컴포넌트 + 레이아웃
+- 직관적이고 사용성 높은 UI, 픽셀단위 계산한 layout

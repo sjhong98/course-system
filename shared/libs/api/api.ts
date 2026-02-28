@@ -16,7 +16,7 @@ export type ApiResponse<TPath extends keyof paths, TMethod extends keyof paths[T
   | ErrorResponse
 
 export const api = createClient<paths>({
-  baseUrl: 'http://localhost:8080',
+  baseUrl: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8080',
 })
 
 export type FetchResponseLike<T, E = { message: string }> =

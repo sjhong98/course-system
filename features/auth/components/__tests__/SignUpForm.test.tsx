@@ -29,10 +29,10 @@ vi.mock('next/navigation', () => ({
 
 const mockSignUp = vi.fn()
 const mockSignIn = vi.fn()
-vi.mock('@/action/signUp', () => ({
+vi.mock('@/features/auth/action/signUp', () => ({
   signUp: (...args: unknown[]) => mockSignUp(...args),
 }))
-vi.mock('@/action/signIn', () => ({
+vi.mock('@/features/auth/action/signIn', () => ({
   signIn: (...args: unknown[]) => mockSignIn(...args),
 }))
 

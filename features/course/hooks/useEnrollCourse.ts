@@ -3,8 +3,8 @@
 import { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { enrollCourse } from '@/action/enrollCourse'
-import { enrollCourseBatch } from '@/action/enrollCourseBatch'
+import { enrollCourse } from '@/features/course/action/enrollCourse'
+import { enrollCourseBatch } from '@/features/course/action/enrollCourseBatch'
 import { courseListQueryOptions } from '@/features/course/query/courseQuery'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'

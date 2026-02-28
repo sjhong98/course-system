@@ -1,4 +1,4 @@
-import { getCourse } from '@/action/getCourse'
+import { getCourse } from '@/features/course/action/getCourse'
 import CourseDetail from '@/features/course/components/CourseDetail'
 import Error from '@/shared/components/ui/Error'
 

@@ -17,7 +17,7 @@ vi.mock('@tanstack/react-query', () => ({
 }))
 
 const mockCreateCourse = vi.fn()
-vi.mock('@/action/createCourse', () => ({
+vi.mock('@/features/course/action/createCourse', () => ({
   createCourse: (...args: unknown[]) => mockCreateCourse(...args),
 }))
 

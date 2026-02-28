@@ -1,6 +1,6 @@
 import { infiniteQueryOptions } from '@tanstack/react-query'
 
-import { getCourseList } from '@/action/getCourseList'
+import { getCourseList } from '@/features/course/action/getCourseList'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 
 // 강의 목록 조회 쿼리 옵션

@@ -1,7 +1,5 @@
-'use server'
-
 import CourseCreateForm from '@/features/course/components/CourseCreateForm'
 
-export default async function CourseCreate() {
+export default function CourseCreate() {
   return <CourseCreateForm />
 }

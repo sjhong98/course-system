@@ -39,7 +39,7 @@ vi.mock('react-intersection-observer', () => ({
   },
 }))
 
-vi.mock('@/action/enrollCourseBatch', () => ({
+vi.mock('@/features/course/action/enrollCourseBatch', () => ({
   enrollCourseBatch: vi.fn(),
 }))
 

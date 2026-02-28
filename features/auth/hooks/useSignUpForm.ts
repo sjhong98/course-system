@@ -1,8 +1,8 @@
 'use client'
 
 import { useCallback, useState } from 'react'
-import { signIn } from '@/action/signIn'
-import { signUp } from '@/action/signUp'
+import { signIn } from '@/features/auth/action/signIn'
+import { signUp } from '@/features/auth/action/signUp'
 import { validateSignUpForm } from '@/features/auth/validation/signUp'
 import useAuth from '@/features/auth/hooks/useAuth'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'

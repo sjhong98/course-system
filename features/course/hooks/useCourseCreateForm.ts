@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
-import { createCourse } from '@/action/createCourse'
+import { createCourse } from '@/features/course/action/createCourse'
 import { validateCourseCreateForm } from '@/features/course/validation/createCourse'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
 import parseNumber from '@/shared/libs/utils/parseNumber'

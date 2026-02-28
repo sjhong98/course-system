@@ -2,7 +2,7 @@
 
 import dayjs from 'dayjs'
 
-import { getCourse } from '@/action/getCourse'
+import { getCourse } from '@/features/course/action/getCourse'
 import PaddingHorizontalOverrideContainer from '@/shared/components/container/PaddingHorizontalOverrideContainer'
 import Column from '@/shared/components/flexBox/Column'
 import Row from '@/shared/components/flexBox/Row'
@@ -10,15 +10,27 @@ import { BottomButton } from '@/shared/components/ui/BottomButton'
 import Error from '@/shared/components/ui/Error'
 import { cn } from '@/shared/libs/utils/cn'
 
-import { useCourseDetail } from '@/features/course/hooks/useCourseDetail'
+import { Course, useCourseDetail } from '@/features/course/hooks/useCourseDetail'
 import CourseDetailSkeleton from '@/features/course/components/CourseDetailSkeleton'
 import { apiSyncResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
+import { useMemo } from 'react'
 
 // 강의 상세 컴포넌트
 
 export default function CourseDetail({ result }: { result: Awaited<ReturnType<typeof getCourse>> }) {
-  const course = apiSyncResponseHandler(result)
-  const { error, processing, handleEnroll } = useCourseDetail(course)
+  const { course, error } = useMemo(() => {
+    try {
+      const data = apiSyncResponseHandler(result, { skipToast: true })
+      return { course: data, error: null as string | null }
+    } catch (e) {
+      return {
+        course: null as Course | null,
+        error: (e as { message?: string })?.message ?? '알 수 없는 오류가 발생했습니다.',
+      }
+    }
+  }, [result])
+
+  const { processing, handleEnroll } = useCourseDetail(course)
 
   if (error) {
     return <Error message={error} />
