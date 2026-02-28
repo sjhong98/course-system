@@ -23,7 +23,7 @@ export type FetchResponseLike<T, E = { message: string }> =
   | { data?: T; error?: never; response: Response }
   | { data?: never; error: E; response: Response }
 
-export type SerializableResponse<T, E = { message: string }> = { data?: T } | { error: E; status: number }
+export type SerializableResponse<T, E = { message: string }> = { data: T; status: number } | { error: E; status: number }
 
 export async function serializableResponse<T, E = { message: string }>(
   apiCall: () => Promise<FetchResponseLike<T, E>>,
@@ -32,5 +32,5 @@ export async function serializableResponse<T, E = { message: string }>(
   if ('error' in response && response.error) {
     return { error: response.error, status: response.response.status }
   }
-  return { data: response.data as T }
+  return { data: response.data as T, status: response.response.status }
 }

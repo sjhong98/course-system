@@ -35,7 +35,7 @@ export function useCourseDetail(result: Awaited<ReturnType<typeof getCourse>>) {
         return
       }
       setProcessing(true)
-      const enrollResult = await apiResponseHandler(async () => await enrollCourse(course.id), { key: toastId })
+      const enrollResult = await apiResponseHandler(async () => await enrollCourse(course.id ?? 0), { key: toastId })
       queryClient.invalidateQueries({ queryKey: ['courses'] })
       setCourse((prev) =>
         prev
