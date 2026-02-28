@@ -3,10 +3,11 @@ import { ApiError, type ApiErrorPayload } from '@/shared/libs/api/api'
 import CourseDetail from './CourseDetail'
 
 interface CourseDetailContainerProps {
-  courseId: string
+  params: Promise<{ courseId: string }>
 }
 
-export default async function CourseDetailContainer({ courseId }: CourseDetailContainerProps) {
+export default async function CourseDetailContainer({ params }: CourseDetailContainerProps) {
+  const { courseId } = await params
   let course = null
   let errorProp: ApiErrorPayload | null = null
 

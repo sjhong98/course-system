@@ -84,7 +84,8 @@ export default function CourseList() {
 
       if (result.failed && result.failed.length > 0) {
         result.failed.forEach((item) => {
-          toast.error(item.reason ?? `강의 수강 신청에 실패했습니다: ${item.courseId}`)
+          const failedItemTitle = courseList.find((course) => course.id === item.courseId)?.title ?? '알 수 없는 강의'
+          toast.error(item.reason ? `${failedItemTitle}: ${item.reason}` : `강의 수강 신청에 실패했습니다: ${item.courseId}`)
         })
       }
       if (result.success && result.success.length > 0) {
