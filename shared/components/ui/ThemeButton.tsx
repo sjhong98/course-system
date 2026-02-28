@@ -1,14 +1,18 @@
 'use client'
 
+import { dispatchThemeChange } from '@/shared/components/ui/ThemeSyncToastContainer'
+
 export default function ThemeButton() {
   const handleChangeTheme = () => {
     const theme = localStorage.getItem('theme')
     if (theme === 'dark') {
       localStorage.setItem('theme', 'light')
       document.documentElement.classList.remove('dark')
+      dispatchThemeChange('light')
     } else {
       localStorage.setItem('theme', 'dark')
       document.documentElement.classList.add('dark')
+      dispatchThemeChange('dark')
     }
   }
 

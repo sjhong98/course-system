@@ -82,7 +82,7 @@ export default function CourseListToolbar() {
       </Row>
       {isFilterOpen && (
         <Row
-          className="absolute right-0 w-full py-2 bg-[var(--background)] z-[100] border-b border-[var(--background-tertiary)]"
+          className="absolute right-0 w-full py-2 bg-[var(--background)] z-[90] border-b border-[var(--background-tertiary)]"
           style={{ top: `${PAGE_TITLE_HEIGHT}px` }}
         >
           {sortList.map((item) => (

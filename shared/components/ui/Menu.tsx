@@ -1,15 +1,19 @@
 'use client'
 
+import { dispatchThemeChange } from '@/shared/components/ui/ThemeSyncToastContainer'
 import useAuth from '@/shared/hooks/useAuth'
 import { HEADER_HEIGHT, PADDING } from '@/shared/libs/constants/constants'
 import { useEffect, useRef, useState } from 'react'
 import PaddingHorizontalOverrideContainer from '../container/PaddingHorizontalOverrideContainer'
 import Column from '../flexBox/Column'
 
+const MENU_OPEN_TIME = 300
+
 export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; setMenuOpen: (open: boolean) => void }) {
   const { completeSignOut } = useAuth()
   const [menuContentHeight, setMenuContentHeight] = useState(0)
   const [currentMenuHeight, setCurrentMenuHeight] = useState(0)
+  const [backdropVisible, setBackdropVisible] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
   const menuItems = [
     {
@@ -25,8 +29,12 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
         const theme = localStorage.getItem('theme')
         if (theme === 'dark') {
           localStorage.setItem('theme', 'light')
+          document.documentElement.classList.remove('dark')
+          dispatchThemeChange('light')
         } else {
           localStorage.setItem('theme', 'dark')
+          document.documentElement.classList.add('dark')
+          dispatchThemeChange('dark')
         }
       },
     },
@@ -35,8 +43,12 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
   useEffect(() => {
     if (menuOpen) {
       setCurrentMenuHeight(menuContentHeight)
+      setBackdropVisible(true)
     } else {
       setCurrentMenuHeight(0)
+      setTimeout(() => {
+        setBackdropVisible(false)
+      }, MENU_OPEN_TIME - 10)
     }
   }, [menuOpen])
 
@@ -46,28 +58,38 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
   }, [menuOpen])
 
   return (
-    <PaddingHorizontalOverrideContainer
-      className="flex tracking-[-1.5px] absolute left-0 right-0 flex-shrink-0 z-[100] bg-[var(--background)] border-[var(--background-tertiary)] transition-all duration-200 overflow-hidden"
-      style={{
-        top: `${HEADER_HEIGHT}px`,
-        height: `${currentMenuHeight}px`,
-        borderBottomWidth: menuOpen ? '1px' : '0px',
-        paddingRight: `${PADDING}px`,
-      }}
-    >
-      <Column ref={menuRef} className="flex-shrink-0 w-full items-end" style={{ paddingRight: `${PADDING}px` }}>
-        <Column gap={12} className="pb-5">
-          {menuItems.map((item) => (
-            <button
-              key={item.label}
-              className="flex gap-2 items-center justify-start gap-2 cursor-pointer select-none"
-              onClick={item.onClick}
-            >
-              <p className="text-sm">{item.label}</p>
-            </button>
-          ))}
+    <>
+      <PaddingHorizontalOverrideContainer
+        className="flex tracking-[-1.5px] absolute left-0 right-0 flex-shrink-0 z-[100] bg-[var(--background)] border-[var(--background-tertiary)] transition-[height] overflow-hidden"
+        style={{
+          top: `${HEADER_HEIGHT}px`,
+          height: `${currentMenuHeight}px`,
+          borderBottomWidth: menuOpen ? '1px' : '0px',
+          paddingRight: `${PADDING}px`,
+          transitionDuration: `${MENU_OPEN_TIME}ms`,
+        }}
+      >
+        <Column ref={menuRef} className="flex-shrink-0 w-full items-end" style={{ paddingRight: `${PADDING}px` }}>
+          <Column gap={24} className="pb-6 pt-10">
+            {menuItems.map((item) => (
+              <button
+                key={item.label}
+                className="flex gap-2 items-center justify-start gap-2 cursor-pointer select-none"
+                onClick={item.onClick}
+              >
+                <p className="text-sm">{item.label}</p>
+              </button>
+            ))}
+          </Column>
         </Column>
-      </Column>
-    </PaddingHorizontalOverrideContainer>
+      </PaddingHorizontalOverrideContainer>
+      {backdropVisible && (
+        <div
+          onClick={() => setMenuOpen(false)}
+          className="absolute top-0 left-0 h-screen w-screen bg-black/50 z-[95]"
+          style={{ animation: menuOpen ? `opacity-up ${MENU_OPEN_TIME}ms ease-in-out` : `opacity-down ${MENU_OPEN_TIME}ms ease-in-out` }}
+        />
+      )}
+    </>
   )
 }

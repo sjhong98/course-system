@@ -1,8 +1,9 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 :root {
   --background: #ffffff;
   --background-tertiary: #eeeeee;
+  --background-quaternary: #cccccc;
   --background-secondary: #444444;
   --foreground: #111111;
   --scrollbar-thumb: #444444;
@@ -13,6 +14,7 @@
 .dark {
   --background: #111111;
   --background-tertiary: #222222;
+  --background-quaternary: #444444;
   --background-secondary: #bbbbbb;
   --foreground: #ffffff;
   --scrollbar-thumb: #555555;
@@ -39,13 +41,14 @@ body {
   color: var(--foreground);
 }
 
-p, label {
+p,
+label {
   font-family: var(--font-pretendard), var(--font-geist-sans), sans-serif;
   letter-spacing: -0.05em;
 }
 
 .scrollbar-thin {
-  scrollbar-width:thin;
+  scrollbar-width: thin;
   scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
 }
 
@@ -72,7 +75,19 @@ p, label {
   }
 }
 
+@keyframes opacity-down {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
 .opacity-up {
-  animation:
-    opacity-up 0.5s ease-in-out forwards,
+  animation: opacity-up 0.5s ease-in-out forwards;
+}
+
+.opacity-down {
+  animation: opacity-down 0.5s ease-in-out forwards;
 }

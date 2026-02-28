@@ -17,7 +17,8 @@ export type LabelInputProps = BaseProps &
     | ({ elem: 'textarea' } & React.TextareaHTMLAttributes<HTMLTextAreaElement>)
   )
 
-const inputClassName = 'w-full p-2 border border-neutral-300 outline-none focus:border-neutral-500 rounded-lg'
+const inputClassName =
+  'w-full p-2 border border-[var(--background-quaternary)] outline-none focus:border-[var(--background-secondary)] rounded-lg'
 
 export default function LabelInput({ label, className, error, elem = 'input', inputWrapper, required = false, ...rest }: LabelInputProps) {
   const resolvedClassName = `${inputClassName} ${className ?? ''}`
