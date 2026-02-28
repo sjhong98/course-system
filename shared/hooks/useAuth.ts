@@ -15,8 +15,20 @@ export default function useAuth() {
     router.push('/signin')
   }
 
+  const isLoggedIn = () => {
+    return localStorage.getItem('role') !== null && localStorage.getItem('name') !== null
+  }
+
+  const getUserInfo = () => {
+    const role = localStorage.getItem('role')
+    const name = localStorage.getItem('name')
+    return { role, name }
+  }
+
   return {
     completeSignIn,
     completeSignOut,
+    isLoggedIn,
+    getUserInfo,
   }
 }
