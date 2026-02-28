@@ -17,7 +17,12 @@ export default function ThemeButton() {
   }
 
   return (
-    <button className="cursor-pointer bg-neutral-100 px-2 py-1 rounded-lg" onClick={handleChangeTheme}>
+    <button
+      type="button"
+      className="cursor-pointer bg-neutral-100 px-2 py-1 rounded-lg"
+      onClick={handleChangeTheme}
+      aria-label="테마 변경"
+    >
       THEME
     </button>
   )

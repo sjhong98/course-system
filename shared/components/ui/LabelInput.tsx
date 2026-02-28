@@ -20,19 +20,34 @@ export type LabelInputProps = BaseProps &
 const inputClassName =
   'w-full p-2 border border-[var(--background-quaternary)] outline-none focus:border-[var(--background-secondary)] rounded-lg'
 
+const labelId = (name: string | undefined) => (name ? `label-${name}` : undefined)
+
 export default function LabelInput({ label, className, error, elem = 'input', inputWrapper, required = false, ...rest }: LabelInputProps) {
   const resolvedClassName = `${inputClassName} ${className ?? ''}`
+  const id = labelId(rest.name as string)
 
   const inputOrTextarea =
     elem === 'textarea' ? (
-      <textarea autoComplete="off" className={resolvedClassName} {...(rest as React.TextareaHTMLAttributes<HTMLTextAreaElement>)} />
+      <textarea
+        autoComplete="off"
+        className={resolvedClassName}
+        id={id}
+        aria-labelledby={id}
+        {...(rest as React.TextareaHTMLAttributes<HTMLTextAreaElement>)}
+      />
     ) : (
-      <input autoComplete="off" className={resolvedClassName} {...(rest as React.InputHTMLAttributes<HTMLInputElement>)} />
+      <input
+        autoComplete="off"
+        className={resolvedClassName}
+        id={id}
+        aria-labelledby={id}
+        {...(rest as React.InputHTMLAttributes<HTMLInputElement>)}
+      />
     )
 
   return (
     <Column gap={6} className="relative">
-      <label className="text-sm">
+      <label id={id} className="text-sm" htmlFor={id}>
         {label}
         {required && <span className="text-red-500 ml-0.5">*</span>}
       </label>

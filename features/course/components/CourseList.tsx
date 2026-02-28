@@ -142,6 +142,7 @@ export default function CourseList() {
   return (
     <Column gap={20} style={{ height: COURSE_LIST_HEIGHT, maxHeight: COURSE_LIST_HEIGHT }}>
       <SelectableList.Container
+        aria-label="강의 목록"
         className={cn('overflow-y-scroll pb-[100px] flex-shrink-0 h-full relative')}
         style={{ marginRight: 'calc(var(--scrollbar-width) * -1)' }}
       >
@@ -156,6 +157,7 @@ export default function CourseList() {
                 selectable={isSelectable}
                 disabled={isSelectable && item.isFull}
                 onSelect={() => handleClickCourseItem(item.id)}
+                aria-label={item.title ? `강의: ${item.title}` : undefined}
               >
                 <Column
                   gap={10}
@@ -189,7 +191,7 @@ export default function CourseList() {
       </SelectableList.Container>
       {isSelectable && (
         <BottomButton.Container>
-          <BottomButton.Button onClick={handleEnrollCourse} processing={processing}>
+          <BottomButton.Button onClick={handleEnrollCourse} processing={processing} aria-label="수강 신청">
             수강 신청
           </BottomButton.Button>
         </BottomButton.Container>

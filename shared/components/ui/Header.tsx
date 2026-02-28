@@ -14,9 +14,25 @@ export default function Header({ menuOpen, setMenuOpen }: { menuOpen: boolean; s
       >
         <h1>COURSE</h1>
         {menuOpen ? (
-          <XIcon className="w-4 h-4 absolute cursor-pointer" style={{ right: `${PADDING}px` }} onClick={() => setMenuOpen(!menuOpen)} />
+          <button
+            type="button"
+            className="w-4 h-4 absolute cursor-pointer flex items-center justify-center"
+            style={{ right: `${PADDING}px` }}
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="메뉴 닫기"
+          >
+            <XIcon className="w-4 h-4" />
+          </button>
         ) : (
-          <MenuIcon className="w-4 h-4 absolute cursor-pointer" style={{ right: `${PADDING}px` }} onClick={() => setMenuOpen(!menuOpen)} />
+          <button
+            type="button"
+            className="w-4 h-4 absolute cursor-pointer flex items-center justify-center"
+            style={{ right: `${PADDING}px` }}
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="메뉴 열기"
+          >
+            <MenuIcon className="w-4 h-4" />
+          </button>
         )}
       </PaddingHorizontalOverrideContainer>
     </>

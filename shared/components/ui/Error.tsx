@@ -21,7 +21,9 @@ export default function Error({ message = '오류가 발생했습니다.', butto
     <Column gap={20} className="w-full h-full items-center justify-center">
       <h2 className="text-lg">{message}</h2>
       <div className="w-[60%]">
-        <Button onClick={retryFunction}>{buttonText}</Button>
+        <Button onClick={retryFunction} aria-label={buttonText}>
+          {buttonText}
+        </Button>
       </div>
     </Column>
   )

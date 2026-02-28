@@ -1,7 +1,7 @@
 'use client'
 
 import dayjs from 'dayjs'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { enrollCourse } from '@/action/enrollCourse'
@@ -30,9 +30,9 @@ export default function CourseDetail({ result }: { result: Awaited<ReturnType<ty
     } catch (error) {
       setError(error.message)
     }
-  }, [])
+  }, [result])
 
-  const handleEnroll = async () => {
+  const handleEnroll = useCallback(async () => {
     const toastId = 'enroll-course'
     try {
       if (!course) return
@@ -53,7 +53,7 @@ export default function CourseDetail({ result }: { result: Awaited<ReturnType<ty
     } finally {
       setProcessing(false)
     }
-  }
+  }, [course, queryClient])
 
   return error ? (
     <Error message={error} />
@@ -83,7 +83,7 @@ export default function CourseDetail({ result }: { result: Awaited<ReturnType<ty
       </Column>
 
       <BottomButton.Container>
-        <BottomButton.Button disabled={course.isFull} processing={processing} onClick={handleEnroll}>
+        <BottomButton.Button disabled={course.isFull} processing={processing} onClick={handleEnroll} aria-label="수강 신청">
           수강 신청
         </BottomButton.Button>
       </BottomButton.Container>

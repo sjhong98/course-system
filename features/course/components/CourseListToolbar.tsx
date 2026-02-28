@@ -16,9 +16,10 @@ type CourseHeaderButtonProps = {
   children: ReactNode
   onClick: () => void
   active?: boolean
+  'aria-label'?: string
 }
 
-function CourseHeaderButton({ children, onClick, active }: CourseHeaderButtonProps) {
+function CourseHeaderButton({ children, onClick, active, 'aria-label': ariaLabel, ...rest }: CourseHeaderButtonProps) {
   return (
     <Button
       className={cn(
@@ -28,6 +29,8 @@ function CourseHeaderButton({ children, onClick, active }: CourseHeaderButtonPro
           : '!bg-[var(--background-tertiary)] !text-[var(--foreground)]',
       )}
       onClick={onClick}
+      aria-label={ariaLabel}
+      {...rest}
     >
       {children}
     </Button>
@@ -67,21 +70,23 @@ export default function CourseListToolbar() {
 
   return (
     <>
-      <Row gap={4} className="absolute top-2 right-0">
-        <CourseHeaderButton onClick={() => setIsFilterOpen(!isFilterOpen)} active={isFilterOpen}>
+      <Row gap={4} className="absolute top-2 right-0" role="toolbar" aria-label="강의 목록 도구">
+        <CourseHeaderButton onClick={() => setIsFilterOpen(!isFilterOpen)} active={isFilterOpen} aria-label="정렬 필터">
           <FilterIcon className="w-4 h-4" />
         </CourseHeaderButton>
-        <CourseHeaderButton onClick={handleSelectChange} active={isSelectable}>
+        <CourseHeaderButton onClick={handleSelectChange} active={isSelectable} aria-label="수강 신청 선택">
           수강 신청 선택
         </CourseHeaderButton>
         {isInstructor && (
-          <CourseHeaderButton onClick={() => router.push('/course/create')} active>
+          <CourseHeaderButton onClick={() => router.push('/course/create')} active aria-label="강의 개설">
             강의 개설
           </CourseHeaderButton>
         )}
       </Row>
       {isFilterOpen && (
         <Row
+          role="group"
+          aria-label="정렬 옵션"
           className="absolute right-0 w-full py-2 bg-[var(--background)] z-[90] border-b border-[var(--background-tertiary)]"
           style={{ top: `${PAGE_TITLE_HEIGHT}px` }}
         >
@@ -92,6 +97,7 @@ export default function CourseListToolbar() {
               className="flex-1"
               checked={sort === item.value}
               onChange={() => handleSortChange(item.value as CourseListSort)}
+              aria-label={item.label}
             />
           ))}
         </Row>

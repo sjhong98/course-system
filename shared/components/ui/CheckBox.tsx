@@ -4,19 +4,30 @@ export type CheckBoxProps = React.InputHTMLAttributes<HTMLInputElement> & {
   label?: string
   name?: string
   onChange?: (e?: any) => void
+  'aria-label'?: string
 }
 
-export default function CheckBox({ label, name, className, onChange, ...rest }: CheckBoxProps) {
+const checkboxId = (name: string | undefined) => (name ? `checkbox-${name}` : undefined)
+
+export default function CheckBox({ label, name, className, onChange, 'aria-label': ariaLabel, ...rest }: CheckBoxProps) {
+  const id = checkboxId(name)
   return (
     <Row gap={8} className={`items-center ${className ?? ''}`} onClick={() => onChange?.({ target: { name, value: rest.checked } })}>
       <input
+        id={id}
         name={name}
         type="checkbox"
+        role="checkbox"
+        aria-label={ariaLabel ?? label ?? name}
         className="w-4 h-4 p-0.5 border border-neutral-300 rounded-lg appearance-none checked:bg-[var(--background-secondary)] checked:border-[var(--background-secondary)] checked:bg-clip-content cursor-pointer"
         {...rest}
         onChange={(e) => onChange?.(e)}
       />
-      {label && <label className="text-sm cursor-pointer">{label}</label>}
+      {label && (
+        <label htmlFor={id} className="text-sm cursor-pointer">
+          {label}
+        </label>
+      )}
     </Row>
   )
 }

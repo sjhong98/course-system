@@ -2,7 +2,7 @@
 
 import { useQueryClient } from '@tanstack/react-query'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { createCourse } from '@/action/createCourse'
@@ -48,38 +48,41 @@ export default function CourseCreateForm() {
     }
   }, [])
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setCourseCreateForm({
-      ...courseCreateForm,
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setCourseCreateForm((prev) => ({
+      ...prev,
       [e.target.name]:
         e.target.getAttribute('data-type') === 'number'
-          ? parseNumber(e as React.ChangeEvent<HTMLInputElement>, Number(courseCreateForm[e.target.name as keyof CourseCreateForm]))
+          ? parseNumber(e as React.ChangeEvent<HTMLInputElement>, Number(prev[e.target.name as keyof CourseCreateForm]))
           : e.target.value,
-    })
-  }
+    }))
+  }, [])
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const toastId = 'create-course'
-    e.preventDefault()
-    try {
-      setProcessing(true)
-      const result = validateCourseCreateForm(courseCreateForm)
-      if (result.ok === false) {
-        setError(result)
-        return
-      } else {
-        setError(null)
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      const toastId = 'create-course'
+      e.preventDefault()
+      try {
+        setProcessing(true)
+        const result = validateCourseCreateForm(courseCreateForm)
+        if (result.ok === false) {
+          setError(result)
+          return
+        } else {
+          setError(null)
+        }
+        await apiResponseHandler(async () => await createCourse(result.data), { key: toastId })
+        await queryClient.invalidateQueries({ queryKey: ['courses'] })
+        router.push('/course/list')
+        toast.success('강의 등록에 성공했습니다.')
+      } catch (error) {
+        errorHandler(error, { key: toastId, message: '강의 등록에 실패했습니다.' })
+      } finally {
+        setProcessing(false)
       }
-      await apiResponseHandler(async () => await createCourse(result.data), { key: toastId })
-      await queryClient.invalidateQueries({ queryKey: ['courses'] })
-      router.push('/course/list')
-      toast.success('강의 등록에 성공했습니다.')
-    } catch (error) {
-      errorHandler(error, { key: toastId, message: '강의 등록에 실패했습니다.' })
-    } finally {
-      setProcessing(false)
-    }
-  }
+    },
+    [courseCreateForm, queryClient, router],
+  )
 
   return (
     <form onSubmit={handleSubmit}>
@@ -115,7 +118,9 @@ export default function CourseCreateForm() {
         />
       </Column>
       <BottomButton.Container>
-        <BottomButton.Button processing={processing}>강의 개설</BottomButton.Button>
+        <BottomButton.Button processing={processing} aria-label="강의 개설">
+          강의 개설
+        </BottomButton.Button>
       </BottomButton.Container>
     </form>
   )

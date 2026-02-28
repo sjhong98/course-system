@@ -1,5 +1,5 @@
 import { usePathname, useRouter } from 'next/navigation'
-import { useCallback, useEffect } from 'react'
+import { useCallback } from 'react'
 
 export function useQueryParams() {
   const router = useRouter()
@@ -22,8 +22,6 @@ export function useQueryParams() {
     },
     [router, pathname],
   )
-
-  useEffect(() => {}, [])
 
   return { setParam }
 }

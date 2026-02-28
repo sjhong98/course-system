@@ -14,7 +14,7 @@ import { errorHandler } from '@/shared/libs/utils/errorHandler'
 import formatPhoneNumber from '@/shared/libs/utils/formatPhoneNumber'
 import { ApiRequest } from '@/shared/libs/utils/typeGenerator'
 import { InvalidResult } from '@/shared/validation/types'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 
 export default function SignUpForm() {
   const { completeSignIn } = useAuth()
@@ -28,44 +28,47 @@ export default function SignUpForm() {
   const [error, setError] = useState<InvalidResult | null>(null)
   const [processing, setProcessing] = useState(false)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
     const nextValue = name === 'phone' ? formatPhoneNumber(value) : value
-    setSignUpForm({
-      ...signUpForm,
+    setSignUpForm((prev) => ({
+      ...prev,
       [name]: nextValue,
-    })
-  }
+    }))
+  }, [])
 
-  const handleRoleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSignUpForm({
-      ...signUpForm,
+  const handleRoleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSignUpForm((prev) => ({
+      ...prev,
       role: e.target.name as 'STUDENT' | 'INSTRUCTOR',
-    })
-  }
+    }))
+  }, [])
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const toastId = 'sign-up'
-    try {
-      e.preventDefault()
-      setProcessing(true)
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      const toastId = 'sign-up'
+      try {
+        e.preventDefault()
+        setProcessing(true)
 
-      const result = validateSignUpForm(signUpForm)
-      if (result.ok === false) {
-        setError(result)
-        return
-      } else {
-        setError(null)
+        const result = validateSignUpForm(signUpForm)
+        if (result.ok === false) {
+          setError(result)
+          return
+        } else {
+          setError(null)
+        }
+        await apiResponseHandler(async () => await signUp(signUpForm), { key: toastId })
+        const signInResult = await apiResponseHandler(async () => await signIn({ email: signUpForm.email, password: signUpForm.password }))
+        completeSignIn(signInResult.user.role, signInResult.user.name)
+      } catch (error) {
+        errorHandler(error, { key: toastId, message: '회원가입 처리 중 오류가 발생했습니다.' })
+      } finally {
+        setProcessing(false)
       }
-      await apiResponseHandler(async () => await signUp(signUpForm), { key: toastId })
-      const signInResult = await apiResponseHandler(async () => await signIn({ email: signUpForm.email, password: signUpForm.password }))
-      completeSignIn(signInResult.user.role, signInResult.user.name)
-    } catch (error) {
-      errorHandler(error, { key: toastId, message: '회원가입 처리 중 오류가 발생했습니다.' })
-    } finally {
-      setProcessing(false)
-    }
-  }
+    },
+    [signUpForm, completeSignIn],
+  )
 
   return (
     <form onSubmit={handleSubmit}>
@@ -82,19 +85,20 @@ export default function SignUpForm() {
           error={error}
           required
         />
-        <Row className="w-full">
-          <CheckBox label="수강생" className="flex-1" name="STUDENT" checked={signUpForm.role === 'STUDENT'} onChange={handleRoleChange} />
+        <Row className="w-full" role="group" aria-label="역할 선택">
+          <CheckBox label="수강생" className="flex-1" name="STUDENT" checked={signUpForm.role === 'STUDENT'} onChange={handleRoleChange} aria-label="수강생" />
           <CheckBox
             label="강사"
             className="flex-1"
             name="INSTRUCTOR"
             checked={signUpForm.role === 'INSTRUCTOR'}
             onChange={handleRoleChange}
+            aria-label="강사"
           />
         </Row>
       </Column>
       <BottomButton.Container type="submit">
-        <BottomButton.Button processing={processing} type="submit">
+        <BottomButton.Button processing={processing} type="submit" aria-label="회원가입">
           회원가입
         </BottomButton.Button>
       </BottomButton.Container>

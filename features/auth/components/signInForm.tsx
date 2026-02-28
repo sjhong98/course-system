@@ -1,7 +1,6 @@
 'use client'
 
-import { useState } from 'react'
-
+import { useCallback, useState } from 'react'
 import { signIn } from '@/action/signIn'
 import { validateSignInForm } from '@/features/auth/validation/signIn'
 import Column from '@/shared/components/flexBox/Column'
@@ -21,33 +20,36 @@ export default function SignInForm() {
   const [error, setError] = useState<InvalidResult | null>(null)
   const [processing, setProcessing] = useState(false)
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSignInForm({
-      ...signInForm,
+  const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSignInForm((prev) => ({
+      ...prev,
       [e.target.name]: e.target.value,
-    })
-  }
+    }))
+  }, [])
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    const toastId = 'sign-in'
-    e.preventDefault()
-    try {
-      setProcessing(true)
-      const result = validateSignInForm(signInForm)
-      if (result.ok === false) {
-        setError(result)
-        return
-      } else {
-        setError(null)
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      const toastId = 'sign-in'
+      e.preventDefault()
+      try {
+        setProcessing(true)
+        const result = validateSignInForm(signInForm)
+        if (result.ok === false) {
+          setError(result)
+          return
+        } else {
+          setError(null)
+        }
+        const signInResult = await apiResponseHandler(() => signIn(signInForm), { key: toastId })
+        completeSignIn(signInResult.user.role, signInResult.user.name)
+      } catch (error) {
+        errorHandler(error, { key: toastId, message: '로그인 처리 중 오류가 발생했습니다.' })
+      } finally {
+        setProcessing(false)
       }
-      const signInResult = await apiResponseHandler(() => signIn(signInForm), { key: toastId })
-      completeSignIn(signInResult.user.role, signInResult.user.name)
-    } catch (error) {
-      errorHandler(error, { key: toastId, message: '로그인 처리 중 오류가 발생했습니다.' })
-    } finally {
-      setProcessing(false)
-    }
-  }
+    },
+    [signInForm, completeSignIn],
+  )
 
   return (
     <form onSubmit={handleSubmit}>
@@ -64,7 +66,7 @@ export default function SignInForm() {
         />
       </Column>
       <BottomButton.Container>
-        <BottomButton.Button processing={processing} type="submit">
+        <BottomButton.Button processing={processing} type="submit" aria-label="로그인">
           로그인
         </BottomButton.Button>
       </BottomButton.Container>

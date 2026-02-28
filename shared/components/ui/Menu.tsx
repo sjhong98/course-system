@@ -60,6 +60,8 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
   return (
     <>
       <PaddingHorizontalOverrideContainer
+        role="menu"
+        aria-label="사용자 메뉴"
         className="flex tracking-[-1.5px] absolute left-0 right-0 flex-shrink-0 z-[100] bg-[var(--background)] border-[var(--background-tertiary)] transition-[height] overflow-hidden"
         style={{
           top: `${HEADER_HEIGHT}px`,
@@ -74,8 +76,11 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
             {menuItems.map((item) => (
               <button
                 key={item.label}
+                type="button"
+                role="menuitem"
                 className="flex gap-2 items-center justify-start gap-2 cursor-pointer select-none"
                 onClick={item.onClick}
+                aria-label={item.label}
               >
                 <p className="text-sm">{item.label}</p>
               </button>
@@ -84,10 +89,12 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
         </Column>
       </PaddingHorizontalOverrideContainer>
       {backdropVisible && (
-        <div
+        <button
+          type="button"
           onClick={() => setMenuOpen(false)}
-          className="absolute top-0 left-0 h-screen w-screen bg-black/50 z-[95]"
+          className="absolute top-0 left-0 h-screen w-screen bg-black/50 z-[95] cursor-default"
           style={{ animation: menuOpen ? `opacity-up ${MENU_OPEN_TIME}ms ease-in-out` : `opacity-down ${MENU_OPEN_TIME}ms ease-in-out` }}
+          aria-label="메뉴 닫기"
         />
       )}
     </>
