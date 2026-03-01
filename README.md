@@ -188,7 +188,7 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
 - **UI와 로직 분리**
   - 비즈니스 로직은 커스텀 훅으로 분리
     - 강의 생성, 강의 조회, 수강 신청 등 세부 로직 훅으로 분리
-    - 고도화될 경우 대응하기 위한 확장 가능성 고려하여 세부적으로 분리
+    - 고도화 시 확장 가능성 고려하여 세부적으로 분리
 
 <br />
 
@@ -248,19 +248,23 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
 - **테마: CSS variable**
   - `:root`와 `.dark`로 구분하여 CSS variable로 스타일 적용
 
-    ```txt
+    ```text
     checked:bg-[var(--background-secondary)] checked:border-[var(--background-secondary)]
     ```
 
-  - cookie로 theme 관리 → FOUC 없는 테마 구현
+  - cookie로 theme 관리 → SSR로 FOUC 없는 테마 구현
 
 <br />
 
-- **SSR: URL 기반 데이터 패치 + Suspense 분리로 concurrent**
+- **SSR: URL 기반 데이터 패치 + Suspense 분리로 concurrent rendering**
   - URL 기반 데이터 패치
     - courseId, sort 등 URL 상태값 기반 서버 컴포넌트 데이터 패치
   - Suspense 분리
-    - concurrent rendering을 통해 데이터 패치 지연 발생하는 영역만 fallback 적용
+    - concurrent rendering을 통해 데이터 패치 지연 발생하는 영역 분리, fallback 적용
+
+    ```typescript
+    <Suspense fallback={<CourseDetailSkeleton />}>
+    ```
 
 <br />
 
