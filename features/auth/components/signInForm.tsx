@@ -2,8 +2,11 @@
 
 import { useSignInForm } from '@/features/auth/hooks/useSignInForm'
 import Column from '@/shared/components/flexBox/Column'
+import Row from '@/shared/components/flexBox/Row'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import LabelInput from '@/shared/components/ui/LabelInput'
+import { SIGN_UP_PATH } from '@/shared/libs/constants/constants'
+import Link from 'next/link'
 
 // 로그인 폼 컴포넌트
 
@@ -25,9 +28,14 @@ export default function SignInForm() {
         />
       </Column>
       <BottomButton.Container>
-        <BottomButton.Button processing={processing} type="submit" aria-label="로그인">
-          로그인
-        </BottomButton.Button>
+        <Column gap={20}>
+          <BottomButton.Button processing={processing} type="submit" aria-label="로그인">
+            로그인
+          </BottomButton.Button>
+          <Row className="justify-center">
+            <Link href={SIGN_UP_PATH}>회원가입</Link>
+          </Row>
+        </Column>
       </BottomButton.Container>
     </form>
   )

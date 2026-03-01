@@ -6,7 +6,8 @@ import Row from '@/shared/components/flexBox/Row'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import CheckBox from '@/shared/components/ui/CheckBox'
 import LabelInput from '@/shared/components/ui/LabelInput'
-import { ROLE_INSTRUCTOR, ROLE_STUDENT } from '@/shared/libs/constants/constants'
+import { ROLE_INSTRUCTOR, ROLE_STUDENT, SIGN_IN_PATH } from '@/shared/libs/constants/constants'
+import Link from 'next/link'
 
 // 회원가입 폼 컴포넌트
 
@@ -48,9 +49,14 @@ export default function SignUpForm() {
         </Row>
       </Column>
       <BottomButton.Container type="submit">
-        <BottomButton.Button processing={processing} type="submit" aria-label="회원가입">
-          회원가입
-        </BottomButton.Button>
+        <Column gap={20}>
+          <BottomButton.Button processing={processing} type="submit" aria-label="회원가입">
+            회원가입
+          </BottomButton.Button>
+          <Row className="justify-center">
+            <Link href={SIGN_IN_PATH}>로그인</Link>
+          </Row>
+        </Column>
       </BottomButton.Container>
     </form>
   )

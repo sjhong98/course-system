@@ -44,8 +44,7 @@ export default function CourseList() {
     <Column gap={20} style={{ height: COURSE_LIST_HEIGHT, maxHeight: COURSE_LIST_HEIGHT }}>
       <SelectableList.Container
         aria-label="강의 목록"
-        className={cn('overflow-y-scroll pb-[100px] flex-shrink-0 h-full relative')}
-        style={{ marginRight: 'calc(var(--scrollbar-width) * -1)' }}
+        className={cn('overflow-y-scroll pb-[100px] flex-shrink-0 h-full relative sm:mr-[calc(var(--scrollbar-width) * -1)] mr-0')}
       >
         {courseList.map((item, index) => {
           if (item === undefined) return null
