@@ -5,7 +5,7 @@
 아래 환경에서 개발되었습니다.
 
 - Node.js v20.x
-- npm 10.x
+- npm 11.x
 
 ### 1. Repository Clone
 
@@ -127,38 +127,38 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
 
 **1. 인증**
 
-**useAuth** 훅 및 Server Actions에 로직 정리
+**useAuth** 훅, **useSignInForm** / **useSignUpForm** 훅 및 **signIn** / **signUp** / **signOut** Server Action에 로직 정리
 
 - 1-1) 로그인 (signIn)
-  - 이메일 주소로 인증 요청
-  - 인증 성공 시 토큰 저장 및 강의 목록 등으로 이동
+  - 이메일·비밀번호로 인증 요청 (useSignInForm, validateSignInForm)
+  - 인증 성공 시 completeSignIn 호출 후 강의 목록으로 이동
 
 - 1-2) 회원가입 (signUp)
-  - 이메일, 비밀번호, 이름 등으로 가입
-  - 유효성 검사 후 가입 처리
+  - 이름, 이메일, 휴대폰 번호, 비밀번호, 역할(학생/강사)으로 가입 (useSignUpForm, validateSignUpForm)
+  - 유효성 검사 후 가입 처리, 이후 자동 로그인
 
 - 1-3) 로그아웃 (signOut)
-  - 세션/토큰 제거 후 로그인 페이지로 이동
+  - signOut 액션 및 completeSignOut으로 로그인 페이지로 이동
 
 **2. 강의 목록**
 
-**useCourseList**, **courseQuery**에 로직 정리
+**useCourseList**, **courseListQueryOptions** (courseQuery)에 로직 정리
 
 - 2-1) 강의 목록 조회
-  - TanStack Query로 강의 목록 패칭 및 관리
-  - 검색·필터·정렬 지원
+  - TanStack Query(infiniteQuery)로 강의 목록 패칭 및 관리
+  - 정렬 지원(recent / popular / rate), 무한 스크롤
 
 **3. 강의 상세**
 
 **useCourseDetail** 훅에 로직 정리
 
 - 3-1) 강의 상세 조회
-  - 강의 ID 기준 상세 정보 패칭
-  - 수강 신청 버튼 및 상태 표시
+  - 강의 ID 기준 상세 정보 표시 (페이지에서 전달받은 course 사용)
+  - 수강 신청 버튼 및 처리 (useEnrollCourse 연동)
 
 **4. 강의 생성**
 
-**useCourseCreateForm** 훅 및 **createCourse** validation에 로직 정리
+**useCourseCreateForm** 훅, **createCourse** Server Action, **validateCourseCreateForm** (validation/createCourse)에 로직 정리
 
 - 4-1) 강의 등록
   - Server Action으로 강의 생성
@@ -166,11 +166,11 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
 
 **5. 수강 신청**
 
-**enrollCourse**, **enrollCourseBatch** Server Action
+**useEnrollCourse** / **useEnrollCourseBatch** 훅 및 **enrollCourse** / **enrollCourseBatch** Server Action
 
 - 5-1) 수강 신청
-  - 강의 상세에서 단건 수강 신청
-  - 일괄 수강 신청 지원 (enrollCourseBatch)
+  - 강의 상세에서 단건 수강 신청 (useEnrollCourse)
+  - 강의 목록에서 일괄 수강 신청 지원 (useEnrollCourseBatch, select 모드)
 
 <br />
 
