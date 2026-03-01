@@ -13,8 +13,6 @@
 git clone https://github.com/sjhong98/course-system.git
 ```
 
-<br/>
-
 ```
 cd course-system
 ```
