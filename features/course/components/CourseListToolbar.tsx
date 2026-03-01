@@ -52,8 +52,8 @@ export default function CourseListToolbar() {
 
   const [isFilterOpen, setIsFilterOpen] = useState(false)
 
-  const handleSortChange = (value: CourseListSort) => {
-    setParam('sort', value)
+  const handleSortChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setParam('sort', e.target.name as CourseListSort)
   }
 
   const handleSelectChange = () => {
@@ -96,9 +96,10 @@ export default function CourseListToolbar() {
             <CheckBox
               key={item.value}
               label={item.label}
+              name={item.value}
               className="flex-1"
               checked={sort === item.value}
-              onChange={() => handleSortChange(item.value as CourseListSort)}
+              onChange={handleSortChange}
               aria-label={item.label}
             />
           ))}

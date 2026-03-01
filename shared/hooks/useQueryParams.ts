@@ -24,7 +24,7 @@ export function useQueryParams() {
       const queryString = params.toString()
       const url = queryString ? `${pathname}?${queryString}` : pathname
 
-      router.replace(url)
+      window.history.replaceState(null, '', url)
     },
     [router, pathname],
   )

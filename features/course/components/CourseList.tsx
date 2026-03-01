@@ -52,7 +52,6 @@ export default function CourseList() {
             <Fragment key={item.id}>
               {index === courseList.length - 4 && <div key={-1} ref={upperTriggerRef} className="w-full h-1" />}
               <SelectableList.Item
-                key={isSelectable ? 'selectable' : 'unselectable'}
                 selected={enrollCourseList.includes(item.id ?? 0)}
                 selectable={isSelectable}
                 disabled={isSelectable && item.isFull}

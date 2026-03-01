@@ -271,6 +271,9 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
 <br />
 
 - **에러 바운더리 + 공용 Error 컴포넌트 + errorHandler 3단계의 에러 핸들링 구조**
+  - 1단계: errorHandler로 API/액션 에러 처리
+  - 2단계: 라우트/페이지 단 에러 바운더리
+  - 3단계: 루트 error.tsx로 상위 포착
 
 <br />
 
