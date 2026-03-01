@@ -27,7 +27,7 @@ npm install
 
 프로젝트 루트에 `.env.local` 파일을 생성하고 아래 변수를 설정합니다.
 
-(기본값으로 http://localhost:8080 가 적용되어 있습니다.)
+(기본값이 http://localhost:8080 으로 설정되어 있어, 생략 가능합니다.)
 
 ```bash
 NEXT_PUBLIC_API_URL=http://localhost:8080
