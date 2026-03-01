@@ -1,4 +1,4 @@
-# lecture-system
+# course-system
 
 ### Prerequisites
 
@@ -10,8 +10,8 @@
 ### 1. Repository Clone
 
 ```bash
-git clone <repository-url>
-cd lecture-system
+git clone https://github.com/sjhong98/course-system.git
+cd course-system
 ```
 
 ### 2. Install Dependencies
@@ -52,108 +52,46 @@ http://localhost:3000
 ### 폴더 구조
 
 ```
-app/
-├── layout.tsx              # 루트 레이아웃
-├── page.tsx                # 메인(/) - 로그인으로 리다이렉트
-├── Providers.tsx           # React Query 등 Provider
-├── globals.css
-├── error.tsx               # 전역 에러 바운더리
-├── loading.tsx             # 전역 로딩
-│
-├── signin/
-│   ├── layout.tsx
-│   └── page.tsx            # /signin - 로그인
-├── signup/
-│   ├── layout.tsx
-│   └── page.tsx            # /signup - 회원가입
-│
-├── course/
-│   ├── list/
-│   │   ├── layout.tsx
-│   │   ├── page.tsx        # /course/list - 강의 목록
-│   │   ├── loading.tsx
-│   │   └── error.tsx
-│   ├── create/
-│   │   ├── layout.tsx
-│   │   └── page.tsx        # /course/create - 강의 생성
-│   └── [courseId]/
-│       ├── layout.tsx
-│       └── page.tsx        # /course/[courseId] - 강의 상세
-│
-action/                      # Server Actions
-├── signIn.ts
-├── signUp.ts
-├── getCourseList.ts
-├── getCourse.ts
-├── createCourse.ts
-├── enrollCourse.ts
-└── enrollCourseBatch.ts
-│
-features/
-├── auth/                    # 인증 기능
-│   ├── components/
-│   │   ├── signInForm.tsx
-│   │   └── SignUpForm.tsx
-│   ├── hooks/
-│   │   ├── useSignInForm.ts
-│   │   └── useSignUpForm.ts
-│   └── validation/
-│       ├── signIn.ts
-│       └── signUp.ts
-└── course/                  # 강의 기능
-    ├── components/
-    │   ├── CourseList.tsx
-    │   ├── CourseListContainer.tsx
-    │   ├── CourseListToolbar.tsx
-    │   ├── CourseListSkeleton.tsx
-    │   ├── CourseDetail.tsx
-    │   ├── CourseDetailContainer.tsx
-    │   ├── CourseDetailSkeleton.tsx
-    │   └── CourseCreateForm.tsx
-    ├── hooks/
-    │   ├── useCourseList.ts
-    │   ├── useCourseDetail.ts
-    │   └── useCourseCreateForm.ts
-    ├── query/
-    │   └── courseQuery.ts
-    └── validation/
-        └── createCourse.ts
-│
-shared/
+app/                          # 라우팅·레이아웃 (Next.js App Router)
+├── layout.tsx                # 루트 레이아웃
+├── page.tsx                  # 메인(/) - 로그인으로 리다이렉트
+├── Providers.tsx             # React Query 등 Provider
+├── globals.css               # 전역 스타일
+├── error.tsx                 # 전역 에러 바운더리
+├── loading.tsx               # 전역 로딩 UI
+├── fonts/                    # 폰트 파일
+├── signin/                   # /signin - 로그인 페이지
+├── signup/                   # /signup - 회원가입 페이지
+└── course/
+    ├── list/                 # /course/list - 강의 목록
+    ├── create/               # /course/create - 강의 생성
+    └── [courseId]/           # /course/[courseId] - 강의 상세
+
+features/                     # 기능 단위 모듈 (Feature-Sliced)
+├── auth/                     # 인증 (로그인·회원가입·로그아웃)
+│   ├── action/               # Server Actions (signIn, signUp, signOut 등)
+│   ├── components/           # 인증 관련 UI 컴포넌트
+│   ├── hooks/                # 인증 관련 훅
+│   └── validation/           # 로그인·회원가입 폼 유효성 검사
+└── course/                   # 강의 (목록·상세·생성·수강 신청)
+    ├── action/               # Server Actions (getCourseList, getCourse, createCourse, enrollCourse 등)
+    ├── components/           # 강의 관련 UI·Container 컴포넌트
+    ├── hooks/                # 강의 목록·상세·생성 폼 등 훅
+    ├── query/                # TanStack Query 옵션 (강의 목록 infinite query 등)
+    ├── utils/                # 강의 도메인 유틸 (정렬 파싱 등)
+    └── validation/           # 강의 생성 폼 유효성 검사
+
+shared/                       # 공용 레이어 (여러 feature에서 사용)
 ├── components/
-│   ├── ui/                  # 공용 UI 컴포넌트
-│   │   ├── Button.tsx
-│   │   ├── Header.tsx
-│   │   ├── LabelInput.tsx
-│   │   ├── BottomButton.tsx
-│   │   ├── Error.tsx
-│   │   ├── Menu.tsx
-│   │   └── ...
-│   ├── container/
-│   │   ├── MobileWrapper.tsx
-│   │   └── PaddingHorizontalOverrideContainer.tsx
-│   └── flexBox/
-│       ├── Row.tsx
-│       └── Column.tsx
-├── hooks/
-│   ├── useAuth.ts
-│   └── useQueryParams.ts
+│   ├── ui/                   # 버튼, 입력, 헤더 등 공용 UI 컴포넌트
+│   ├── container/            # MobileWrapper 등 레이아웃 래퍼
+│   └── flexBox/              # Row, Column 등 레이아웃 컴포넌트
+├── hooks/                    # useAuth, useQueryParams 등 공용 훅
 ├── libs/
-│   ├── api/
-│   │   ├── api.ts
-│   │   └── scheme.d.ts
-│   ├── constants/
-│   │   └── constants.ts
-│   └── utils/
-│       ├── apiResponseHandler.ts
-│       ├── errorHandler.ts
-│       ├── formatNumber.ts
-│       ├── formatPhoneNumber.ts
-│       ├── parseNumber.ts
-│       └── cn.ts
-└── validation/
-    ├── rules.ts
-    └── types.ts
+│   ├── api/                  # API 클라이언트·스키마 타입 (scheme.d.ts)
+│   ├── constants/            # 레이아웃 상수 등
+│   └── utils/                # apiResponseHandler, errorHandler, formatNumber 등
+└── validation/               # 공통 유효성 규칙(rules)·ValidationResult 타입
 ```
 
 <br />
@@ -238,18 +176,79 @@ shared/
 
 ### 구현내용
 
-**Feature-Sliced 아키텍처**
-타입 안정된
+- **Feature-Sliced 아키텍처**
+  - app + features + shared 3개 레이어 사용
+  - 라우팅과 기능 분리
+    - app 하위의 page는 feature를 가져와 조합하는 역할로 한정
+    - UI, 로직 등은 feature에 최대한 분리
 
-- 타입 안정한 API 레이어
-  - /v3/api-docs 에서
-    OpenAPI 스펙 기반으로 API 스키마를
-- 서버/클라이언트 응답 처리 일원화
-- tanstack query: 무한 스크롤 + prefetch + cache + revalidate
-- 보안: httpOnly
-- 테마: beforeInteractive + css variable
-- skeleton + error
-- 테스트
-- SSR: URL 기반 데이터 패치 + supsense 분리로 concurrent
-- 중복 제거: 공용 컴포넌트 + 레이아웃
-- 직관적이고 사용성 높은 UI, 픽셀단위 계산한 layout
+- **UI와 로직 분리**
+  - 비즈니스 로직은 커스텀 훅으로 분리
+    - 강의 생성, 강의 조회, 수강 신청 등 세부 로직 훅으로 분리
+    - 고도화될 경우 대응하기 위한 확장 가능성 고려하여 세부적으로 분리
+
+- **타입 안정한 API 레이어**
+  - openapi-typescript를 통해 API 스키마 자동 생성 (`/v3/api-docs` → `scheme.d.ts`)
+
+    ```json
+    "scripts": {
+      "api": "npx openapi-typescript http://localhost:8080/v3/api-docs -o shared/libs/api/scheme.d.ts"
+    }
+    ```
+
+  - API 요청 및 응답값 사용 시 타입 자동 추론
+  - 경로/메소드별 Request/Response 타입 추출 가능한 TypeGenerator를 이용하여 타입 지정
+
+    ```typescript
+    type CourseCreateForm = ApiRequest<'/api/courses', 'post'>
+    ```
+
+- **서버/클라이언트 응답 처리 일원화**
+  - 서버 액션에서 API를 호출한 뒤, 응답/에러 값을 직렬화 가능한 형태로 클라이언트에게 전달
+    - serializableResponse
+    - 서버 → 클라이언트로 직렬화되어 전달되는 과정에서 Response 객체 없어지므로, 미리 직렬화하여 전달
+  - 클라이언트에서는 동일한 규칙으로 성공/에러 처리
+    - apiResponseHandler / apiSyncResponseHandler
+    - 성공값은 반환하고, 2xx 제외한 응답값은 throw → 타입 추론
+    - 에러 UI 자동 처리
+    - 401 에러에 대한 리다이렉트 처리
+
+- **Tanstack Query: 무한 스크롤 + prefetch + cache + revalidate**
+  - Tanstack Query 활용한 강의목록 패치 및 상태 관리
+  - 무한 스크롤 (infiniteQueryOptions)
+    - 끝에서 4번째 아이템에 trigger 배치 → 여유공간 통한 조기 데이터 패치로 자연스러운 스크롤 구현
+  - Fallback 일원화 (useSuspenseInfiniteQuery)
+    - suspense fallback와 isFetching를 동일한 Loading UI로 일원화 → 버벅임 없음
+  - Server Prefetch (prefetchInfiniteQuery)
+    - 서버에서 첫 페이지 먼저 조회하여 캐시에 저장
+  - cache 설정 (gcTime)
+    - 강의 업데이트 시 revalidate
+
+    ```typescript
+    await queryClient.invalidateQueries({ queryKey: ['courses'] })
+    ```
+
+- **보안: httpOnly**
+  - 서버 액션을 이용하여 액세스 토큰을 httpOnly 쿠키로 저장 (signIn)
+  - 액세스 토큰 포함해야 하는 API는 서버 액션에서만 호출
+
+- **테마: CSS variable**
+  - `:root`와 `.dark`로 구분하여 CSS variable로 스타일 적용
+
+    ```txt
+    checked:bg-[var(--background-secondary)] checked:border-[var(--background-secondary)]
+    ```
+
+  - cookie로 theme 관리 → FOUC 없는 테마 구현
+
+- **SSR: URL 기반 데이터 패치 + Suspense 분리로 concurrent**
+  - URL 기반 데이터 패치
+    - courseId, sort 등 URL 상태값 기반 서버 컴포넌트 데이터 패치
+  - Suspense 분리
+    - concurrent rendering을 통해 데이터 패치 지연 발생하는 영역만 fallback 적용
+
+- **직관적이고 사용성 높은 UI, 픽셀 단위 계산한 layout**
+  - 레이아웃 상수를 한 곳에서 관리하여, 픽셀 단위의 레이아웃 구현
+  - MobileWrapper를 이용한 모바일 웹 화면 구현
+
+- **에러 바운더리 + 공용 Error 컴포넌트 + errorHandler 3단계의 에러 핸들링 구조**
