@@ -1,6 +1,6 @@
 # course-system
 
-### Prerequisites
+## Prerequisites
 
 아래 환경에서 개발되었습니다.
 
@@ -49,7 +49,7 @@ http://localhost:3000
 
 <br />
 
-### 폴더 구조
+## 폴더 구조
 
 ```
 app/                          # 라우팅·레이아웃 (Next.js App Router)
@@ -95,8 +95,9 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
 ```
 
 <br />
+<br />
 
-### 페이지 구성
+## 페이지 구성
 
 1. **/**
    - 메인 페이지 (로그인 페이지로 리다이렉트)
@@ -122,8 +123,9 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
    - 강의 정보 확인 및 수강 신청이 가능합니다.
 
 <br />
+<br />
 
-### 기능 설명
+## 기능 설명
 
 **1. 인증**
 
@@ -181,8 +183,9 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
   - 강의 목록에서 일괄 수강 신청 지원 (useEnrollCourseBatch, select 모드)
 
 <br />
+<br />
 
-### 구현내용
+## 구현내용
 
 - **Feature-Sliced 아키텍처**
   - app + features + shared 3개 레이어 사용
