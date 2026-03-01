@@ -11,6 +11,9 @@
 
 ```bash
 git clone https://github.com/sjhong98/course-system.git
+```
+
+```
 cd course-system
 ```
 
