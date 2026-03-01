@@ -213,7 +213,7 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
 - **서버/클라이언트 응답 처리 일원화**
   - 서버 액션에서 API를 호출한 뒤, 응답/에러 값을 직렬화 가능한 형태로 클라이언트에게 전달
     - serializableResponse
-    - 서버 → 클라이언트로 직렬화되어 전달되는 과정에서 Response 객체 없어지므로, 미리 직렬화하여 전달
+    - Server Action 반환값은 직렬화 가능해야 하므로, Response 등은 서버에서 미리 직렬화한 형태로 넘기고, 클라이언트는 그 형식을 기준으로 처리
   - 클라이언트에서는 동일한 규칙으로 성공/에러 처리
     - apiResponseHandler / apiSyncResponseHandler
     - 성공값은 반환하고, 2xx 제외한 응답값은 throw → 타입 추론
@@ -225,11 +225,11 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
 - **Tanstack Query: 무한 스크롤 + prefetch + cache + revalidate**
   - Tanstack Query 활용한 강의목록 패치 및 상태 관리
   - 무한 스크롤 (infiniteQueryOptions)
-    - 끝에서 4번째 아이템에 trigger 배치 → 여유공간 통한 조기 데이터 패치로 자연스러운 스크롤 구현
+    - viewport 하단에서 일정 거리 두고 trigger 영역 배치 (TRIGGER_THRESHOLD) → 여유공간 통한 조기 데이터 패치로 자연스러운 스크롤 구현
   - Fallback 일원화 (useSuspenseInfiniteQuery)
     - suspense fallback와 isFetching를 동일한 Loading UI로 일원화 → 버벅임 없음
   - Server Prefetch (prefetchInfiniteQuery)
-    - 서버에서 첫 페이지 먼저 조회하여 캐시에 저장
+    - 강의 목록 페이지 진입 시 서버에서 prefetchInfiniteQuery로 첫 페이지를 미리 가져와 캐시에 저장
   - cache 설정 (gcTime)
     - 강의 업데이트 시 revalidate
 
