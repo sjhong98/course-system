@@ -140,6 +140,8 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
 - 1-3) 로그아웃 (signOut)
   - signOut 액션 및 completeSignOut으로 로그인 페이지로 이동
 
+<br />
+
 **2. 강의 목록**
 
 **useCourseList**, **courseListQueryOptions** (courseQuery)에 로직 정리
@@ -147,6 +149,8 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
 - 2-1) 강의 목록 조회
   - TanStack Query(infiniteQuery)로 강의 목록 패칭 및 관리
   - 정렬 지원(recent / popular / rate), 무한 스크롤
+
+<br />
 
 **3. 강의 상세**
 
@@ -156,6 +160,8 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
   - 강의 ID 기준 상세 정보 표시 (페이지에서 전달받은 course 사용)
   - 수강 신청 버튼 및 처리 (useEnrollCourse 연동)
 
+<br />
+
 **4. 강의 생성**
 
 **useCourseCreateForm** 훅, **createCourse** Server Action, **validateCourseCreateForm** (validation/createCourse)에 로직 정리
@@ -163,6 +169,8 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
 - 4-1) 강의 등록
   - Server Action으로 강의 생성
   - 폼 유효성 검사 후 제출
+
+<br />
 
 **5. 수강 신청**
 
@@ -182,10 +190,14 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
     - app 하위의 page는 feature를 가져와 조합하는 역할로 한정
     - UI, 로직 등은 feature에 최대한 분리
 
+<br />
+
 - **UI와 로직 분리**
   - 비즈니스 로직은 커스텀 훅으로 분리
     - 강의 생성, 강의 조회, 수강 신청 등 세부 로직 훅으로 분리
     - 고도화될 경우 대응하기 위한 확장 가능성 고려하여 세부적으로 분리
+
+<br />
 
 - **타입 안정한 API 레이어**
   - openapi-typescript를 통해 API 스키마 자동 생성 (`/v3/api-docs` → `scheme.d.ts`)
@@ -203,6 +215,8 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
     type CourseCreateForm = ApiRequest<'/api/courses', 'post'>
     ```
 
+<br />
+
 - **서버/클라이언트 응답 처리 일원화**
   - 서버 액션에서 API를 호출한 뒤, 응답/에러 값을 직렬화 가능한 형태로 클라이언트에게 전달
     - serializableResponse
@@ -212,6 +226,8 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
     - 성공값은 반환하고, 2xx 제외한 응답값은 throw → 타입 추론
     - 에러 UI 자동 처리
     - 401 에러에 대한 리다이렉트 처리
+
+<br />
 
 - **Tanstack Query: 무한 스크롤 + prefetch + cache + revalidate**
   - Tanstack Query 활용한 강의목록 패치 및 상태 관리
@@ -228,9 +244,13 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
     await queryClient.invalidateQueries({ queryKey: ['courses'] })
     ```
 
+<br />
+
 - **보안: httpOnly**
   - 서버 액션을 이용하여 액세스 토큰을 httpOnly 쿠키로 저장 (signIn)
   - 액세스 토큰 포함해야 하는 API는 서버 액션에서만 호출
+
+<br />
 
 - **테마: CSS variable**
   - `:root`와 `.dark`로 구분하여 CSS variable로 스타일 적용
@@ -241,14 +261,20 @@ shared/                       # 공용 레이어 (여러 feature에서 사용)
 
   - cookie로 theme 관리 → FOUC 없는 테마 구현
 
+<br />
+
 - **SSR: URL 기반 데이터 패치 + Suspense 분리로 concurrent**
   - URL 기반 데이터 패치
     - courseId, sort 등 URL 상태값 기반 서버 컴포넌트 데이터 패치
   - Suspense 분리
     - concurrent rendering을 통해 데이터 패치 지연 발생하는 영역만 fallback 적용
 
+<br />
+
 - **직관적이고 사용성 높은 UI, 픽셀 단위 계산한 layout**
   - 레이아웃 상수를 한 곳에서 관리하여, 픽셀 단위의 레이아웃 구현
   - MobileWrapper를 이용한 모바일 웹 화면 구현
+
+<br />
 
 - **에러 바운더리 + 공용 Error 컴포넌트 + errorHandler 3단계의 에러 핸들링 구조**
