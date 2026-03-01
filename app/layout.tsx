@@ -1,10 +1,11 @@
 import ThemeSyncToastContainer from '@/shared/components/ui/ThemeSyncToastContainer'
 import type { Metadata } from 'next'
+import { cookies } from 'next/headers'
 import { Geist, Geist_Mono } from 'next/font/google'
 import localFont from 'next/font/local'
-import Script from 'next/script'
 
 import '@/app/globals.css'
+import { THEME_COOKIE_NAME } from '@/shared/libs/utils/theme'
 import Providers from '@/app/Providers'
 import MobileWrapper from '@/shared/components/container/MobileWrapper'
 
@@ -39,23 +40,16 @@ export const metadata: Metadata = {
   description: 'COURSE SYSTEM',
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode
 }>) {
+  const cookieStore = await cookies()
+  const theme = cookieStore.get(THEME_COOKIE_NAME)?.value === 'dark' ? 'dark' : 'light'
+
   return (
-    <html lang="ko" suppressHydrationWarning>
-      <head>
-        <Script id="theme-script" strategy="beforeInteractive">
-          {`
-            const saved = localStorage.getItem('theme');
-            if (saved === 'dark') {
-              document.documentElement.classList.add('dark');
-            }
-          `}
-        </Script>
-      </head>
+    <html lang="ko" className={theme === 'dark' ? 'dark' : ''} suppressHydrationWarning>
       <body className={`${pretendard.variable} ${geistSans.variable} ${geistMono.variable} font-sans antialiased h-screen m-0`}>
         <ThemeSyncToastContainer
           className="!max-w-[500px]"
