@@ -12,7 +12,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { ReactNode, useMemo, useState } from 'react'
 import { parseCourseListSort, CourseListSort } from '@/features/course/utils/parseCourseListSort'
 
-type CourseHeaderButtonProps = {
+type CourseToolbarButtonProps = {
   children: ReactNode
   onClick: () => void
   active?: boolean
@@ -21,7 +21,7 @@ type CourseHeaderButtonProps = {
 
 // 강의 목록 툴바 버튼 컴포넌트
 
-function CourseHeaderButton({ children, onClick, active, 'aria-label': ariaLabel, ...rest }: CourseHeaderButtonProps) {
+function CourseToolbarButton({ children, onClick, active, 'aria-label': ariaLabel, ...rest }: CourseToolbarButtonProps) {
   return (
     <Button
       className={cn(
@@ -71,16 +71,16 @@ export default function CourseListToolbar() {
   return (
     <>
       <Row gap={4} className="absolute top-2 right-0" role="toolbar" aria-label="강의 목록 도구">
-        <CourseHeaderButton onClick={() => setIsFilterOpen(!isFilterOpen)} active={isFilterOpen} aria-label="정렬 필터">
+        <CourseToolbarButton onClick={() => setIsFilterOpen(!isFilterOpen)} active={isFilterOpen} aria-label="정렬 필터">
           <FilterIcon className="w-4 h-4" />
-        </CourseHeaderButton>
-        <CourseHeaderButton onClick={handleSelectChange} active={isSelectable} aria-label="수강 신청 선택">
+        </CourseToolbarButton>
+        <CourseToolbarButton onClick={handleSelectChange} active={isSelectable} aria-label="수강 신청 선택">
           수강 신청 선택
-        </CourseHeaderButton>
+        </CourseToolbarButton>
         {isInstructor && (
-          <CourseHeaderButton onClick={() => router.push('/course/create')} active aria-label="강의 개설">
+          <CourseToolbarButton onClick={() => router.push('/course/create')} active aria-label="강의 개설">
             강의 개설
-          </CourseHeaderButton>
+          </CourseToolbarButton>
         )}
       </Row>
       {isFilterOpen && (

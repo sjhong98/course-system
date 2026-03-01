@@ -10,10 +10,22 @@ import { signOut } from '@/features/auth/action/signOut'
 import { usePathname } from 'next/navigation'
 
 const MENU_OPEN_TIME = 300
+const BACKDROP_OPEN_TIME = MENU_OPEN_TIME - 10
+
+type MenuProps = {
+  menuOpen: boolean
+  setMenuOpen: (open: boolean) => void
+}
+
+type MenuItem = {
+  label: string
+  onClick: () => void
+  condition?: boolean
+}
 
 // 메뉴 컴포넌트
 
-export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; setMenuOpen: (open: boolean) => void }) {
+export default function Menu({ menuOpen, setMenuOpen }: MenuProps) {
   const { completeSignOut } = useAuth()
   const pathname = usePathname()
   const [menuContentHeight, setMenuContentHeight] = useState(0)
@@ -21,7 +33,7 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
   const [backdropVisible, setBackdropVisible] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
-  const menuItems = useMemo(
+  const menuItems: MenuItem[] = useMemo(
     () => [
       {
         label: '로그아웃',
@@ -48,7 +60,7 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
       setCurrentMenuHeight(0)
       setTimeout(() => {
         setBackdropVisible(false)
-      }, MENU_OPEN_TIME - 10)
+      }, BACKDROP_OPEN_TIME)
     }
   }, [menuOpen])
 
@@ -77,20 +89,21 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
         }}
       >
         <Column as="nav" className="flex-shrink-0 w-full items-end" style={{ paddingRight: `${PADDING}px` }}>
-          <Column ref={menuRef} gap={24} className="pb-6 pt-10 h-fit">
-            {menuItems.map((item) =>
-              item.condition === undefined || item.condition === true ? (
+          <Column ref={menuRef} gap={24} className="pt-10 pb-8 h-fit">
+            {menuItems.map((item) => {
+              const isVisible = item.condition === undefined || item.condition === true
+              return isVisible ? (
                 <button
                   key={item.label}
                   role="menuitem"
-                  className="flex gap-2 items-center justify-start gap-2 cursor-pointer select-none cursor-pointer"
+                  className="flex gap-2 items-center justify-start gap-2 cursor-pointer select-none cursor-pointer text-sm py-1"
                   onClick={item.onClick}
                   aria-label={item.label}
                 >
-                  <p className="text-sm">{item.label}</p>
+                  {item.label}
                 </button>
-              ) : null,
-            )}
+              ) : null
+            })}
           </Column>
         </Column>
       </PaddingHorizontalOverrideContainer>

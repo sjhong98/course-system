@@ -7,7 +7,7 @@ type PaddingHorizontalOverrideContainerProps = React.HTMLAttributes<HTMLDivEleme
   paddingHorizontal?: boolean
 }
 
-// 패딩 무효화 Wrapper 컴포넌트
+// 패딩 상쇄 Wrapper 컴포넌트
 
 export default function PaddingHorizontalOverrideContainer({
   as,

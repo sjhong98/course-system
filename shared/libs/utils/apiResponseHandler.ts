@@ -14,7 +14,7 @@ export const apiResponseHandler = async <T, E extends ErrorLike>(
 ): Promise<T> => {
   try {
     const result = await apiCall()
-    return responseErrorHandler(result, option)
+    return unwrapApiResponse(result, option)
   } catch (error) {
     await errorHandler(error)
     throw error
@@ -26,10 +26,10 @@ export const apiSyncResponseHandler = <T, E extends ErrorLike>(
   apiResponse: SerializableResponse<T, E>,
   option?: { key?: string; skipToast?: boolean },
 ): T => {
-  return responseErrorHandler(apiResponse, option)
+  return unwrapApiResponse(apiResponse, option)
 }
 
-const responseErrorHandler = <T, E extends ErrorLike>(
+const unwrapApiResponse = <T, E extends ErrorLike>(
   apiResponse: SerializableResponse<T, E>,
   option?: { key?: string; skipToast?: boolean },
 ) => {
