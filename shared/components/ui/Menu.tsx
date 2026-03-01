@@ -6,6 +6,7 @@ import { HEADER_HEIGHT, PADDING } from '@/shared/libs/constants/constants'
 import { useEffect, useRef, useState } from 'react'
 import PaddingHorizontalOverrideContainer from '@/shared/components/container/PaddingHorizontalOverrideContainer'
 import Column from '@/shared/components/flexBox/Column'
+import { signOut } from '@/features/auth/action/signOut'
 
 const MENU_OPEN_TIME = 300
 
@@ -21,6 +22,7 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
     {
       label: '로그아웃',
       onClick: () => {
+        signOut()
         completeSignOut()
         setMenuOpen(false)
       },

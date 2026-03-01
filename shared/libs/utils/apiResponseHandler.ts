@@ -1,6 +1,7 @@
 import { toast } from 'react-toastify'
 import { SerializableResponse } from '@/shared/libs/api/api'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
+import { signOut } from '@/features/auth/action/signOut'
 
 export type ApiErrorPayload = { message: string; status: number }
 
@@ -44,6 +45,7 @@ const responseErrorHandler = <T, E extends ErrorLike>(
       window.location.href = '/signin'
       localStorage.removeItem('role')
       localStorage.removeItem('name')
+      signOut()
     }
 
     throw new Error(apiResponse.error?.message ?? '요청 중에 오류가 발생했습니다.')
