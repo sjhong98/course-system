@@ -3,10 +3,11 @@
 import useAuth from '@/features/auth/hooks/useAuth'
 import { toggleThemeAndSync } from '@/shared/libs/utils/theme'
 import { HEADER_HEIGHT, PADDING } from '@/shared/libs/constants/constants'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import PaddingHorizontalOverrideContainer from '@/shared/components/container/PaddingHorizontalOverrideContainer'
 import Column from '@/shared/components/flexBox/Column'
 import { signOut } from '@/features/auth/action/signOut'
+import { usePathname } from 'next/navigation'
 
 const MENU_OPEN_TIME = 300
 
@@ -14,24 +15,30 @@ const MENU_OPEN_TIME = 300
 
 export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; setMenuOpen: (open: boolean) => void }) {
   const { completeSignOut } = useAuth()
+  const pathname = usePathname()
   const [menuContentHeight, setMenuContentHeight] = useState(0)
   const [currentMenuHeight, setCurrentMenuHeight] = useState(0)
   const [backdropVisible, setBackdropVisible] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
-  const menuItems = [
-    {
-      label: '로그아웃',
-      onClick: () => {
-        signOut()
-        completeSignOut()
-        setMenuOpen(false)
+
+  const menuItems = useMemo(
+    () => [
+      {
+        label: '로그아웃',
+        onClick: () => {
+          signOut()
+          completeSignOut()
+          setMenuOpen(false)
+        },
+        condition: pathname !== '/signin' && pathname !== '/signup',
       },
-    },
-    {
-      label: '테마 변경',
-      onClick: toggleThemeAndSync,
-    },
-  ]
+      {
+        label: '테마 변경',
+        onClick: toggleThemeAndSync,
+      },
+    ],
+    [pathname],
+  )
 
   useEffect(() => {
     if (menuOpen) {
@@ -46,9 +53,14 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
   }, [menuOpen])
 
   useEffect(() => {
-    if (!menuRef.current) return
-    setMenuContentHeight(menuRef.current.scrollHeight)
-  }, [menuOpen])
+    const el = menuRef.current
+    if (!el) return
+    const observer = new ResizeObserver(() => {
+      setMenuContentHeight(el.scrollHeight)
+    })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [])
 
   return (
     <>
@@ -64,19 +76,21 @@ export default function Menu({ menuOpen, setMenuOpen }: { menuOpen: boolean; set
           transitionDuration: `${MENU_OPEN_TIME}ms`,
         }}
       >
-        <Column as="nav" ref={menuRef} className="flex-shrink-0 w-full items-end" style={{ paddingRight: `${PADDING}px` }}>
-          <Column gap={24} className="pb-6 pt-10">
-            {menuItems.map((item) => (
-              <button
-                key={item.label}
-                role="menuitem"
-                className="flex gap-2 items-center justify-start gap-2 cursor-pointer select-none cursor-pointer"
-                onClick={item.onClick}
-                aria-label={item.label}
-              >
-                <p className="text-sm">{item.label}</p>
-              </button>
-            ))}
+        <Column as="nav" className="flex-shrink-0 w-full items-end" style={{ paddingRight: `${PADDING}px` }}>
+          <Column ref={menuRef} gap={24} className="pb-6 pt-10 h-fit">
+            {menuItems.map((item) =>
+              item.condition === undefined || item.condition === true ? (
+                <button
+                  key={item.label}
+                  role="menuitem"
+                  className="flex gap-2 items-center justify-start gap-2 cursor-pointer select-none cursor-pointer"
+                  onClick={item.onClick}
+                  aria-label={item.label}
+                >
+                  <p className="text-sm">{item.label}</p>
+                </button>
+              ) : null,
+            )}
           </Column>
         </Column>
       </PaddingHorizontalOverrideContainer>
