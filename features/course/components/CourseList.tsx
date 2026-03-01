@@ -13,6 +13,7 @@ import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT } from '@/shared/libs/constants/consta
 import { cn } from '@/shared/libs/utils/cn'
 
 const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`
+const TRIGGER_THRESHOLD = 4
 
 // 강의 목록 컴포넌트
 
@@ -50,7 +51,7 @@ export default function CourseList() {
           if (item === undefined) return null
           return (
             <Fragment key={item.id}>
-              {index === courseList.length - 4 && <div key={-1} ref={upperTriggerRef} className="w-full h-1" />}
+              {index === courseList.length - TRIGGER_THRESHOLD && <div key={-1} ref={upperTriggerRef} className="w-full h-1" />}
               <SelectableList.Item
                 selected={enrollCourseList.includes(item.id ?? 0)}
                 selectable={isSelectable}
