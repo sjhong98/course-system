@@ -1,7 +1,7 @@
 import React from 'react'
 
-import { InvalidResult } from '@/shared/validation/types'
 import Column from '@/shared/components/flexBox/Column'
+import { InvalidResult } from '@/shared/validation/types'
 
 type BaseProps = {
   label: string
@@ -52,7 +52,7 @@ export default function LabelInput({ label, className, error, elem = 'input', in
         {required && <span className="text-red-500 ml-0.5">*</span>}
       </label>
       {inputWrapper ? inputWrapper(inputOrTextarea) : inputOrTextarea}
-      {error && error.errors && error.errors?.[rest.name as string] && (
+      {error?.errors?.[rest.name as string] && (
         <p className="text-[12px] text-red-500 absolute bottom-[-18px]">{error.errors[rest.name as string]}</p>
       )}
     </Column>

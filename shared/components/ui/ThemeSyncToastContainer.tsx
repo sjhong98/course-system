@@ -1,8 +1,9 @@
 'use client'
 
-import { THEME_CHANGE_EVENT } from '@/shared/libs/utils/theme'
 import { useEffect, useState } from 'react'
 import { ToastContainer } from 'react-toastify'
+
+import { THEME_CHANGE_EVENT } from '@/shared/libs/utils/theme'
 
 function getThemeFromDOM(): 'dark' | 'light' {
   if (typeof window === 'undefined') return 'light'

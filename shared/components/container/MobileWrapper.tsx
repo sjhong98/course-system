@@ -1,10 +1,11 @@
 'use client'
 
-import { PADDING, PAGE_HEIGHT } from '@/shared/libs/constants/constants'
+import { useState } from 'react'
+
 import Column from '@/shared/components/flexBox/Column'
 import Header from '@/shared/components/ui/Header'
 import Menu from '@/shared/components/ui/Menu'
-import { useState } from 'react'
+import { PADDING, PAGE_HEIGHT } from '@/shared/libs/constants/constants'
 
 // 모바일 Wrapper 컴포넌트
 

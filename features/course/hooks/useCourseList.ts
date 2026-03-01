@@ -5,11 +5,11 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useInView } from 'react-intersection-observer'
 
-import { courseListQueryOptions } from '@/features/course/query/courseQuery'
 import { useEnrollCourseBatch } from '@/features/course/hooks/useEnrollCourse'
+import { courseListQueryOptions } from '@/features/course/query/courseQuery'
+import { parseCourseListSort } from '@/features/course/utils/parseCourseListSort'
 import { useQueryParams } from '@/shared/hooks/useQueryParams'
 import { paths } from '@/shared/libs/api/scheme'
-import { parseCourseListSort } from '@/features/course/utils/parseCourseListSort'
 
 type CourseItem = paths['/api/courses/{courseId}']['get']['responses']['200']['content']['*/*']
 

@@ -1,13 +1,14 @@
 'use client'
 
-import useAuth from '@/features/auth/hooks/useAuth'
-import { toggleThemeAndSync } from '@/shared/libs/utils/theme'
-import { HEADER_HEIGHT, PADDING } from '@/shared/libs/constants/constants'
+import { usePathname } from 'next/navigation'
 import { useEffect, useMemo, useRef, useState } from 'react'
+
+import { signOut } from '@/features/auth/action/signOut'
+import useAuth from '@/features/auth/hooks/useAuth'
 import PaddingHorizontalOverrideContainer from '@/shared/components/container/PaddingHorizontalOverrideContainer'
 import Column from '@/shared/components/flexBox/Column'
-import { signOut } from '@/features/auth/action/signOut'
-import { usePathname } from 'next/navigation'
+import { HEADER_HEIGHT, PADDING, SIGN_IN_PATH, SIGN_UP_PATH } from '@/shared/libs/constants/constants'
+import { toggleThemeAndSync } from '@/shared/libs/utils/theme'
 
 const MENU_OPEN_TIME = 300
 const BACKDROP_OPEN_TIME = MENU_OPEN_TIME - 10
@@ -42,7 +43,7 @@ export default function Menu({ menuOpen, setMenuOpen }: MenuProps) {
           completeSignOut()
           setMenuOpen(false)
         },
-        condition: pathname !== '/signin' && pathname !== '/signup',
+        condition: pathname !== SIGN_IN_PATH && pathname !== SIGN_UP_PATH,
       },
       {
         label: '테마 변경',
@@ -90,9 +91,8 @@ export default function Menu({ menuOpen, setMenuOpen }: MenuProps) {
       >
         <Column as="nav" className="flex-shrink-0 w-full items-end" style={{ paddingRight: `${PADDING}px` }}>
           <Column ref={menuRef} gap={24} className="pt-10 pb-8 h-fit">
-            {menuItems.map((item) => {
-              const isVisible = item.condition === undefined || item.condition === true
-              return isVisible ? (
+            {menuItems.map((item) =>
+              item.condition !== false ? (
                 <button
                   key={item.label}
                   role="menuitem"
@@ -102,8 +102,8 @@ export default function Menu({ menuOpen, setMenuOpen }: MenuProps) {
                 >
                   {item.label}
                 </button>
-              ) : null
-            })}
+              ) : null,
+            )}
           </Column>
         </Column>
       </PaddingHorizontalOverrideContainer>

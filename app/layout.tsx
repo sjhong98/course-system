@@ -1,13 +1,13 @@
-import ThemeSyncToastContainer from '@/shared/components/ui/ThemeSyncToastContainer'
 import type { Metadata } from 'next'
 import { cookies } from 'next/headers'
 import { Geist, Geist_Mono } from 'next/font/google'
 import localFont from 'next/font/local'
 
 import '@/app/globals.css'
-import { THEME_COOKIE_NAME } from '@/shared/libs/utils/theme'
 import Providers from '@/app/Providers'
 import MobileWrapper from '@/shared/components/container/MobileWrapper'
+import ThemeSyncToastContainer from '@/shared/components/ui/ThemeSyncToastContainer'
+import { THEME_COOKIE_NAME } from '@/shared/libs/utils/theme'
 
 const pretendard = localFont({
   src: [

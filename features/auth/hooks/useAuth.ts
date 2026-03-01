@@ -1,9 +1,9 @@
 'use client'
 
-// 클라이언트 전용 훅
-
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+
+import { COURSE_LIST_PATH, ROLE_INSTRUCTOR, SIGN_IN_PATH } from '@/shared/libs/constants/constants'
 
 // 세션 훅
 
@@ -14,13 +14,13 @@ export default function useAuth() {
   const completeSignIn = (role: string, name: string) => {
     localStorage.setItem('role', role)
     localStorage.setItem('name', name)
-    router.push('/course/list')
+    router.push(COURSE_LIST_PATH)
   }
 
   const completeSignOut = () => {
     localStorage.removeItem('role')
     localStorage.removeItem('name')
-    router.push('/signin')
+    router.push(SIGN_IN_PATH)
   }
 
   const isLoggedIn = () => {
@@ -34,7 +34,7 @@ export default function useAuth() {
   }
 
   useEffect(() => {
-    setIsInstructor(localStorage.getItem('role') === 'INSTRUCTOR')
+    setIsInstructor(localStorage.getItem('role') === ROLE_INSTRUCTOR)
   }, [])
 
   return {

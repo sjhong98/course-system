@@ -1,6 +1,7 @@
 'use server'
 
 import { cookies } from 'next/headers'
+
 import { api, serializableResponse } from '@/shared/libs/api/api'
 
 const GET_COURSES_PATH = '/api/courses'

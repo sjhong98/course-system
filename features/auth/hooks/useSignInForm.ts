@@ -3,8 +3,9 @@
 import { useCallback, useState } from 'react'
 
 import { signIn } from '@/features/auth/action/signIn'
-import { validateSignInForm } from '@/features/auth/validation/signIn'
 import useAuth from '@/features/auth/hooks/useAuth'
+import { validateSignInForm } from '@/features/auth/validation/signIn'
+import { SIGN_IN_ERROR_MESSAGE } from '@/shared/libs/constants/constants'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
 import type { InvalidResult } from '@/shared/validation/types'
@@ -45,15 +46,15 @@ export function useSignInForm() {
         const signInResult = await apiResponseHandler(() => signIn(signInForm), { key: toastId })
         const user = signInResult?.user
         if (!user?.role || !user?.name) {
-          errorHandler(new Error('로그인 응답에 사용자 정보가 없습니다.'), {
+          errorHandler(new Error(SIGN_IN_ERROR_MESSAGE), {
             key: toastId,
-            message: '로그인 응답에 사용자 정보가 없습니다. 다시 시도해 주세요.',
+            message: SIGN_IN_ERROR_MESSAGE,
           })
           return
         }
         completeSignIn(user.role, user.name)
       } catch (err) {
-        errorHandler(err, { key: toastId, message: '로그인 처리 중 오류가 발생했습니다.' })
+        errorHandler(err, { key: toastId, message: SIGN_IN_ERROR_MESSAGE })
       } finally {
         setProcessing(false)
       }

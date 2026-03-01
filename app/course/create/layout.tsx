@@ -1,7 +1,8 @@
 'use client'
 
-import PageTitle from '@/shared/components/ui/PageTitle'
 import { useRouter } from 'next/navigation'
+
+import PageTitle from '@/shared/components/ui/PageTitle'
 
 export default function CourseListLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()

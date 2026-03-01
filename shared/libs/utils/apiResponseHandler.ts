@@ -1,13 +1,18 @@
 import { toast } from 'react-toastify'
+
+import { signOut } from '@/features/auth/action/signOut'
 import { SerializableResponse } from '@/shared/libs/api/api'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
-import { signOut } from '@/features/auth/action/signOut'
+
+import { API_ERROR_MESSAGE, UNAUTHORIZED_MESSAGE, UNAUTHORIZED_REDIRECT_URL } from '../constants/constants'
 
 export type ApiErrorPayload = { message: string; status: number }
 
 type ErrorLike = { message?: string } | undefined
 
-// Client에서 동작하는 API 호출 및 응답값 핸들러
+// apiResponseHandler: 비동기 API 호출 함수를 인자로 받아, 호출한 뒤 반환된 응답을 풀고, 에러 시 에러 핸들러를 호출.
+// apiSyncResponseHandler: 이미 서버 등에서 가져온 직렬화된 응답 객체를 인자로 받아, 별도 호출 없이 그 응답만 풀고, 에러 시 에러 핸들러를 호출.
+
 export const apiResponseHandler = async <T, E extends ErrorLike>(
   apiCall: () => Promise<SerializableResponse<T, E>>,
   option?: { key?: string },
@@ -16,12 +21,11 @@ export const apiResponseHandler = async <T, E extends ErrorLike>(
     const result = await apiCall()
     return unwrapApiResponse(result, option)
   } catch (error) {
-    await errorHandler(error)
+    await errorHandler(error, { key: option?.key })
     throw error
   }
 }
 
-// Server에서 패치한 데이터를 Client에서 받아 동작하는 응답값 핸들러
 export const apiSyncResponseHandler = <T, E extends ErrorLike>(
   apiResponse: SerializableResponse<T, E>,
   option?: { key?: string; skipToast?: boolean },
@@ -36,19 +40,19 @@ const unwrapApiResponse = <T, E extends ErrorLike>(
   const { key, skipToast } = option ?? {}
 
   if ('error' in apiResponse) {
-    const toastMessage = apiResponse.error?.message ?? '요청 중에 오류가 발생했습니다.'
+    const toastMessage = apiResponse.error?.message ?? API_ERROR_MESSAGE
     if (!skipToast) {
       toast.error(toastMessage, { toastId: key ? key : toastMessage })
     }
 
-    if (apiResponse.status === 401 && apiResponse.error?.message === '인증이 필요합니다') {
-      window.location.href = '/signin'
+    if (apiResponse.status === 401 && apiResponse.error?.message === UNAUTHORIZED_MESSAGE) {
+      window.location.href = UNAUTHORIZED_REDIRECT_URL
       localStorage.removeItem('role')
       localStorage.removeItem('name')
       signOut()
     }
 
-    throw new Error(apiResponse.error?.message ?? '요청 중에 오류가 발생했습니다.')
+    throw new Error(apiResponse.error?.message ?? API_ERROR_MESSAGE)
   }
 
   return apiResponse.data as T

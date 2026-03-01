@@ -1,6 +1,6 @@
+import ButtonComponent, { ButtonProps } from '@/shared/components/ui/Button'
 import { PADDING } from '@/shared/libs/constants/constants'
 import { cn } from '@/shared/libs/utils/cn'
-import ButtonComponent, { ButtonProps } from '@/shared/components/ui/Button'
 
 // 하단 버튼 레이아웃
 export namespace BottomButton {

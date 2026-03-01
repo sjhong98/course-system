@@ -1,11 +1,10 @@
 'use client'
 
+import { useCourseCreateForm } from '@/features/course/hooks/useCourseCreateForm'
 import Column from '@/shared/components/flexBox/Column'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import LabelInput from '@/shared/components/ui/LabelInput'
 import LabelInputWithSuffixText from '@/shared/components/ui/LabelInputWithSuffixText'
-
-import { useCourseCreateForm } from '@/features/course/hooks/useCourseCreateForm'
 
 // 강의 개설 폼 컴포넌트
 

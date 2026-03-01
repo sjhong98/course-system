@@ -1,6 +1,7 @@
 import { getCourse } from '@/features/course/action/getCourse'
 import CourseDetail from '@/features/course/components/CourseDetail'
 import Error from '@/shared/components/ui/Error'
+import { COURSE_ID_INVALID_MESSAGE } from '@/shared/libs/constants/constants'
 
 interface CourseDetailContainerProps {
   params: Promise<{ courseId: string }>
@@ -13,7 +14,7 @@ export default async function CourseDetailContainer({ params }: CourseDetailCont
 
   const isNumber = !isNaN(Number(courseId)) && Number(courseId) > 0
   if (!isNumber) {
-    return <Error message="강의 ID가 올바르지 않습니다." />
+    return <Error message={COURSE_ID_INVALID_MESSAGE} />
   }
 
   const result: Awaited<ReturnType<typeof getCourse>> = await getCourse(Number(courseId))

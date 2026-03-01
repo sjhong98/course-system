@@ -2,6 +2,8 @@
 
 import { Fragment } from 'react'
 
+import CourseListSkeleton from '@/features/course/components/CourseListSkeleton'
+import { useCourseList } from '@/features/course/hooks/useCourseList'
 import Column from '@/shared/components/flexBox/Column'
 import Row from '@/shared/components/flexBox/Row'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
@@ -9,9 +11,6 @@ import { SelectableList } from '@/shared/components/ui/SelectableList'
 import Error from '@/shared/components/ui/Error'
 import { HEADER_HEIGHT, PAGE_TITLE_HEIGHT } from '@/shared/libs/constants/constants'
 import { cn } from '@/shared/libs/utils/cn'
-
-import { useCourseList } from '@/features/course/hooks/useCourseList'
-import CourseListSkeleton from '@/features/course/components/CourseListSkeleton'
 
 const COURSE_LIST_HEIGHT = `calc(100vh - ${HEADER_HEIGHT}px - ${PAGE_TITLE_HEIGHT}px)`
 

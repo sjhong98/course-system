@@ -1,9 +1,10 @@
 'use client'
 
-import { useEnrollCourse } from '@/features/course/hooks/useEnrollCourse'
-import { paths } from '@/shared/libs/api/scheme'
 import { useRouter } from 'next/navigation'
 import { useCallback } from 'react'
+
+import { useEnrollCourse } from '@/features/course/hooks/useEnrollCourse'
+import { paths } from '@/shared/libs/api/scheme'
 
 export type Course = paths['/api/courses/{courseId}']['get']['responses']['200']['content']['*/*']
 

@@ -1,6 +1,7 @@
+import { MenuIcon, XIcon } from 'lucide-react'
+
 import PaddingHorizontalOverrideContainer from '@/shared/components/container/PaddingHorizontalOverrideContainer'
 import { HEADER_HEIGHT, PADDING } from '@/shared/libs/constants/constants'
-import { MenuIcon, XIcon } from 'lucide-react'
 
 // 메뉴 헤더 컴포넌트
 

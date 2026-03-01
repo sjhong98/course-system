@@ -1,12 +1,12 @@
 'use client'
 
+import { useSignUpForm } from '@/features/auth/hooks/useSignUpForm'
 import Column from '@/shared/components/flexBox/Column'
 import Row from '@/shared/components/flexBox/Row'
 import { BottomButton } from '@/shared/components/ui/BottomButton'
 import CheckBox from '@/shared/components/ui/CheckBox'
 import LabelInput from '@/shared/components/ui/LabelInput'
-
-import { useSignUpForm } from '@/features/auth/hooks/useSignUpForm'
+import { ROLE_INSTRUCTOR, ROLE_STUDENT } from '@/shared/libs/constants/constants'
 
 // 회원가입 폼 컴포넌트
 
@@ -32,16 +32,16 @@ export default function SignUpForm() {
           <CheckBox
             label="수강생"
             className="flex-1"
-            name="STUDENT"
-            checked={signUpForm.role === 'STUDENT'}
+            name={ROLE_STUDENT}
+            checked={signUpForm.role === ROLE_STUDENT}
             onChange={handleRoleChange}
             aria-label="수강생"
           />
           <CheckBox
             label="강사"
             className="flex-1"
-            name="INSTRUCTOR"
-            checked={signUpForm.role === 'INSTRUCTOR'}
+            name={ROLE_INSTRUCTOR}
+            checked={signUpForm.role === ROLE_INSTRUCTOR}
             onChange={handleRoleChange}
             aria-label="강사"
           />

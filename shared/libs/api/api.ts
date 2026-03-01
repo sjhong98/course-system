@@ -1,5 +1,6 @@
-import type { paths } from '@/shared/libs/api/scheme.d'
 import createClient from 'openapi-fetch'
+
+import type { paths } from '@/shared/libs/api/scheme.d'
 
 export type SuccessResponse<T> = {
   data?: T

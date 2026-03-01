@@ -1,15 +1,21 @@
 'use client'
 
+import { useQueryClient } from '@tanstack/react-query'
 import { useCallback, useState } from 'react'
 import { toast } from 'react-toastify'
 
 import { enrollCourse } from '@/features/course/action/enrollCourse'
 import { enrollCourseBatch } from '@/features/course/action/enrollCourseBatch'
 import { courseListQueryOptions } from '@/features/course/query/courseQuery'
+import { paths } from '@/shared/libs/api/scheme'
+import {
+  COURSE_ENROLL_BATCH_SUCCESS_MESSAGE,
+  COURSE_ENROLL_ERROR_MESSAGE,
+  COURSE_ENROLL_SUCCESS_MESSAGE,
+  COURSE_ID_INVALID_MESSAGE,
+} from '@/shared/libs/constants/constants'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
-import { paths } from '@/shared/libs/api/scheme'
-import { useQueryClient } from '@tanstack/react-query'
 
 type CourseItem = paths['/api/courses/{courseId}']['get']['responses']['200']['content']['*/*']
 
@@ -25,18 +31,18 @@ export function useEnrollCourse(courseId: number | undefined) {
       const toastId = 'enroll-course'
       try {
         if (courseId == null) {
-          errorHandler(new Error('강의 ID가 올바르지 않습니다.'), { message: '강의 ID가 올바르지 않습니다.' })
+          errorHandler(new Error(COURSE_ID_INVALID_MESSAGE), { message: COURSE_ID_INVALID_MESSAGE })
           return
         }
         setProcessing(true)
-        const enrollResult = await apiResponseHandler(async () => await enrollCourse(courseId), { key: toastId })
+        const enrollResult = await apiResponseHandler(() => enrollCourse(courseId), { key: toastId })
         queryClient.invalidateQueries({ queryKey: ['courses'] })
         if (enrollResult) {
-          toast.success('수강 신청이 완료되었습니다.')
+          toast.success(COURSE_ENROLL_SUCCESS_MESSAGE)
           onSuccess?.(courseId)
         }
       } catch (err) {
-        errorHandler(err, { key: toastId, message: '수강 신청에 실패했습니다.' })
+        errorHandler(err, { key: toastId, message: COURSE_ENROLL_ERROR_MESSAGE })
       } finally {
         setProcessing(false)
       }
@@ -76,17 +82,17 @@ export function useEnrollCourseBatch(options: UseEnrollCourseBatchOptions) {
     const toastId = 'enroll-course'
     try {
       setProcessing(true)
-      const result = await apiResponseHandler(async () => await enrollCourseBatch(enrollCourseList), { key: toastId })
+      const result = await apiResponseHandler(() => enrollCourseBatch(enrollCourseList), { key: toastId })
       setEnrollCourseList([])
 
       if (result.failed && result.failed.length > 0) {
         result.failed.forEach((item) => {
-          const failedItemTitle = courseList.find((c) => c.id === item.courseId)?.title ?? '알 수 없는 강의'
-          toast.error(item.reason ? `${failedItemTitle}: ${item.reason}` : `강의 수강 신청에 실패했습니다: ${item.courseId}`)
+          const failedItemTitle = courseList.find((c) => c.id === item.courseId)?.title ?? 'invalid course id'
+          toast.error(item.reason ? `${failedItemTitle}: ${item.reason}` : `${COURSE_ENROLL_ERROR_MESSAGE}: ${item.courseId}`)
         })
       }
       if (result.success && result.success.length > 0) {
-        toast.success(`${result.success.length}개의 강의를 수강 신청했습니다.`)
+        toast.success(`${COURSE_ENROLL_BATCH_SUCCESS_MESSAGE.replace('{count}', result.success.length.toString())}`)
         setParam('select', null)
         queryClient.setQueryData(courseListQueryOptions(sort).queryKey, (old) => {
           if (!old?.pages) return old
@@ -110,7 +116,7 @@ export function useEnrollCourseBatch(options: UseEnrollCourseBatchOptions) {
         })
       }
     } catch (err) {
-      errorHandler(err, { key: toastId, message: '수강 신청에 실패했습니다.' })
+      errorHandler(err, { key: toastId, message: COURSE_ENROLL_ERROR_MESSAGE })
     } finally {
       setProcessing(false)
     }

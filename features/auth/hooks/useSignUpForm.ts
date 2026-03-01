@@ -1,10 +1,19 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
 import { useCallback, useState } from 'react'
+
 import { signIn } from '@/features/auth/action/signIn'
 import { signUp } from '@/features/auth/action/signUp'
-import { validateSignUpForm } from '@/features/auth/validation/signUp'
 import useAuth from '@/features/auth/hooks/useAuth'
+import { validateSignUpForm } from '@/features/auth/validation/signUp'
+import {
+  ROLE_INSTRUCTOR,
+  ROLE_STUDENT,
+  SIGN_IN_ERROR_MESSAGE,
+  SIGN_IN_PATH,
+  SIGN_UP_ERROR_MESSAGE,
+} from '@/shared/libs/constants/constants'
 import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
 import formatPhoneNumber from '@/shared/libs/utils/formatPhoneNumber'
@@ -16,17 +25,17 @@ const initialSignUpForm: ApiRequest<'/api/users/signup', 'post'> = {
   password: '',
   name: '',
   phone: '',
-  role: 'STUDENT',
+  role: ROLE_STUDENT,
 }
 
 // 회원가입 도메인 로직 훅
 
 export function useSignUpForm() {
+  const router = useRouter()
   const { completeSignIn } = useAuth()
   const [signUpForm, setSignUpForm] = useState<ApiRequest<'/api/users/signup', 'post'>>(initialSignUpForm)
   const [error, setError] = useState<InvalidResult | null>(null)
   const [processing, setProcessing] = useState(false)
-
   // 입력 핸들러
   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
@@ -41,7 +50,7 @@ export function useSignUpForm() {
   const handleRoleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSignUpForm((prev) => ({
       ...prev,
-      role: e.target.name as 'STUDENT' | 'INSTRUCTOR',
+      role: e.target.name as typeof ROLE_STUDENT | typeof ROLE_INSTRUCTOR,
     }))
   }, [])
 
@@ -60,30 +69,37 @@ export function useSignUpForm() {
         } else {
           setError(null)
         }
-        await apiResponseHandler(async () => await signUp(signUpForm), { key: toastId })
-        let signInResult
+        await apiResponseHandler(() => signUp(signUpForm), { key: toastId })
+
+        // 로그인 처리 (회원가입 후 자동 로그인)
         try {
-          signInResult = await apiResponseHandler(async () => await signIn({ email: signUpForm.email, password: signUpForm.password }))
+          const signInResult = await apiResponseHandler(() => signIn({ email: signUpForm.email, password: signUpForm.password }))
+          const user = signInResult?.user
+          if (!user?.role || !user?.name) {
+            errorHandler(new Error(SIGN_IN_ERROR_MESSAGE), {
+              key: toastId,
+              message: SIGN_IN_ERROR_MESSAGE,
+              callback: () => {
+                router.push(SIGN_IN_PATH)
+              },
+            })
+            return
+          }
+          completeSignIn(user.role, user.name)
         } catch (signInErr) {
           errorHandler(signInErr instanceof Error ? signInErr : new Error(String(signInErr)), {
             key: toastId,
-            message: '회원가입이 완료되었습니다. 로그인에 실패했습니다. 아래에서 로그인해 주세요.',
+            message: SIGN_IN_ERROR_MESSAGE,
+            callback: () => {
+              router.push(SIGN_IN_PATH)
+            },
           })
           return
         }
-        const user = signInResult?.user
-        if (!user?.role || !user?.name) {
-          errorHandler(new Error('로그인 응답에 사용자 정보가 없습니다.'), {
-            key: toastId,
-            message: '회원가입이 완료되었습니다. 로그인 응답에 문제가 있습니다. 아래에서 로그인해 주세요.',
-          })
-          return
-        }
-        completeSignIn(user.role, user.name)
       } catch (err) {
         errorHandler(err instanceof Error ? err : new Error(String(err)), {
           key: toastId,
-          message: '회원가입 처리 중 오류가 발생했습니다.',
+          message: SIGN_UP_ERROR_MESSAGE,
         })
       } finally {
         setProcessing(false)

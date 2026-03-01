@@ -1,6 +1,7 @@
+import { ROLE_INSTRUCTOR, ROLE_STUDENT } from '@/shared/libs/constants/constants'
 import type { ApiRequest } from '@/shared/libs/utils/typeGenerator'
-import { invalid, valid, type ValidationResult } from '@/shared/validation/types'
 import { rules } from '@/shared/validation/rules'
+import { invalid, valid, type ValidationResult } from '@/shared/validation/types'
 
 const SIGNUP_PATH = '/api/users/signup'
 export type SignUpForm = ApiRequest<typeof SIGNUP_PATH, 'post'>
@@ -22,7 +23,7 @@ export function validateSignUpForm(form: SignUpForm): ValidationResult<SignUpFor
   const passwordError = rules.required('비밀번호', form.password) ?? rules.passwordFormat('비밀번호', form.password)
   if (passwordError) errors.password = passwordError
 
-  const validRoles = ['STUDENT', 'INSTRUCTOR'] as const
+  const validRoles = [ROLE_STUDENT, ROLE_INSTRUCTOR] as const
   if (!form.role || !validRoles.includes(form.role)) {
     errors.role = '역할을 선택해 주세요.'
   }

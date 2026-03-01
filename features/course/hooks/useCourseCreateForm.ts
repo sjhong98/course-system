@@ -7,11 +7,18 @@ import { toast } from 'react-toastify'
 
 import { createCourse } from '@/features/course/action/createCourse'
 import { validateCourseCreateForm } from '@/features/course/validation/createCourse'
+import {
+  COURSE_CREATE_AUTHORIZATION_MESSAGE,
+  COURSE_CREATE_ERROR_MESSAGE,
+  COURSE_CREATE_SUCCESS_MESSAGE,
+  COURSE_LIST_PATH,
+  ROLE_INSTRUCTOR,
+} from '@/shared/libs/constants/constants'
+import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 import { errorHandler } from '@/shared/libs/utils/errorHandler'
 import parseNumber from '@/shared/libs/utils/parseNumber'
 import { ApiRequest } from '@/shared/libs/utils/typeGenerator'
 import type { InvalidResult } from '@/shared/validation/types'
-import { apiResponseHandler } from '@/shared/libs/utils/apiResponseHandler'
 
 type CourseCreateForm = ApiRequest<'/api/courses', 'post'>
 
@@ -36,9 +43,9 @@ export function useCourseCreateForm() {
   // 권한 검사
   useEffect(() => {
     const role = typeof window !== 'undefined' ? localStorage.getItem('role') : null
-    if (role !== 'INSTRUCTOR') {
-      window.alert('강사만 강의를 개설할 수 있습니다.')
-      router.push('/course/list')
+    if (role !== ROLE_INSTRUCTOR) {
+      window.alert(COURSE_CREATE_AUTHORIZATION_MESSAGE)
+      router.push(COURSE_LIST_PATH)
       return
     }
   }, [])
@@ -78,10 +85,10 @@ export function useCourseCreateForm() {
         }
         await apiResponseHandler(async () => await createCourse(result.data), { key: toastId })
         await queryClient.invalidateQueries({ queryKey: ['courses'] })
-        router.push('/course/list')
-        toast.success('강의 등록에 성공했습니다.')
+        router.push(COURSE_LIST_PATH)
+        toast.success(COURSE_CREATE_SUCCESS_MESSAGE)
       } catch (err) {
-        errorHandler(err, { key: toastId, message: '강의 등록에 실패했습니다.' })
+        errorHandler(err, { key: toastId, message: COURSE_CREATE_ERROR_MESSAGE })
       } finally {
         setProcessing(false)
       }

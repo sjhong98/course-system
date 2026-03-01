@@ -8,7 +8,7 @@ export const courseListQueryOptions = (sort: string) =>
   infiniteQueryOptions({
     queryKey: ['courses', sort],
     queryFn: async ({ pageParam }) => {
-      return await apiResponseHandler(async () => await getCourseList(pageParam, sort))
+      return await apiResponseHandler(() => getCourseList(pageParam, sort))
     },
     staleTime: 5 * 60 * 1000,
     gcTime: 5 * 60 * 1000,

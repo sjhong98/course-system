@@ -1,16 +1,17 @@
 'use client'
 
-import Row from '@/shared/components/flexBox/Row'
-import Button from '@/shared/components/ui/Button'
-import CheckBox from '@/shared/components/ui/CheckBox'
+import { FilterIcon } from 'lucide-react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { ReactNode, useMemo, useState } from 'react'
+
+import { parseCourseListSort, CourseListSort } from '@/features/course/utils/parseCourseListSort'
 import useAuth from '@/features/auth/hooks/useAuth'
 import { useQueryParams } from '@/shared/hooks/useQueryParams'
 import { PAGE_TITLE_HEIGHT } from '@/shared/libs/constants/constants'
 import { cn } from '@/shared/libs/utils/cn'
-import { FilterIcon } from 'lucide-react'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { ReactNode, useMemo, useState } from 'react'
-import { parseCourseListSort, CourseListSort } from '@/features/course/utils/parseCourseListSort'
+import Row from '@/shared/components/flexBox/Row'
+import Button from '@/shared/components/ui/Button'
+import CheckBox from '@/shared/components/ui/CheckBox'
 
 type CourseToolbarButtonProps = {
   children: ReactNode
